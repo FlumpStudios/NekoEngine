@@ -170,15 +170,6 @@ static inline SFG_TileDefinition SFG_getMapTile
 
 #define SFG_NUMBER_OF_LEVELS 10
 
-/*
-  NOTE: Initially the levels were stored sequentially in one big array, but that
-  caused some issues with Arduino's PROGMEM, so now we store each level in a
-  separate variable and eventually create an array of pointers to these.
-
-  Levels can be designed using bitmap editor and converted to the struct format
-  with provided tools.
-*/
-
 uint8_t SFG_loadLevelFromFile(SFG_Level* buffer, uint8_t level, const char* exceutableLocation)
 {   
     char levelString[256];
@@ -187,10 +178,7 @@ uint8_t SFG_loadLevelFromFile(SFG_Level* buffer, uint8_t level, const char* exce
     FILE* file = fopen(levelString, "rb");
     if (file != NULL)
     {
-        // Read the binary data into the struct
         fread(buffer, sizeof(SFG_Level), 1, file);
-
-        // Now yourStruct holds the data from the serialized C# class
         fclose(file);
 
         return 1;
