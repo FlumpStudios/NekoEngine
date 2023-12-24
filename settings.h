@@ -1,21 +1,3 @@
-/**
-  @file settings.h
-
-  This file contains settings (or setting hints) for the game. Values here can
-  fine tune performance vs quality and personalize the final compiled game. Some
-  of these settings may be overriden by the specific platform used according to
-  its limitations. You are advised to NOT change value in this file directly,
-  but rather predefine them somewhere before this file gets included, e.g. in
-  you personal settings file.
-
-  by Miloslav Ciz (drummyfish), 2019
-
-  Released under CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
-  plus a waiver of all other intellectual property. The goal of this work is to
-  be and remain completely in the public domain forever, available for any use
-  whatsoever.
-*/
-
 #ifndef _SFG_SETTINGS_H
 #define _SFG_SETTINGS_H
 
