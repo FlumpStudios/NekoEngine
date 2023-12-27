@@ -393,7 +393,7 @@ int main(int argc, char *argv[])
   uint8_t argHelp = 0;
   uint8_t argForceWindow = 0;
   uint8_t argForceFullscreen = 0;
-
+  
 #ifndef __EMSCRIPTEN__
   argForceFullscreen = 1;
 #endif
@@ -409,6 +409,8 @@ int main(int argc, char *argv[])
       argForceWindow = 1;
     else if (argv[i][0] == '-' && argv[i][1] == 'f' && argv[i][2] == 0)       
       argForceFullscreen = 1;
+    else if (argv[i][0] == '-' && argv[i][1] == 'd' && argv[i][2] == 0)       
+      SFG_isDebug = 1;
     else
       puts("SDL: unknown argument"); 
   }

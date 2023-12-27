@@ -86,6 +86,8 @@
                                    potentially multiple simulation steps). */
 #endif
 
+int8_t SFG_isDebug = 0;
+
 /** 
   Returns 1 (0) if given key is pressed (not pressed). At least the mandatory
   keys have to be implemented, the optional keys don't have to ever return 1.
@@ -1519,7 +1521,7 @@ void SFG_GetExecutablePath(char* buffer, size_t size) {
     GetModuleFileName(NULL, buffer, size);
     char* lastBackslash = strrchr(buffer, '\\');
     if (lastBackslash != NULL) {
-        *lastBackslash = '\0';  // Null-terminate at the last backslash to get the directory
+        *lastBackslash = '\0';
     }
 }
  
@@ -1529,7 +1531,10 @@ void SFG_setAndInitLevel(uint8_t levelNumber)
 {
   SFG_LOG("setting and initializing level");
 
-
+if(SFG_isDebug)
+{
+  levelNumber = 99;
+}
 
 #if SFG_AVR
   memcpy_P(&SFG_ramLevel,SFG_levels[levelNumber],sizeof(SFG_Level));
@@ -1715,7 +1720,28 @@ void SFG_createDefaultSaveData(uint8_t *memory)
 
 void SFG_init()
 {
-  SFG_LOG("initializing game")
+  SFG_LOG("initializing game");
+  char executablePath[256];
+  SFG_GetExecutablePath(executablePath, sizeof(executablePath));
+
+  char loc[256];    
+  sprintf(loc, "%s/WallTextures/data.TAD", executablePath);  
+  SFG_loadTexturesFromFile(SFG_wallTextures,loc, SFG_WALL_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);  
+  
+  sprintf(loc, "%s/Items/data.TAD", executablePath);
+  SFG_loadTexturesFromFile(SFG_itemSprites,loc, SFG_ITEM_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);  
+
+  sprintf(loc, "%s/Backgrounds/data.TAD", executablePath);
+  SFG_loadTexturesFromFile(SFG_backgroundImages,loc, SFG_BACKGROUND_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
+
+  sprintf(loc, "%s/Weapons/data.TAD", executablePath);
+  SFG_loadTexturesFromFile(SFG_weaponImages,loc, SFG_WEAPON_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
+
+  sprintf(loc, "%s/Effects/data.TAD", executablePath);
+  SFG_loadTexturesFromFile(SFG_effectSprites,loc, SFG_EFFECT_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
+
+  sprintf(loc, "%s/Enemies/data.TAD", executablePath);
+  SFG_loadTexturesFromFile(SFG_monsterSprites,loc, SFG_ENEMY_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
 
   SFG_game.frame = 0;
   SFG_game.frameTime = 0;
@@ -1817,6 +1843,10 @@ void SFG_init()
 #else
   SFG_setAndInitLevel(SFG_START_LEVEL - 1);
 #endif
+  if(SFG_isDebug)
+  {
+    SFG_setAndInitLevel(0);
+  }
 }
 
 /**
@@ -3918,7 +3948,14 @@ void SFG_gameStepMenu()
         if (SFG_game.selectedLevel == 0)
         {
           SFG_currentLevel.levelNumber = 0; // to draw intro, not outro
-          SFG_setGameState(SFG_GAME_STATE_INTRO);
+          if(SFG_SKIP_INTRO)
+          {
+            SFG_setAndInitLevel(SFG_game.selectedLevel);
+          }
+          else
+          {
+            SFG_setGameState(SFG_GAME_STATE_INTRO);
+          }
         }
         else
           SFG_setAndInitLevel(SFG_game.selectedLevel);
