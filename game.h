@@ -1764,6 +1764,9 @@ void SFG_init()
   sprintf(loc, "%s/Enemies/data.TAD", executablePath);
   SFG_loadTexturesFromFile(SFG_monsterSprites,loc, SFG_ENEMY_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
 
+  sprintf(loc, "%s/Title/data.TAD", executablePath);
+  SFG_loadTexturesFromFile(SFG_logoImage,loc, SFG_TEXTURE_STORE_SIZE);
+
   SFG_game.frame = 0;
   SFG_game.frameTime = 0;
   SFG_game.currentRandom = 0;
