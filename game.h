@@ -27,8 +27,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// TODO: don't do this
-#include <Windows.h> // Undoing all of anarch's good work here
+
+#ifdef _WIN32
+    #include <windows.h>
+#elif __linux__
+    #include <limits.h>
+    #include <unistd.h>
+#endif
+
+
 
 /*
   The following keys are mandatory to be implemented on any platform in order
@@ -1516,14 +1523,28 @@ void SFG_setGameState(uint8_t state)
   SFG_game.stateTime = 0;
 }
 
-// TODO: Make cross platform
 void SFG_GetExecutablePath(char* buffer, size_t size) {
+#ifdef _WIN32
     GetModuleFileName(NULL, buffer, size);
     char* lastBackslash = strrchr(buffer, '\\');
     if (lastBackslash != NULL) {
         *lastBackslash = '\0';
     }
+#elif __linux__
+    ssize_t len = readlink("/proc/self/exe", buffer, size - 1);
+    if (len != -1) {
+        buffer[len] = '\0';
+        char* lastSlash = strrchr(buffer, '/');
+        if (lastSlash != NULL) {
+            *lastSlash = '\0';
+        }
+    } else {
+        fprintf(stderr, "Error getting executable path\n");
+        exit(EXIT_FAILURE);
+    }
+#endif
 }
+
  
 static SFG_Level *level = NULL;
 
