@@ -1,25 +1,3 @@
-/**
-  @file game.h
- 
-  Main source file of Anarch the game that puts together all the pieces. main
-  game logic is implemented here.
-
-  physics notes (you can break this when messing around with game constants):
-
-  - Lowest ceiling under which player can fit is 4 height steps.
-  - Widest hole over which player can run without jumping is 1 square.
-  - Widest hole over which the player can jump is 3 squares.
-  - Highest step a player can walk onto without jumping is 2 height steps.
-  - Highest step a player can jump onto is 3 height steps.
-
-  by Miloslav Ciz (drummyfish), 2019
-
-  Released under CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
-  plus a waiver of all other intellectual property. The goal of this work is
-  be and remain completely in the public domain forever, available for any use
-  whatsoever.
-*/
-
 #ifndef _SFG_GAME_H
 #define _SFG_GAME_H
 

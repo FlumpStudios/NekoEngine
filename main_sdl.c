@@ -1,25 +1,3 @@
-/**
-  @file main_sdl.c
-
-  This is an SDL2 implementation of the game front end. It can be used to
-  compile a native executable or a transpiled JS browser version with
-  emscripten.
-
-  This frontend is not strictly minimal, it could be reduced a lot. If you want
-  a learning example of frontend, look at another, simpler one, e.g. terminal.
-
-  To compile with emscripten run:
-
-  emcc ./main_sdl.c -s USE_SDL=2 -O3 --shell-file HTMLshell.html -o game.html
-
-  by Miloslav Ciz (drummyfish), 2019
-
-  Released under CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
-  plus a waiver of all other intellectual property. The goal of this work is to
-  be and remain completely in the public domain forever, available for any use
-  whatsoever.
-*/
-
 #if defined(_WIN32) || defined(WIN32) || defined(__WIN32__) || defined(__NT__) || defined(__APPLE__)
   #define SFG_OS_IS_MALWARE 1
 #endif
