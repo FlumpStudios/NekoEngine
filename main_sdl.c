@@ -419,6 +419,13 @@ int main(int argc, char *argv[])
     return 0;
   }
 
+  // Load in SFX files
+  char executablePath[256];
+  SFG_GetExecutablePath(executablePath, sizeof(executablePath));
+  char loc[256];
+  sprintf(loc, "%s/Sfx/data.SAD", executablePath);
+  SFG_loadTexturesFromFile(SFG_sounds,loc, SFG_SFX_SIZE * 6);
+
   SFG_init();
 
   puts("SDL: initializing SDL");
