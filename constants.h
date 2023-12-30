@@ -1,8 +1,7 @@
 #ifndef _SFG_CONSTANTS_H
 #define _SFG_CONSTANTS_H
 
-#define SFG_SKIP_INTRO 0
-
+#define SFG_SKIP_INTRO 1
 
 /**
   How quickly player moves, in squares per second.

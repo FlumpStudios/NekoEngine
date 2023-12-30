@@ -1539,16 +1539,24 @@ if(SFG_isDebug)
   memcpy_P(&SFG_ramLevel,SFG_levels[levelNumber],sizeof(SFG_Level));
   level = &SFG_ramLevel;
 #else
-    if (!level)
-    {
-        level = malloc(sizeof(SFG_Level));
-        if (level == NULL)
-        {
-            SFG_LOG("Memory allocation failed for SFG_Level.");
-            return;
-        }
-    }
+if (!level) {
+    // If level is not already allocated, allocate memory
+    level = malloc(sizeof(SFG_Level));
     
+    if (level == NULL) {
+        SFG_LOG("Memory allocation failed for SFG_Level.");
+        return;
+    }
+} else {
+    // If level is already allocated, free it before reallocating
+    free(level);
+    level = malloc(sizeof(SFG_Level));
+
+    if (level == NULL) {
+        SFG_LOG("Memory allocation failed for SFG_Level.");
+        return;
+    }
+}
     char executablePath[256];  // Adjust the size as needed
     SFG_GetExecutablePath(executablePath, sizeof(executablePath));
 
