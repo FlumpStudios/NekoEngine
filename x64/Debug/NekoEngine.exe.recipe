@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Projects\Neko\x64\Debug\NekoEngine.exe</FullPath>
+      <FullPath>c:\projects\NekoEngine\x64\Debug\NekoEngine.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

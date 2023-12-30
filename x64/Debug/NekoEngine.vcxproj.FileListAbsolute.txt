@@ -1,1 +1,2 @@
 C:\Projects\Neko\x64\Debug\NekoEngine.exe
+C:\Projects\NekoEngine\x64\Debug\NekoEngine.exe
