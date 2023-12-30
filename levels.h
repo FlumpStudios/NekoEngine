@@ -165,7 +165,7 @@ uint8_t SFG_loadLevelFromFile(SFG_Level* buffer, uint8_t level, const char* exec
     }
 
     char levelString[512];
-    snprintf(levelString, sizeof(levelString), "%s/levels/level%02u.HAD", executableLocation, level); 
+    snprintf(levelString, sizeof(levelString), "levels/level%02u.HAD",level); 
 
     FILE* file = fopen(levelString, "rb");
     if (file == NULL) {

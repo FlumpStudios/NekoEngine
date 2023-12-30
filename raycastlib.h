@@ -164,8 +164,17 @@
 #define RCL_max(a,b) ((a) > (b) ? (a) : (b))
 #define RCL_nonZero(v) ((v) + ((v) == 0)) ///< To prevent zero divisions.
 #define RCL_zeroClamp(x) ((x) * ((x) >= 0))
-#define RCL_likely(cond)    __builtin_expect(!!(cond),1) 
-#define RCL_unlikely(cond)  __builtin_expect(!!(cond),0) 
+#ifdef __GNUC__ // Check if using GCC
+
+#define RCL_likely(cond)    __builtin_expect(!!(cond), 1)
+#define RCL_unlikely(cond)  __builtin_expect(!!(cond), 0)
+
+#else // Assume using Visual Studio
+
+#define RCL_likely(cond)    (cond)
+#define RCL_unlikely(cond)  (cond)
+
+#endif
 
 #define RCL_logV2D(v)\
   printf("[%d,%d]\n",v.x,v.y);
@@ -979,7 +988,7 @@ void RCL_castRaysMultiHit(RCL_Camera cam, RCL_ArrayFunction arrayFunc,
   RCL_Unit dX = dir2.x - dir1.x;
   RCL_Unit dY = dir2.y - dir1.y;
 
-  RCL_HitResult hits[constraints.maxHits];
+  RCL_HitResult hits[SFG_RAYCASTING_MAX_HITS];
   uint16_t hitCount;
 
   RCL_Ray r;
@@ -1769,7 +1778,7 @@ RCL_Unit RCL_castRay3D(
   RCL_ArrayFunction floorHeightFunc, RCL_ArrayFunction ceilingHeightFunc,
   RCL_RayConstraints constraints)
 {
-  RCL_HitResult hits[constraints.maxHits];
+  RCL_HitResult hits[SFG_RAYCASTING_MAX_HITS];
   uint16_t numHits;
 
   RCL_Ray ray;

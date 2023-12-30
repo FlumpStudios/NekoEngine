@@ -72,8 +72,10 @@
 #define SDL_DISABLE_IMMINTRIN_H 1
 
 #include <stdio.h>
+#ifdef __linux__
 #include <unistd.h>
-#include <SDL2/SDL.h>
+#endif
+#include <SDL.h>
 
 #include "game.h"
 #include "sounds.h"
@@ -147,7 +149,11 @@ uint8_t SFG_load(uint8_t data[SFG_SAVE_SIZE])
 void SFG_sleepMs(uint16_t timeMs)
 {
 #ifndef __EMSCRIPTEN__
-  usleep(timeMs * 1000);
+#ifdef _WIN32
+    Sleep(timeMs);
+#elif __linux__
+    usleep(timeMs * 1000);
+#endif
 #endif
 }
 
@@ -420,10 +426,8 @@ int main(int argc, char *argv[])
   }
 
   // Load in SFX files
-  char executablePath[256];
-  SFG_GetExecutablePath(executablePath, sizeof(executablePath));
-  char loc[256];
-  sprintf(loc, "%s/Sfx/data.SAD", executablePath);
+  const char* loc = "Sfx/data.SAD";
+  
   SFG_loadTexturesFromFile(SFG_sounds,loc, SFG_SFX_SIZE * 6);
 
   SFG_init();

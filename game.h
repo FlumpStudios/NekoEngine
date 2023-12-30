@@ -1727,25 +1727,25 @@ void SFG_init()
   SFG_GetExecutablePath(executablePath, sizeof(executablePath));
 
   char loc[256];    
-  sprintf(loc, "%s/WallTextures/data.TAD", executablePath);  
+  sprintf(loc, "WallTextures/data.TAD");  
   SFG_loadTexturesFromFile(SFG_wallTextures,loc, SFG_WALL_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);  
   
-  sprintf(loc, "%s/Items/data.TAD", executablePath);
+  sprintf(loc, "Items/data.TAD");
   SFG_loadTexturesFromFile(SFG_itemSprites,loc, SFG_ITEM_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);  
 
-  sprintf(loc, "%s/Backgrounds/data.TAD", executablePath);
+  sprintf(loc, "Backgrounds/data.TAD");
   SFG_loadTexturesFromFile(SFG_backgroundImages,loc, SFG_BACKGROUND_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
 
-  sprintf(loc, "%s/Weapons/data.TAD", executablePath);
+  sprintf(loc, "Weapons/data.TAD");
   SFG_loadTexturesFromFile(SFG_weaponImages,loc, SFG_WEAPON_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
 
-  sprintf(loc, "%s/Effects/data.TAD", executablePath);
+  sprintf(loc, "Effects/data.TAD");
   SFG_loadTexturesFromFile(SFG_effectSprites,loc, SFG_EFFECT_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
 
-  sprintf(loc, "%s/Enemies/data.TAD", executablePath);
+  sprintf(loc, "Enemies/data.TAD");
   SFG_loadTexturesFromFile(SFG_monsterSprites,loc, SFG_ENEMY_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
 
-  sprintf(loc, "%s/Title/data.TAD", executablePath);
+  sprintf(loc, "Title/data.TAD");
   SFG_loadTexturesFromFile(SFG_logoImage,loc, SFG_TEXTURE_STORE_SIZE);
 
   SFG_game.frame = 0;
