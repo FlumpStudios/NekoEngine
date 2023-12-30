@@ -1532,7 +1532,7 @@ void SFG_setAndInitLevel(uint8_t levelNumber)
 
 if(SFG_isDebug)
 {
-  levelNumber = 99;
+  levelNumber = 0;
 }
 
 #if SFG_AVR
