@@ -157,22 +157,32 @@ static inline SFG_TileDefinition SFG_getMapTile
 
 #define SFG_NUMBER_OF_LEVELS 10
 
-uint8_t SFG_loadLevelFromFile(SFG_Level* buffer, uint8_t level, const char* exceutableLocation)
+uint8_t SFG_loadLevelFromFile(SFG_Level* buffer, uint8_t level, const char* executableLocation)
 {   
-    char levelString[256];
-    sprintf(levelString, "%s/levels/level%02u.HAD", exceutableLocation, level);
-        
-    FILE* file = fopen(levelString, "rb");
-    if (file != NULL)
-    {
-        fread(buffer, sizeof(SFG_Level), 1, file);
-        fclose(file);
-
-        return 1;
+    if (buffer == NULL || executableLocation == NULL) {
+        // Handle the case where pointers are NULL
+        return 0;
     }
 
-    return 0;
+    char levelString[512];
+    snprintf(levelString, sizeof(levelString), "%s/levels/level%02u.HAD", executableLocation, level); 
+
+    FILE* file = fopen(levelString, "rb");
+    if (file == NULL) {
+        // Handle the error
+        return 0;
+    }
+
+    if (fread(buffer, sizeof(SFG_Level), 1, file) != 1) {
+        fclose(file);
+        // Handle the error
+        return 0;
+    }
+
+    fclose(file);
+    return 1;
 }
+
 
 #endif // guard
 

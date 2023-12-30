@@ -1523,17 +1523,19 @@ void SFG_GetExecutablePath(char* buffer, size_t size) {
 #endif
 }
 
+ 
+static SFG_Level *level = NULL;
 
 void SFG_setAndInitLevel(uint8_t levelNumber)
 {
   SFG_LOG("setting and initializing level");
-  SFG_Level *level = NULL;
 
 #if SFG_AVR
   memcpy_P(&SFG_ramLevel,SFG_levels[levelNumber],sizeof(SFG_Level));
   level = &SFG_ramLevel;
 #else
 if (!level) {
+    // If level is not already allocated, allocate memory
     level = (SFG_Level*)malloc(sizeof(SFG_Level));
     
     if (level == NULL) {
@@ -1541,6 +1543,7 @@ if (!level) {
         return;
     }
 } else {
+    // If level is already allocated, free it before reallocating
     free(level);
     level = (SFG_Level*)malloc(sizeof(SFG_Level));
 
