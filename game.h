@@ -1523,41 +1523,33 @@ void SFG_GetExecutablePath(char* buffer, size_t size) {
 #endif
 }
 
- 
-static SFG_Level *level = NULL;
 
 void SFG_setAndInitLevel(uint8_t levelNumber)
 {
   SFG_LOG("setting and initializing level");
-
-if(SFG_isDebug)
-{
-  levelNumber = 0;
-}
+  SFG_Level *level = NULL;
 
 #if SFG_AVR
   memcpy_P(&SFG_ramLevel,SFG_levels[levelNumber],sizeof(SFG_Level));
   level = &SFG_ramLevel;
 #else
 if (!level) {
-    // If level is not already allocated, allocate memory
-    level = malloc(sizeof(SFG_Level));
+    level = (SFG_Level*)malloc(sizeof(SFG_Level));
     
     if (level == NULL) {
         SFG_LOG("Memory allocation failed for SFG_Level.");
         return;
     }
 } else {
-    // If level is already allocated, free it before reallocating
     free(level);
-    level = malloc(sizeof(SFG_Level));
+    level = (SFG_Level*)malloc(sizeof(SFG_Level));
 
     if (level == NULL) {
         SFG_LOG("Memory allocation failed for SFG_Level.");
         return;
     }
 }
-    char executablePath[256];  // Adjust the size as needed
+    char executablePath[512];  // Adjust the size as needed
     SFG_GetExecutablePath(executablePath, sizeof(executablePath));
 
     if (!SFG_loadLevelFromFile(level, levelNumber, executablePath))
@@ -1855,7 +1847,7 @@ void SFG_init()
 #endif
   if(SFG_isDebug)
   {
-    SFG_setAndInitLevel(0);
+    SFG_setAndInitLevel(99);
   }
 }
 
