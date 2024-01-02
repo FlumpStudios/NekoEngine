@@ -1537,6 +1537,7 @@ void SFG_setAndInitLevel(uint8_t levelNumber)
 if (!level) {
     // If level is not already allocated, allocate memory
     level = (SFG_Level*)malloc(sizeof(SFG_Level));
+    memset(level,0,sizeof(SFG_Level));
     
     if (level == NULL) {
         SFG_LOG("Memory allocation failed for SFG_Level.");
