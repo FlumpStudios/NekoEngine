@@ -1,6 +1,25 @@
-## What the hell is this?
+# Introduction
 
-This is a super small 2D engine with GUI tools for making a basic FPS game based on the awesome [Anarc](https://drummyfish.gitlab.io/anarch/).
-The idea is to create a simple set of tools, such as image and sound data generation and level editor, to allow people to knock up a simple retro shooter.
-My main goal is to create an engine and a set of tools simple enough for my 7 year son to use.
-It's super early days at the moment, so it's very light on features and probably buggy as hell. However, at the time of writing, you should be able to knock some basic levels up, as well as switch out textures and sprites.
+Welcome to Neko, a 3D raycasting engine and level design tools based on Drummyfish's exceptional [Anarch](https://drummyfish.gitlab.io/anarch/).
+
+## What is it tho?
+
+Neko started as a 3D raycasting engine based on a modified version of anarch. The goal? To create an engine and tools that are approachable enough for my 7-year-old son to start crafting levels, while maintaining the flexibility needed for my more ambitious indie game projects.
+
+This project serves as a precusor to Neko Neo, a custom 3D engine, writtin in C and Raylib, designed to seamlessly integrate with the Neko editor tools.
+
+## Key Components
+
+## Key Features
+
+- **3D Raycasting Engine**: Powered by a modified version of Drummyfish's Anarch.
+- **Level Creation Tools**: Intuitive tools designed for crafting levels.
+- **Asset Editing Tools**: Streamlining the process of tweaking and customizing textures and sound effects.
+- **3D Level Previewing**: View your levels in full 3D powererd by Neko Neo :)	
+
+
+## Getting Started
+
+To start editing levels just run the NekoBuilder.exe, hopefully the UI is simple enough to get started.
+I'll write a proper readme with instructions when I have more time.
+
