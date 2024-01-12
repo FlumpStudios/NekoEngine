@@ -23,3 +23,5 @@ This project serves as a precusor to Neko Neo, a custom 3D engine, writtin in C 
 To start editing levels just run the NekoBuilder.exe, hopefully the UI is simple enough to get started.
 I'll write a proper readme with instructions when I have more time.
 
+IMPORTANT: To update the textures and sounds, you will need to have python(and in your PATH env vars)  and the PIL library installed. If you try and sync to game without these installed, the data will be wiped
+
