@@ -5,15 +5,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 #ifdef _WIN32
-    #include <windows.h>
+#include <windows.h>
 #elif __linux__
-    #include <limits.h>
-    #include <unistd.h>
+#include <limits.h>
+#include <unistd.h>
 #endif
-
-
 
 /*
   The following keys are mandatory to be implemented on any platform in order
@@ -23,9 +20,9 @@
 #define SFG_KEY_RIGHT 1
 #define SFG_KEY_DOWN 2
 #define SFG_KEY_LEFT 3
-#define SFG_KEY_A 4     ///< fire, confirm
-#define SFG_KEY_B 5     ///< cancel, strafe, look up/down
-#define SFG_KEY_C 6     ///< menu, jump, switch weapons
+#define SFG_KEY_A 4 ///< fire, confirm
+#define SFG_KEY_B 5 ///< cancel, strafe, look up/down
+#define SFG_KEY_C 6 ///< menu, jump, switch weapons
 
 /*
   The following keys are optional for a platform to implement. They just make
@@ -57,23 +54,30 @@
    source. */
 
 #ifndef SFG_LOG
-  #define SFG_LOG(str) {} ///< Can be redefined to log game messages.
+#define SFG_LOG(str) \
+  {                  \
+  } ///< Can be redefined to log game messages.
 #endif
 
 #ifndef SFG_CPU_LOAD
-  #define SFG_CPU_LOAD(percent) {} ///< Can be redefined to check CPU load in %.
+#define SFG_CPU_LOAD(percent) \
+  {                           \
+  } ///< Can be redefined to check CPU load in %.
 #endif
 
 #ifndef SFG_GAME_STEP_COMMAND
-  #define SFG_GAME_STEP_COMMAND {} /**< Will be called each simulation step
-                                   (good for creating deterministic behavior
-                                   such as demos (SFG_mainLoopBody() calls
-                                   potentially multiple simulation steps). */
+#define SFG_GAME_STEP_COMMAND                 \
+  {                                           \
+  } /**< Will be called each simulation step  \
+    (good for creating deterministic behavior \
+    such as demos (SFG_mainLoopBody() calls   \
+    potentially multiple simulation steps). */
 #endif
 
 int8_t SFG_isDebug = 0;
+int8_t SFG_launchWithGodMode = 0;
 
-/** 
+/**
   Returns 1 (0) if given key is pressed (not pressed). At least the mandatory
   keys have to be implemented, the optional keys don't have to ever return 1.
   See the key constant definitions to see which ones are mandatory.
@@ -94,7 +98,7 @@ void SFG_getMouseOffset(int16_t *x, int16_t *y);
 */
 uint32_t SFG_getTimeMs();
 
-/** 
+/**
   Sleep (yield CPU) for specified amount of ms. This is used to relieve CPU
   usage. If your platform doesn't need this or handles it in other way, this
   function can do nothing.
@@ -132,7 +136,7 @@ void SFG_playSound(uint8_t soundIndex, uint8_t volume);
 void SFG_setMusic(uint8_t value);
 
 #define SFG_EVENT_VIBRATE 0 ///< the controller should vibrate (or blink etc.)
-#define SFG_EVENT_PLAYER_HURT 1 
+#define SFG_EVENT_PLAYER_HURT 1
 #define SFG_EVENT_PLAYER_DIES 2
 #define SFG_EVENT_LEVEL_STARTS 3
 #define SFG_EVENT_LEVEL_WON 4
@@ -192,13 +196,13 @@ void SFG_init();
 #include "settings.h"
 
 #if SFG_AVR
-  #include <avr/pgmspace.h>
+#include <avr/pgmspace.h>
 
-  #define SFG_PROGRAM_MEMORY const PROGMEM
-  #define SFG_PROGRAM_MEMORY_U8(addr) pgm_read_byte(addr)
+#define SFG_PROGRAM_MEMORY const PROGMEM
+#define SFG_PROGRAM_MEMORY_U8(addr) pgm_read_byte(addr)
 #else
-  #define SFG_PROGRAM_MEMORY static const
-  #define SFG_PROGRAM_MEMORY_U8(addr) ((uint8_t) (*(addr)))
+#define SFG_PROGRAM_MEMORY static const
+#define SFG_PROGRAM_MEMORY_U8(addr) ((uint8_t)(*(addr)))
 #endif
 
 #include "images.h" // don't change the order of these includes
@@ -207,7 +211,7 @@ void SFG_init();
 #include "palette.h"
 
 #if SFG_TEXTURE_DISTANCE == 0
-  #define RCL_COMPUTE_WALL_TEXCOORDS 0
+#define RCL_COMPUTE_WALL_TEXCOORDS 0
 #endif
 
 #define RCL_PIXEL_FUNCTION SFG_pixelFunc
@@ -219,21 +223,21 @@ void SFG_init();
 #define RCL_HORIZONTAL_FOV SFG_FOV_HORIZONTAL
 #define RCL_VERTICAL_FOV SFG_FOV_VERTICAL
 
-#include "raycastlib.h" 
+#include "raycastlib.h"
 
 #include "constants.h"
 
 typedef struct
 {
   uint8_t coords[2];
-  uint8_t state;    /**< door state in format:
-                          
-                         MSB  ccbaaaaa  LSB
+  uint8_t state; /**< door state in format:
 
-                         aaaaa: current door height (how much they're open)
-                         b:     whether currently going up (0) or down (1)
-                         cc:    by which card (key) the door is unlocked, 00
-                                means no card (unlocked), 1 means card 0 etc. */
+                      MSB  ccbaaaaa  LSB
+
+                      aaaaa: current door height (how much they're open)
+                      b:     whether currently going up (0) or down (1)
+                      cc:    by which card (key) the door is unlocked, 00
+                             means no card (unlocked), 1 means card 0 etc. */
 } SFG_DoorRecord;
 
 #define SFG_SPRITE_SIZE(size0to3) \
@@ -253,21 +257,21 @@ typedef struct
 
   a:        active flag, 1 means the item is nearby to player and is active
   bbbbbbb:  index to elements array of the current level, pointing to element
-            representing this item 
+            representing this item
 */
 typedef uint8_t SFG_ItemRecord;
 
 #define SFG_ITEM_RECORD_ACTIVE_MASK 0x80
 
-#define SFG_ITEM_RECORD_LEVEL_ELEMENT(itemRecord) \
+#define SFG_ITEM_RECORD_LEVEL_ELEMENT(itemRecord)       \
   (SFG_currentLevel.levelPointer->elements[itemRecord & \
-  ~SFG_ITEM_RECORD_ACTIVE_MASK])
+                                           ~SFG_ITEM_RECORD_ACTIVE_MASK])
 
-typedef struct 
+typedef struct
 {
-  uint8_t stateType;  /**< Holds state (lower 4 bits) and type of monster (upper
-                           4 bits). */
-  uint8_t coords[2];  /**< monster position, in 1/4s of a square */
+  uint8_t stateType; /**< Holds state (lower 4 bits) and type of monster (upper
+                          4 bits). */
+  uint8_t coords[2]; /**< monster position, in 1/4s of a square */
   uint8_t health;
 } SFG_MonsterRecord;
 
@@ -282,33 +286,33 @@ typedef struct
   (c * RCL_UNITS_PER_SQUARE + RCL_UNITS_PER_SQUARE / 2)
 
 #define SFG_MONSTER_MASK_STATE 0x0f
-#define SFG_MONSTER_MASK_TYPE  0xf0
+#define SFG_MONSTER_MASK_TYPE 0xf0
 
-#define SFG_MONSTER_STATE_INACTIVE  0 ///< Not nearby, not actively updated.
-#define SFG_MONSTER_STATE_IDLE      1
+#define SFG_MONSTER_STATE_INACTIVE 0 ///< Not nearby, not actively updated.
+#define SFG_MONSTER_STATE_IDLE 1
 #define SFG_MONSTER_STATE_ATTACKING 2
-#define SFG_MONSTER_STATE_HURTING   3
-#define SFG_MONSTER_STATE_DYING     4
-#define SFG_MONSTER_STATE_GOING_N   5
-#define SFG_MONSTER_STATE_GOING_NE  6
-#define SFG_MONSTER_STATE_GOING_E   7
-#define SFG_MONSTER_STATE_GOING_SE  8
-#define SFG_MONSTER_STATE_GOING_S   9
-#define SFG_MONSTER_STATE_GOING_SW  10
-#define SFG_MONSTER_STATE_GOING_W   11
-#define SFG_MONSTER_STATE_GOING_NW  12
-#define SFG_MONSTER_STATE_DEAD      13
+#define SFG_MONSTER_STATE_HURTING 3
+#define SFG_MONSTER_STATE_DYING 4
+#define SFG_MONSTER_STATE_GOING_N 5
+#define SFG_MONSTER_STATE_GOING_NE 6
+#define SFG_MONSTER_STATE_GOING_E 7
+#define SFG_MONSTER_STATE_GOING_SE 8
+#define SFG_MONSTER_STATE_GOING_S 9
+#define SFG_MONSTER_STATE_GOING_SW 10
+#define SFG_MONSTER_STATE_GOING_W 11
+#define SFG_MONSTER_STATE_GOING_NW 12
+#define SFG_MONSTER_STATE_DEAD 13
 
 typedef struct
 {
-  uint8_t  type;
-  uint8_t  doubleFramesToLive; /**< This number times two (because 255 could be
-                                    too little at high FPS) says after how many
-                                    frames the projectile is destroyed. */
-  uint16_t position[3]; /**< Current position, stored as u16 to save space, as
-                             that is exactly enough to store position on 64x64
-                             map. */
-  int16_t direction[3]; /**< Added to position each game step. */
+  uint8_t type;
+  uint8_t doubleFramesToLive; /**< This number times two (because 255 could be
+                                   too little at high FPS) says after how many
+                                   frames the projectile is destroyed. */
+  uint16_t position[3];       /**< Current position, stored as u16 to save space, as
+                                   that is exactly enough to store position on 64x64
+                                   map. */
+  int16_t direction[3];       /**< Added to position each game step. */
 } SFG_ProjectileRecord;
 
 #define SFG_GAME_STATE_INIT 0 ///< first state, waiting for key releases
@@ -319,7 +323,7 @@ typedef struct
 #define SFG_GAME_STATE_OUTRO 5
 #define SFG_GAME_STATE_MAP 6
 #define SFG_GAME_STATE_LEVEL_START 7
-#define SFG_GAME_STATE_MENU 8  
+#define SFG_GAME_STATE_MENU 8
 
 #define SFG_MENU_ITEM_CONTINUE 0
 #define SFG_MENU_ITEM_MAP 1
@@ -342,18 +346,18 @@ typedef struct
 */
 struct
 {
-  uint8_t state;                 ///< Current game state.
-  uint32_t stateTime;            ///< Time in ms from last state change.
-  uint8_t currentRandom;         ///< for RNG
+  uint8_t state;         ///< Current game state.
+  uint32_t stateTime;    ///< Time in ms from last state change.
+  uint8_t currentRandom; ///< for RNG
   uint8_t spriteAnimationFrame;
-  uint8_t soundsPlayedThisFrame; /**< Each bit says whether given sound was
-                                    played this frame, prevents playing too many
-                                    sounds at once. */
-  RCL_RayConstraints rayConstraints; ///< Ray constraints for rendering.
+  uint8_t soundsPlayedThisFrame;               /**< Each bit says whether given sound was
+                                                  played this frame, prevents playing too many
+                                                  sounds at once. */
+  RCL_RayConstraints rayConstraints;           ///< Ray constraints for rendering.
   RCL_RayConstraints visibilityRayConstraints; ///< Constraints for visibility.
-  uint8_t keyStates[SFG_KEY_COUNT]; /**< Pressed states of keys, each value
-                                    stores the number of frames for which the
-                                    key has been held. */
+  uint8_t keyStates[SFG_KEY_COUNT];            /**< Pressed states of keys, each value
+                                               stores the number of frames for which the
+                                               key has been held. */
   uint8_t zBuffer[SFG_Z_BUFFER_SIZE];
   uint8_t textureAverageColors[SFG_WALL_TEXTURE_COUNT]; /**< Contains average
                                     color for each wall texture. */
@@ -363,46 +367,46 @@ struct
                                                      precomputing sprite
                                                      sampling positions for
                                                      drawing. */
-  uint32_t frameTime;      ///< time (in ms) of the current frame start
-  uint32_t frame;          ///< frame number
+  uint32_t frameTime;                                ///< time (in ms) of the current frame start
+  uint32_t frame;                                    ///< frame number
   uint8_t selectedMenuItem;
-  uint8_t selectedLevel;   ///< level to play selected in the main menu
-  uint8_t antiSpam;        ///< Prevents log message spamming.
-  uint8_t settings;   /**< dynamic game settings (can be changed at runtime),
-                           bit meaning:
+  uint8_t selectedLevel;       ///< level to play selected in the main menu
+  uint8_t antiSpam;            ///< Prevents log message spamming.
+  uint8_t settings;            /**< dynamic game settings (can be changed at runtime),
+                                    bit meaning:
+           
+                                    MSB -------- LSB
+                                            ||||
+                                            |||\_ sound (SFX)
+                                            ||\__ music
+                                            |\___ shearing
+                                            \____ freelook (shearing not sliding back) */
+  uint8_t blink;               ///< Says whether blinkg is currently on or off.
+  uint8_t saved;               /**< Helper variable to know if game was saved. Can be
+                                    0 (not saved), 1 (just saved) or 255 (can't save).*/
+  uint8_t cheatState;          /**< Highest bit say whether cheat is enabled, other bits
+                                    represent the state of typing the cheat code. */
+  uint8_t save[SFG_SAVE_SIZE]; /**< Stores the game save state that's kept in
+                          the persistent memory.
 
-                           MSB -------- LSB
-                                   ||||
-                                   |||\_ sound (SFX)
-                                   ||\__ music
-                                   |\___ shearing
-                                   \____ freelook (shearing not sliding back) */
-  uint8_t blink;      ///< Says whether blinkg is currently on or off.
-  uint8_t saved;      /**< Helper variable to know if game was saved. Can be
-                           0 (not saved), 1 (just saved) or 255 (can't save).*/
-  uint8_t cheatState; /**< Highest bit say whether cheat is enabled, other bits
-                           represent the state of typing the cheat code. */
-  uint8_t save[SFG_SAVE_SIZE];  /**< Stores the game save state that's kept in
-                           the persistent memory.
+                          The save format is binary and platform independent.
+                          The save contains game settings, game progress and a
+                          saved position. The format is as follows:
 
-                           The save format is binary and platform independent.
-                           The save contains game settings, game progress and a
-                           saved position. The format is as follows:
-
-         0  4b  (less signif.) highest level that has been reached
-         0  4b  (more signif.) level number of the saved position (0: no save)
-         1  8b  game settings (SFG_game.settings)
-         2  8b  health at saved position
-         3  8b  bullet ammo at saved position
-         4  8b  rocket ammo at saved position
-         5  8b  plasma ammo at saved position
-         6  32b little endian total play time, in 10ths of sec
-         10 16b little endian total enemies killed from start */
-  uint8_t continues;  ///< Whether the game continues or was exited.
+        0  4b  (less signif.) highest level that has been reached
+        0  4b  (more signif.) level number of the saved position (0: no save)
+        1  8b  game settings (SFG_game.settings)
+        2  8b  health at saved position
+        3  8b  bullet ammo at saved position
+        4  8b  rocket ammo at saved position
+        5  8b  plasma ammo at saved position
+        6  32b little endian total play time, in 10ths of sec
+        10 16b little endian total enemies killed from start */
+  uint8_t continues;           ///< Whether the game continues or was exited.
 } SFG_game;
 
 #define SFG_SAVE_TOTAL_TIME (SFG_game.save[6] + SFG_game.save[7] * 256 + \
-  SFG_game.save[8] * 65536 + SFG_game.save[9] * 4294967296)
+                             SFG_game.save[8] * 65536 + SFG_game.save[9] * 4294967296)
 
 /**
   Stores player state.
@@ -413,22 +417,22 @@ struct
   int8_t squarePosition[2];
   RCL_Vector2D direction;
   RCL_Unit verticalSpeed;
-  RCL_Unit previousVerticalSpeed;  /**< Vertical speed in previous frame, needed
-                                   for determining whether player is in the
-                                   air. */
+  RCL_Unit previousVerticalSpeed; /**< Vertical speed in previous frame, needed
+                                  for determining whether player is in the
+                                  air. */
   uint16_t headBobFrame;
-  uint8_t  weapon;                 ///< currently selected weapon
-  uint8_t  health;
-  uint32_t weaponCooldownFrames;   ///< frames left for weapon cooldown
+  uint8_t weapon; ///< currently selected weapon
+  uint8_t health;
+  uint32_t weaponCooldownFrames; ///< frames left for weapon cooldown
   uint32_t lastHurtFrame;
   uint32_t lastItemTakenFrame;
-  uint8_t  ammo[SFG_AMMO_TOTAL];
-  uint8_t  cards;                  /**< Lowest 3 bits say which access cards
-                                   have been taken, the next 3 bits say
-                                   which cards should be blinking in the HUD,
-                                   the last 2 bits are a blink reset counter. */
-  uint8_t  justTeleported;
-  int8_t   previousWeaponDirection; ///< Direction (+/0/-) of previous weapon.
+  uint8_t ammo[SFG_AMMO_TOTAL];
+  uint8_t cards; /**< Lowest 3 bits say which access cards
+                 have been taken, the next 3 bits say
+                 which cards should be blinking in the HUD,
+                 the last 2 bits are a blink reset counter. */
+  uint8_t justTeleported;
+  int8_t previousWeaponDirection; ///< Direction (+/0/-) of previous weapon.
 } SFG_player;
 
 /**
@@ -438,7 +442,7 @@ struct
 {
   const SFG_Level *levelPointer;
   uint8_t levelNumber;
-  const uint8_t* textures[7];    ///< textures the level is using
+  const uint8_t *textures[7]; ///< textures the level is using
   uint32_t timeStart;
   uint32_t frameStart;
   uint32_t completionTime10sOfS; ///< completion time in 10ths of second
@@ -455,7 +459,7 @@ struct
 
   SFG_MonsterRecord monsterRecords[SFG_MAX_MONSTERS];
   uint8_t monsterRecordCount;
-  uint8_t checkedMonsterIndex; 
+  uint8_t checkedMonsterIndex;
 
   SFG_ProjectileRecord projectileRecords[SFG_MAX_PROJECTILES];
   uint8_t projectileRecordCount;
@@ -466,8 +470,8 @@ struct
   uint16_t mapRevealMask; /**< Bits say which parts of the map have been
                                revealed. */
   uint8_t itemCollisionMap[(SFG_MAP_SIZE * SFG_MAP_SIZE) / 8];
-                          /**< Bit array, for each map square says whether there
-                               is a colliding item or not. */
+  /**< Bit array, for each map square says whether there
+       is a colliding item or not. */
 } SFG_currentLevel;
 
 #if SFG_AVR
@@ -483,7 +487,7 @@ SFG_Level SFG_ramLevel;
   Helper function for accessing the itemCollisionMap bits.
 */
 void SFG_getItemCollisionMapIndex(
-  uint8_t x, uint8_t y, uint16_t *byte, uint8_t *bit)
+    uint8_t x, uint8_t y, uint16_t *byte, uint8_t *bit)
 {
   uint16_t index = y * SFG_MAP_SIZE + x;
 
@@ -496,7 +500,7 @@ void SFG_setItemCollisionMapBit(uint8_t x, uint8_t y, uint8_t value)
   uint16_t byte;
   uint8_t bit;
 
-  SFG_getItemCollisionMapIndex(x,y,&byte,&bit);
+  SFG_getItemCollisionMapIndex(x, y, &byte, &bit);
 
   SFG_currentLevel.itemCollisionMap[byte] &= ~(0x01 << bit);
   SFG_currentLevel.itemCollisionMap[byte] |= (value & 0x01) << bit;
@@ -507,40 +511,39 @@ uint8_t SFG_getItemCollisionMapBit(uint8_t x, uint8_t y)
   uint16_t byte;
   uint8_t bit;
 
-  SFG_getItemCollisionMapIndex(x,y,&byte,&bit);
+  SFG_getItemCollisionMapIndex(x, y, &byte, &bit);
   return (SFG_currentLevel.itemCollisionMap[byte] >> bit) & 0x01;
 }
 
 #if SFG_DITHERED_SHADOW
 static const uint8_t SFG_ditheringPatterns[] =
-{
-  0,0,0,0,
-  0,0,0,0,
+    {
+        0, 0, 0, 0,
+        0, 0, 0, 0,
 
-  0,0,0,0,
-  0,1,0,0,
+        0, 0, 0, 0,
+        0, 1, 0, 0,
 
-  0,0,0,0,
-  0,1,0,1,
+        0, 0, 0, 0,
+        0, 1, 0, 1,
 
-  1,0,1,0,
-  0,1,0,0,
+        1, 0, 1, 0,
+        0, 1, 0, 0,
 
-  1,0,1,0,
-  0,1,0,1,
+        1, 0, 1, 0,
+        0, 1, 0, 1,
 
-  1,0,1,0,
-  0,1,1,1,
+        1, 0, 1, 0,
+        0, 1, 1, 1,
 
-  1,1,1,1,
-  0,1,0,1,
+        1, 1, 1, 1,
+        0, 1, 0, 1,
 
-  1,1,1,1,
-  0,1,1,1,
- 
-  1,1,1,1,
-  1,1,1,1
-};
+        1, 1, 1, 1,
+        0, 1, 1, 1,
+
+        1, 1, 1, 1,
+        1, 1, 1, 1};
 #endif
 
 /*
@@ -557,7 +560,7 @@ uint8_t SFG_random()
 {
   SFG_game.currentRandom *= 13;
   SFG_game.currentRandom += 7;
-  
+
   return SFG_game.currentRandom;
 }
 
@@ -570,7 +573,7 @@ void SFG_playGameSound(uint8_t soundIndex, uint8_t volume)
 
   if (!(SFG_game.soundsPlayedThisFrame & mask))
   {
-    SFG_playSound(soundIndex,volume);
+    SFG_playSound(soundIndex, volume);
     SFG_game.soundsPlayedThisFrame |= mask;
   }
 }
@@ -642,7 +645,7 @@ uint8_t SFG_weaponAmmo(uint8_t weapon)
 }
 
 RCL_Unit SFG_taxicabDistance(
-  RCL_Unit x0, RCL_Unit y0, RCL_Unit z0, RCL_Unit x1, RCL_Unit y1, RCL_Unit z1)
+    RCL_Unit x0, RCL_Unit y0, RCL_Unit z0, RCL_Unit x1, RCL_Unit y1, RCL_Unit z1)
 {
   return (RCL_abs(x0 - x1) + RCL_abs(y0 - y1) + RCL_abs(z0 - z1));
 }
@@ -650,8 +653,8 @@ RCL_Unit SFG_taxicabDistance(
 uint8_t SFG_isInActiveDistanceFromPlayer(RCL_Unit x, RCL_Unit y, RCL_Unit z)
 {
   return SFG_taxicabDistance(
-    x,y,z,SFG_player.camera.position.x,SFG_player.camera.position.y,
-    SFG_player.camera.height) <= SFG_LEVEL_ELEMENT_ACTIVE_DISTANCE;
+             x, y, z, SFG_player.camera.position.x, SFG_player.camera.position.y,
+             SFG_player.camera.height) <= SFG_LEVEL_ELEMENT_ACTIVE_DISTANCE;
 }
 
 /**
@@ -660,21 +663,22 @@ uint8_t SFG_isInActiveDistanceFromPlayer(RCL_Unit x, RCL_Unit y, RCL_Unit z)
 void SFG_levelEnds()
 {
   SFG_currentLevel.completionTime10sOfS = (SFG_MS_PER_FRAME *
-    (SFG_game.frame - SFG_currentLevel.frameStart)) / 100; 
+                                           (SFG_game.frame - SFG_currentLevel.frameStart)) /
+                                          100;
 
   if (
-   (SFG_player.health != 0) &&
-   (SFG_currentLevel.levelNumber >= (SFG_game.save[0] & 0x0f)) &&
-   ((SFG_currentLevel.levelNumber + 1) < SFG_NUMBER_OF_LEVELS))
+      (SFG_player.health != 0) &&
+      (SFG_currentLevel.levelNumber >= (SFG_game.save[0] & 0x0f)) &&
+      ((SFG_currentLevel.levelNumber + 1) < SFG_NUMBER_OF_LEVELS))
   {
     SFG_game.save[0] = // save progress
-      (SFG_game.save[0] & 0xf0) | (SFG_currentLevel.levelNumber + 1);
+        (SFG_game.save[0] & 0xf0) | (SFG_currentLevel.levelNumber + 1);
 
     SFG_gameSave();
   }
 
   SFG_currentLevel.monstersDead = 0;
-       
+
   for (uint16_t i = 0; i < SFG_currentLevel.monsterRecordCount; ++i)
     if (SFG_currentLevel.monsterRecords[i].health == 0)
       SFG_currentLevel.monstersDead++;
@@ -684,7 +688,7 @@ void SFG_levelEnds()
   if ((SFG_currentLevel.levelNumber == 0) || (totalTime != 0))
   {
     SFG_LOG("Updating save totals.");
-  
+
     totalTime += SFG_currentLevel.completionTime10sOfS;
 
     for (uint8_t i = 0; i < 4; ++i)
@@ -713,65 +717,89 @@ static inline uint8_t SFG_RCLUnitToZBuffer(RCL_Unit x)
 }
 
 const uint8_t *SFG_getMonsterSprite(
-  uint8_t monsterType, uint8_t state, uint8_t frame)
+    uint8_t monsterType, uint8_t state, uint8_t frame)
 {
-  uint8_t index = 
-    state == SFG_MONSTER_STATE_DEAD ? 18 : 17;
+  uint8_t index =
+      state == SFG_MONSTER_STATE_DEAD ? 18 : 17;
   // ^ makes the compiled binary smaller compared to returning pointers directly
 
   if ((state != SFG_MONSTER_STATE_DYING) && (state != SFG_MONSTER_STATE_DEAD))
     switch (monsterType)
     {
-      case SFG_LEVEL_ELEMENT_MONSTER_SPIDER:
-        switch (state)
-        {
-          case SFG_MONSTER_STATE_ATTACKING: index = 1; break;
-          case SFG_MONSTER_STATE_IDLE: index = 0; break;
-          default: index = frame ? 0 : 2; break;
-        }
+    case SFG_LEVEL_ELEMENT_MONSTER_SPIDER:
+      switch (state)
+      {
+      case SFG_MONSTER_STATE_ATTACKING:
+        index = 1;
         break;
-
-      case SFG_LEVEL_ELEMENT_MONSTER_WARRIOR:
-        index = state != SFG_MONSTER_STATE_ATTACKING ? 6 : 7;
+      case SFG_MONSTER_STATE_IDLE:
+        index = 0;
         break;
-
-      case SFG_LEVEL_ELEMENT_MONSTER_DESTROYER:
-        switch (state)
-        {
-          case SFG_MONSTER_STATE_ATTACKING: index = 4; break;
-          case SFG_MONSTER_STATE_IDLE: index = 3; break;
-          default: index = frame ? 3 : 5; break;
-        }
-        break;
-
-      case SFG_LEVEL_ELEMENT_MONSTER_PLASMABOT:
-        index = state != SFG_MONSTER_STATE_ATTACKING ? 8 : 9;
-        break;
-
-      case SFG_LEVEL_ELEMENT_MONSTER_ENDER:
-        switch (state)
-        {
-          case SFG_MONSTER_STATE_ATTACKING: index = 12; break;
-          case SFG_MONSTER_STATE_IDLE: index = 10; break;
-          default: index = frame ? 10 : 11; break;
-        }
-        break;
-
-      case SFG_LEVEL_ELEMENT_MONSTER_TURRET:
-        switch (state)
-        {
-          case SFG_MONSTER_STATE_ATTACKING: index = 15; break;
-          case SFG_MONSTER_STATE_IDLE: index = 13; break;
-          default: index = frame ? 13 : 14; break;
-        }
-        break;
-
-      case SFG_LEVEL_ELEMENT_MONSTER_EXPLODER:
       default:
-        index = 16; 
+        index = frame ? 0 : 2;
         break;
+      }
+      break;
+
+    case SFG_LEVEL_ELEMENT_MONSTER_WARRIOR:
+      index = state != SFG_MONSTER_STATE_ATTACKING ? 6 : 7;
+      break;
+
+    case SFG_LEVEL_ELEMENT_MONSTER_DESTROYER:
+      switch (state)
+      {
+      case SFG_MONSTER_STATE_ATTACKING:
+        index = 4;
+        break;
+      case SFG_MONSTER_STATE_IDLE:
+        index = 3;
+        break;
+      default:
+        index = frame ? 3 : 5;
+        break;
+      }
+      break;
+
+    case SFG_LEVEL_ELEMENT_MONSTER_PLASMABOT:
+      index = state != SFG_MONSTER_STATE_ATTACKING ? 8 : 9;
+      break;
+
+    case SFG_LEVEL_ELEMENT_MONSTER_ENDER:
+      switch (state)
+      {
+      case SFG_MONSTER_STATE_ATTACKING:
+        index = 12;
+        break;
+      case SFG_MONSTER_STATE_IDLE:
+        index = 10;
+        break;
+      default:
+        index = frame ? 10 : 11;
+        break;
+      }
+      break;
+
+    case SFG_LEVEL_ELEMENT_MONSTER_TURRET:
+      switch (state)
+      {
+      case SFG_MONSTER_STATE_ATTACKING:
+        index = 15;
+        break;
+      case SFG_MONSTER_STATE_IDLE:
+        index = 13;
+        break;
+      default:
+        index = frame ? 13 : 14;
+        break;
+      }
+      break;
+
+    case SFG_LEVEL_ELEMENT_MONSTER_EXPLODER:
+    default:
+      index = 16;
+      break;
     }
-  
+
   return SFG_monsterSprites + index * SFG_TEXTURE_STORE_SIZE;
 }
 
@@ -797,10 +825,9 @@ uint8_t SFG_keyJustPressed(uint8_t key)
 */
 uint8_t SFG_keyRepeated(uint8_t key)
 {
-  return
-    ((SFG_game.keyStates[key] >= SFG_KEY_REPEAT_DELAY_FRAMES) ||
-    (SFG_game.keyStates[key] == 255)) &&
-    (SFG_game.frame % SFG_KEY_REPEAT_PERIOD_FRAMES == 0);
+  return ((SFG_game.keyStates[key] >= SFG_KEY_REPEAT_DELAY_FRAMES) ||
+          (SFG_game.keyStates[key] == 255)) &&
+         (SFG_game.frame % SFG_KEY_REPEAT_PERIOD_FRAMES == 0);
 }
 
 uint16_t SFG_keyRegisters(uint8_t key)
@@ -809,7 +836,7 @@ uint16_t SFG_keyRegisters(uint8_t key)
 }
 
 #if SFG_RESOLUTION_SCALEDOWN == 1
-  #define SFG_setGamePixel SFG_setPixel
+#define SFG_setGamePixel SFG_setPixel
 #else
 
 /**
@@ -823,44 +850,41 @@ static inline void SFG_setGamePixel(uint16_t x, uint16_t y, uint8_t colorIndex)
 
   for (uint16_t j = screenY; j < screenY + SFG_RESOLUTION_SCALEDOWN; ++j)
     for (uint16_t i = screenX; i < screenX + SFG_RESOLUTION_SCALEDOWN; ++i)
-      SFG_setPixel(i,j,colorIndex);
+      SFG_setPixel(i, j, colorIndex);
 }
 #endif
 
 void SFG_recomputePLayerDirection()
 {
   SFG_player.camera.direction =
-    RCL_wrap(SFG_player.camera.direction,RCL_UNITS_PER_SQUARE);
+      RCL_wrap(SFG_player.camera.direction, RCL_UNITS_PER_SQUARE);
 
   SFG_player.direction = RCL_angleToDirection(SFG_player.camera.direction);
 
   SFG_player.direction.x =
-    (SFG_player.direction.x * SFG_PLAYER_MOVE_UNITS_PER_FRAME)
-    / RCL_UNITS_PER_SQUARE;
+      (SFG_player.direction.x * SFG_PLAYER_MOVE_UNITS_PER_FRAME) / RCL_UNITS_PER_SQUARE;
 
   SFG_player.direction.y =
-    (SFG_player.direction.y * SFG_PLAYER_MOVE_UNITS_PER_FRAME)
-    / RCL_UNITS_PER_SQUARE;
+      (SFG_player.direction.y * SFG_PLAYER_MOVE_UNITS_PER_FRAME) / RCL_UNITS_PER_SQUARE;
 
   SFG_game.backgroundScroll =
-    ((SFG_player.camera.direction * 8) * SFG_GAME_RESOLUTION_Y)
-    / RCL_UNITS_PER_SQUARE; 
+      ((SFG_player.camera.direction * 8) * SFG_GAME_RESOLUTION_Y) / RCL_UNITS_PER_SQUARE;
 }
 
 #if SFG_BACKGROUND_BLUR != 0
 uint8_t SFG_backgroundBlurIndex = 0;
 
 static const int8_t SFG_backgroundBlurOffsets[8] =
-  {
-    0  * SFG_BACKGROUND_BLUR,
-    16 * SFG_BACKGROUND_BLUR,
-    7  * SFG_BACKGROUND_BLUR,
-    17 * SFG_BACKGROUND_BLUR,
-    1  * SFG_BACKGROUND_BLUR,
-    4  * SFG_BACKGROUND_BLUR,
-    15 * SFG_BACKGROUND_BLUR,
-    9  * SFG_BACKGROUND_BLUR,
-  };
+    {
+        0 * SFG_BACKGROUND_BLUR,
+        16 * SFG_BACKGROUND_BLUR,
+        7 * SFG_BACKGROUND_BLUR,
+        17 * SFG_BACKGROUND_BLUR,
+        1 * SFG_BACKGROUND_BLUR,
+        4 * SFG_BACKGROUND_BLUR,
+        15 * SFG_BACKGROUND_BLUR,
+        9 * SFG_BACKGROUND_BLUR,
+};
 #endif
 
 static inline uint8_t SFG_fogValueDiminish(RCL_Unit depth)
@@ -869,34 +893,24 @@ static inline uint8_t SFG_fogValueDiminish(RCL_Unit depth)
 }
 
 static inline uint8_t
-  SFG_getTexelFull(uint8_t textureIndex,RCL_Unit u, RCL_Unit v)
+SFG_getTexelFull(uint8_t textureIndex, RCL_Unit u, RCL_Unit v)
 {
-  return
-    SFG_getTexel(
-      textureIndex != 255 ?
-        SFG_currentLevel.textures[textureIndex] :
-          (SFG_wallTextures + SFG_currentLevel.levelPointer->doorTextureIndex
-          * SFG_TEXTURE_STORE_SIZE), 
-          u / (RCL_UNITS_PER_SQUARE / SFG_TEXTURE_SIZE), 
-          v / (RCL_UNITS_PER_SQUARE / SFG_TEXTURE_SIZE));
+  return SFG_getTexel(
+      textureIndex != 255 ? SFG_currentLevel.textures[textureIndex] : (SFG_wallTextures + SFG_currentLevel.levelPointer->doorTextureIndex * SFG_TEXTURE_STORE_SIZE),
+      u / (RCL_UNITS_PER_SQUARE / SFG_TEXTURE_SIZE),
+      v / (RCL_UNITS_PER_SQUARE / SFG_TEXTURE_SIZE));
 }
 
 static inline uint8_t SFG_getTexelAverage(uint8_t textureIndex)
 {
-  return
-    textureIndex != 255 ?
-      SFG_game.textureAverageColors[
-        SFG_currentLevel.levelPointer->textureIndices[textureIndex]]
-      :
-      (
-        SFG_game.textureAverageColors[
-          SFG_currentLevel.levelPointer->doorTextureIndex]
-        + 1 // to distinguish from normal walls
-      );
+  return textureIndex != 255 ? SFG_game.textureAverageColors[SFG_currentLevel.levelPointer->textureIndices[textureIndex]]
+                             : (
+                                   SFG_game.textureAverageColors[SFG_currentLevel.levelPointer->doorTextureIndex] + 1 // to distinguish from normal walls
+                               );
 }
 
 void SFG_pixelFunc(RCL_PixelInfo *pixel)
-{ 
+{
   uint8_t color;
   uint8_t shadow = 0;
 
@@ -907,63 +921,51 @@ void SFG_pixelFunc(RCL_PixelInfo *pixel)
   else if (pixel->isWall)
   {
     uint8_t textureIndex =
-      pixel->isFloor ?
-      (
-        ((pixel->hit.type & SFG_TILE_PROPERTY_MASK) != SFG_TILE_PROPERTY_DOOR) ?
-        (pixel->hit.type & 0x7)
-        :
-        (
-          (pixel->texCoords.y > RCL_UNITS_PER_SQUARE) ?
-          (pixel->hit.type & 0x7) : 255
-        )
-      ):
-      ((pixel->hit.type & 0x38) >> 3); 
+        pixel->isFloor ? (
+                             ((pixel->hit.type & SFG_TILE_PROPERTY_MASK) != SFG_TILE_PROPERTY_DOOR) ? (pixel->hit.type & 0x7)
+                                                                                                    : (
+                                                                                                          (pixel->texCoords.y > RCL_UNITS_PER_SQUARE) ? (pixel->hit.type & 0x7) : 255))
+                       : ((pixel->hit.type & 0x38) >> 3);
 
 #if SFG_TEXTURE_DISTANCE != 0
     RCL_Unit textureV = pixel->texCoords.y;
 
     if ((pixel->hit.type & SFG_TILE_PROPERTY_MASK) ==
-      SFG_TILE_PROPERTY_SQUEEZER)
+        SFG_TILE_PROPERTY_SQUEEZER)
       textureV += pixel->wallHeight;
 #endif
 
     color =
-      textureIndex != SFG_TILE_TEXTURE_TRANSPARENT ?
-      (
+        textureIndex != SFG_TILE_TEXTURE_TRANSPARENT ? (
 #if SFG_TEXTURE_DISTANCE >= 65535
-      SFG_getTexelFull(textureIndex,pixel->texCoords.x,textureV)
-#elif SFG_TEXTURE_DISTANCE == 0 
-      SFG_getTexelAverage(textureIndex)
+                                                           SFG_getTexelFull(textureIndex, pixel->texCoords.x, textureV)
+#elif SFG_TEXTURE_DISTANCE == 0
+                                                           SFG_getTexelAverage(textureIndex)
 #else
-      pixel->depth <= SFG_TEXTURE_DISTANCE ?
-        SFG_getTexelFull(textureIndex,pixel->texCoords.x,textureV) :
-        SFG_getTexelAverage(textureIndex)
+                                                           pixel->depth <= SFG_TEXTURE_DISTANCE ? SFG_getTexelFull(textureIndex, pixel->texCoords.x, textureV) : SFG_getTexelAverage(textureIndex)
 #endif
-      )
-      :
-      SFG_TRANSPARENT_COLOR;
+                                                               )
+                                                     : SFG_TRANSPARENT_COLOR;
 
     shadow = pixel->hit.direction >> 1;
   }
   else // floor/ceiling
   {
-    color = pixel->isFloor ?
-      (
+    color = pixel->isFloor ? (
 #if SFG_DIFFERENT_FLOOR_CEILING_COLORS
-        2 + (pixel->height / SFG_WALL_HEIGHT_STEP) % 4
+                                 2 + (pixel->height / SFG_WALL_HEIGHT_STEP) % 4
 #else
-        SFG_currentLevel.floorColor
+                                 SFG_currentLevel.floorColor
 #endif
-      ) : 
-      (pixel->height < SFG_CEILING_MAX_HEIGHT ?
-        (
+                                 )
+                           : (pixel->height < SFG_CEILING_MAX_HEIGHT ? (
 #if SFG_DIFFERENT_FLOOR_CEILING_COLORS
-          18 + (pixel->height / SFG_WALL_HEIGHT_STEP) % 4
+                                                                           18 + (pixel->height / SFG_WALL_HEIGHT_STEP) % 4
 #else
-          SFG_currentLevel.ceilingColor 
+                                                                           SFG_currentLevel.ceilingColor
 #endif
-        )
-        : SFG_TRANSPARENT_COLOR);
+                                                                           )
+                                                                     : SFG_TRANSPARENT_COLOR);
   }
 
   if (color != SFG_TRANSPARENT_COLOR)
@@ -979,55 +981,57 @@ void SFG_pixelFunc(RCL_PixelInfo *pixel)
     uint8_t yMod2 = pixel->position.y & 0x01;
 
     shadow +=
-      fogShadow + SFG_ditheringPatterns[fogShadowPart * 8 + yMod2 * 4 + xMod4];
+        fogShadow + SFG_ditheringPatterns[fogShadowPart * 8 + yMod2 * 4 + xMod4];
 #else
     shadow += SFG_fogValueDiminish(pixel->depth);
 #endif
 
 #if SFG_ENABLE_FOG
-    color = palette_minusValue(color,shadow);
+    color = palette_minusValue(color, shadow);
 #endif
   }
   else
   {
 #if SFG_DRAW_LEVEL_BACKGROUND
-    color = SFG_getTexel(SFG_backgroundImages + 
-        SFG_currentLevel.backgroundImage * SFG_TEXTURE_STORE_SIZE,
-      SFG_game.backgroundScaleMap[((pixel->position.x 
-  #if SFG_BACKGROUND_BLUR != 0
-        + SFG_backgroundBlurOffsets[SFG_backgroundBlurIndex]
-  #endif
-        ) * SFG_RAYCASTING_SUBSAMPLE + SFG_game.backgroundScroll) % SFG_GAME_RESOLUTION_Y], 
-      (SFG_game.backgroundScaleMap[(pixel->position.y          // ^ TODO: get rid of mod?
-  #if SFG_BACKGROUND_BLUR != 0
-        + SFG_backgroundBlurOffsets[SFG_backgroundBlurIndex + 1]
-  #endif
-        ) % SFG_GAME_RESOLUTION_Y])                                               
-      );
+    color = SFG_getTexel(SFG_backgroundImages +
+                             SFG_currentLevel.backgroundImage * SFG_TEXTURE_STORE_SIZE,
+                         SFG_game.backgroundScaleMap[((pixel->position.x
+#if SFG_BACKGROUND_BLUR != 0
+                                                       + SFG_backgroundBlurOffsets[SFG_backgroundBlurIndex]
+#endif
+                                                       ) * SFG_RAYCASTING_SUBSAMPLE +
+                                                      SFG_game.backgroundScroll) %
+                                                     SFG_GAME_RESOLUTION_Y],
+                         (SFG_game.backgroundScaleMap[(pixel->position.y // ^ TODO: get rid of mod?
+#if SFG_BACKGROUND_BLUR != 0
+                                                       + SFG_backgroundBlurOffsets[SFG_backgroundBlurIndex + 1]
+#endif
+                                                       ) %
+                                                      SFG_GAME_RESOLUTION_Y]));
 
-  #if SFG_BACKGROUND_BLUR != 0
-      SFG_backgroundBlurIndex = (SFG_backgroundBlurIndex + 1) % 8;
-  #endif
+#if SFG_BACKGROUND_BLUR != 0
+    SFG_backgroundBlurIndex = (SFG_backgroundBlurIndex + 1) % 8;
+#endif
 #else
     color = 1;
 #endif
   }
 
 #if SFG_BRIGHTNESS > 0
-  color = palette_plusValue(color,SFG_BRIGHTNESS);
+  color = palette_plusValue(color, SFG_BRIGHTNESS);
 #elif SFG_BRIGHTNESS < 0
-  color = palette_minusValue(color,-1 * SFG_BRIGHTNESS);
+  color = palette_minusValue(color, -1 * SFG_BRIGHTNESS);
 #endif
 
 #if SFG_RAYCASTING_SUBSAMPLE == 1
   // the other version will probably get optimized to this, but just in case
-  SFG_setGamePixel(pixel->position.x,pixel->position.y,color);
+  SFG_setGamePixel(pixel->position.x, pixel->position.y, color);
 #else
   RCL_Unit screenX = pixel->position.x * SFG_RAYCASTING_SUBSAMPLE;
 
   for (int_fast8_t i = 0; i < SFG_RAYCASTING_SUBSAMPLE; ++i)
   {
-    SFG_setGamePixel(screenX,pixel->position.y,color);
+    SFG_setGamePixel(screenX, pixel->position.y, color);
     screenX++;
   }
 #endif
@@ -1038,19 +1042,19 @@ void SFG_pixelFunc(RCL_PixelInfo *pixel)
   For performance sake drawing near screen edges is not pixel perfect.
 */
 void SFG_blitImage(
-  const uint8_t *image,
-  int16_t posX,
-  int16_t posY,
-  uint8_t scale)
+    const uint8_t *image,
+    int16_t posX,
+    int16_t posY,
+    uint8_t scale)
 {
   if (scale == 0)
     return;
- 
+
   uint16_t x0 = posX,
            x1,
-           y0 = posY, 
+           y0 = posY,
            y1;
- 
+
   uint8_t u0 = 0, v0 = 0;
 
   if (posX < 0)
@@ -1064,9 +1068,8 @@ void SFG_blitImage(
   uint16_t limitX = SFG_GAME_RESOLUTION_X - scale;
   uint16_t limitY = SFG_GAME_RESOLUTION_Y - scale;
 
-  x1 = posX >= 0 ?
-       (posX <= limitX ? posX : limitX)
-       : 0;
+  x1 = posX >= 0 ? (posX <= limitX ? posX : limitX)
+                 : 0;
 
   if (x1 >= SFG_GAME_RESOLUTION_X)
     x1 = SFG_GAME_RESOLUTION_X - 1;
@@ -1092,7 +1095,7 @@ void SFG_blitImage(
 
     for (uint16_t x = x0; x < x1; x += scale)
     {
-      uint8_t color = SFG_getTexel(image,u,v);
+      uint8_t color = SFG_getTexel(image, u, v);
 
       if (color != SFG_TRANSPARENT_COLOR)
       {
@@ -1104,10 +1107,10 @@ void SFG_blitImage(
 
           for (uint8_t i = 0; i < scale; ++i)
           {
-            SFG_setGamePixel(sX,sY,color);
+            SFG_setGamePixel(sX, sY, color);
             sX++;
           }
-          
+
           sY++;
         }
       }
@@ -1118,12 +1121,12 @@ void SFG_blitImage(
 }
 
 void SFG_drawScaledSprite(
-  const uint8_t *image,
-  int16_t centerX,
-  int16_t centerY,
-  int16_t size,
-  uint8_t minusValue,
-  RCL_Unit distance)
+    const uint8_t *image,
+    int16_t centerX,
+    int16_t centerY,
+    int16_t size,
+    uint8_t minusValue,
+    RCL_Unit distance)
 {
   if (size == 0)
     return;
@@ -1134,7 +1137,7 @@ void SFG_drawScaledSprite(
   uint16_t halfSize = size / 2;
 
   int16_t topLeftX = centerX - halfSize;
-  int16_t topLeftY = centerY - halfSize; 
+  int16_t topLeftY = centerY - halfSize;
 
   int16_t x0, u0;
 
@@ -1173,27 +1176,27 @@ void SFG_drawScaledSprite(
     y1 = SFG_GAME_RESOLUTION_Y - 1;
 
   if ((x0 > x1) || (y0 > y1) || (u0 >= size) || (v0 >= size)) // outside screen?
-    return; 
+    return;
 
   int16_t u1 = u0 + (x1 - x0);
   int16_t v1 = v0 + (y1 - y0);
 
   // precompute sampling positions:
 
-  int16_t uMin = RCL_min(u0,u1);
-  int16_t vMin = RCL_min(v0,v1);
-  int16_t uMax = RCL_max(u0,u1);
-  int16_t vMax = RCL_max(v0,v1);
+  int16_t uMin = RCL_min(u0, u1);
+  int16_t vMin = RCL_min(v0, v1);
+  int16_t uMax = RCL_max(u0, u1);
+  int16_t vMax = RCL_max(v0, v1);
 
-  int16_t precompFrom = RCL_min(uMin,vMin);
-  int16_t precompTo = RCL_max(uMax,vMax);
+  int16_t precompFrom = RCL_min(uMin, vMin);
+  int16_t precompTo = RCL_max(uMax, vMax);
 
-  precompFrom = RCL_max(0,precompFrom);
-  precompTo = RCL_min(SFG_MAX_SPRITE_SIZE - 1,precompTo);
+  precompFrom = RCL_max(0, precompFrom);
+  precompTo = RCL_min(SFG_MAX_SPRITE_SIZE - 1, precompTo);
 
-  #define PRECOMP_SCALE 512
+#define PRECOMP_SCALE 512
 
-  int16_t precompStepScaled = ((SFG_TEXTURE_SIZE) * PRECOMP_SCALE) / size;
+  int16_t precompStepScaled = ((SFG_TEXTURE_SIZE)*PRECOMP_SCALE) / size;
   int16_t precompPosScaled = precompFrom * precompStepScaled;
 
   for (int16_t i = precompFrom; i <= precompTo; ++i)
@@ -1202,7 +1205,7 @@ void SFG_drawScaledSprite(
     precompPosScaled += precompStepScaled;
   }
 
-  #undef PRECOMP_SCALE
+#undef PRECOMP_SCALE
 
   uint8_t zDistance = SFG_RCLUnitToZBuffer(distance);
 
@@ -1215,17 +1218,17 @@ void SFG_drawScaledSprite(
       for (int16_t y = y0, v = v0; y <= y1; ++y, ++v)
       {
         uint8_t color =
-          SFG_getTexel(image,SFG_game.spriteSamplingPoints[u],
-            SFG_game.spriteSamplingPoints[v]);
+            SFG_getTexel(image, SFG_game.spriteSamplingPoints[u],
+                         SFG_game.spriteSamplingPoints[v]);
 
         if (color != SFG_TRANSPARENT_COLOR)
         {
 #if SFG_DIMINISH_SPRITES
-          color = palette_minusValue(color,minusValue);
-#endif 
+          color = palette_minusValue(color, minusValue);
+#endif
           columnTransparent = 0;
 
-          SFG_setGamePixel(x,y,color);
+          SFG_setGamePixel(x, y, color);
         }
       }
 
@@ -1240,28 +1243,24 @@ RCL_Unit SFG_texturesAt(int16_t x, int16_t y)
   uint8_t p;
 
   SFG_TileDefinition tile =
-    SFG_getMapTile(SFG_currentLevel.levelPointer,x,y,&p);
+      SFG_getMapTile(SFG_currentLevel.levelPointer, x, y, &p);
 
-  return
-    SFG_TILE_FLOOR_TEXTURE(tile) | (SFG_TILE_CEILING_TEXTURE(tile) << 3) | p;
-    // ^ store both textures (floor and ceiling) and properties in one number
+  return SFG_TILE_FLOOR_TEXTURE(tile) | (SFG_TILE_CEILING_TEXTURE(tile) << 3) | p;
+  // ^ store both textures (floor and ceiling) and properties in one number
 }
 
-RCL_Unit SFG_movingWallHeight
-(
-  RCL_Unit low,
-  RCL_Unit high,
-  uint32_t time    
-)
+RCL_Unit SFG_movingWallHeight(
+    RCL_Unit low,
+    RCL_Unit high,
+    uint32_t time)
 {
   RCL_Unit height = RCL_nonZero(high - low);
   RCL_Unit halfHeight = height / 2;
 
   RCL_Unit sinArg =
-    (time * ((SFG_MOVING_WALL_SPEED * RCL_UNITS_PER_SQUARE) / 1000)) / height;
+      (time * ((SFG_MOVING_WALL_SPEED * RCL_UNITS_PER_SQUARE) / 1000)) / height;
 
-  return
-    low + halfHeight + (RCL_sin(sinArg) * halfHeight) / RCL_UNITS_PER_SQUARE;
+  return low + halfHeight + (RCL_sin(sinArg) * halfHeight) / RCL_UNITS_PER_SQUARE;
 }
 
 RCL_Unit SFG_floorHeightAt(int16_t x, int16_t y)
@@ -1269,7 +1268,7 @@ RCL_Unit SFG_floorHeightAt(int16_t x, int16_t y)
   uint8_t properties;
 
   SFG_TileDefinition tile =
-    SFG_getMapTile(SFG_currentLevel.levelPointer,x,y,&properties);
+      SFG_getMapTile(SFG_currentLevel.levelPointer, x, y, &properties);
 
   RCL_Unit doorHeight = 0;
 
@@ -1283,8 +1282,7 @@ RCL_Unit SFG_floorHeightAt(int16_t x, int16_t y)
       {
         doorHeight = door->state & SFG_DOOR_VERTICAL_POSITION_MASK;
 
-        doorHeight = doorHeight != (0xff & SFG_DOOR_VERTICAL_POSITION_MASK)    ? 
-          doorHeight * SFG_DOOR_HEIGHT_STEP : RCL_UNITS_PER_SQUARE;
+        doorHeight = doorHeight != (0xff & SFG_DOOR_VERTICAL_POSITION_MASK) ? doorHeight * SFG_DOOR_HEIGHT_STEP : RCL_UNITS_PER_SQUARE;
 
         break;
       }
@@ -1293,14 +1291,14 @@ RCL_Unit SFG_floorHeightAt(int16_t x, int16_t y)
   else if (properties == SFG_TILE_PROPERTY_ELEVATOR)
   {
     RCL_Unit height =
-      SFG_TILE_FLOOR_HEIGHT(tile) * SFG_WALL_HEIGHT_STEP;
+        SFG_TILE_FLOOR_HEIGHT(tile) * SFG_WALL_HEIGHT_STEP;
 
     return SFG_movingWallHeight(
-      height,
-      height + SFG_TILE_CEILING_HEIGHT(tile) * SFG_WALL_HEIGHT_STEP,
-      SFG_game.frameTime - SFG_currentLevel.timeStart);
+        height,
+        height + SFG_TILE_CEILING_HEIGHT(tile) * SFG_WALL_HEIGHT_STEP,
+        SFG_game.frameTime - SFG_currentLevel.timeStart);
   }
- 
+
   return SFG_TILE_FLOOR_HEIGHT(tile) * SFG_WALL_HEIGHT_STEP - doorHeight;
 }
 
@@ -1311,12 +1309,12 @@ RCL_Unit SFG_floorHeightAt(int16_t x, int16_t y)
 */
 RCL_Unit SFG_floorCollisionHeightAt(int16_t x, int16_t y)
 {
-  return SFG_floorHeightAt(x,y) +
-    SFG_getItemCollisionMapBit(x,y) * RCL_UNITS_PER_SQUARE; 
+  return SFG_floorHeightAt(x, y) +
+         SFG_getItemCollisionMapBit(x, y) * RCL_UNITS_PER_SQUARE;
 }
 
 void SFG_getPlayerWeaponInfo(
-  uint8_t *ammoType, uint8_t *projectileCount, uint8_t *canShoot)
+    uint8_t *ammoType, uint8_t *projectileCount, uint8_t *canShoot)
 {
   *ammoType = SFG_weaponAmmo(SFG_player.weapon);
 
@@ -1325,10 +1323,10 @@ void SFG_getPlayerWeaponInfo(
 #if SFG_INFINITE_AMMO
   *canShoot = 1;
 #else
-  *canShoot = 
-    ((*ammoType == SFG_AMMO_NONE) || 
-     (SFG_player.ammo[*ammoType] >= *projectileCount) ||
-     (SFG_game.cheatState & 0x80));
+  *canShoot =
+      ((*ammoType == SFG_AMMO_NONE) ||
+       (SFG_player.ammo[*ammoType] >= *projectileCount) ||
+       (SFG_game.cheatState & 0x80));
 #endif
 }
 
@@ -1340,15 +1338,15 @@ void SFG_playerRotateWeapon(uint8_t next)
   while (1)
   {
     SFG_player.weapon =
-      (SFG_WEAPONS_TOTAL + SFG_player.weapon + increment) % SFG_WEAPONS_TOTAL;
+        (SFG_WEAPONS_TOTAL + SFG_player.weapon + increment) % SFG_WEAPONS_TOTAL;
 
     if (SFG_player.weapon == initialWeapon)
       break;
 
     uint8_t ammo, projectileCount, canShoot;
 
-    SFG_getPlayerWeaponInfo(&ammo,&projectileCount,&canShoot);
- 
+    SFG_getPlayerWeaponInfo(&ammo, &projectileCount, &canShoot);
+
     if (canShoot)
       break;
   }
@@ -1359,31 +1357,31 @@ void SFG_initPlayer()
   RCL_initCamera(&SFG_player.camera);
 
   SFG_player.camera.resolution.x =
-    SFG_GAME_RESOLUTION_X / SFG_RAYCASTING_SUBSAMPLE;
+      SFG_GAME_RESOLUTION_X / SFG_RAYCASTING_SUBSAMPLE;
 
   SFG_player.camera.resolution.y = SFG_GAME_RESOLUTION_Y - SFG_HUD_BAR_HEIGHT;
 
   SFG_player.camera.position.x = RCL_UNITS_PER_SQUARE / 2 +
-    SFG_currentLevel.levelPointer->playerStart[0] *  RCL_UNITS_PER_SQUARE;
+                                 SFG_currentLevel.levelPointer->playerStart[0] * RCL_UNITS_PER_SQUARE;
 
   SFG_player.camera.position.y = RCL_UNITS_PER_SQUARE / 2 +
-    SFG_currentLevel.levelPointer->playerStart[1] *  RCL_UNITS_PER_SQUARE;
+                                 SFG_currentLevel.levelPointer->playerStart[1] * RCL_UNITS_PER_SQUARE;
 
   SFG_player.squarePosition[0] =
-    SFG_player.camera.position.x / RCL_UNITS_PER_SQUARE;
+      SFG_player.camera.position.x / RCL_UNITS_PER_SQUARE;
 
   SFG_player.squarePosition[1] =
-    SFG_player.camera.position.y / RCL_UNITS_PER_SQUARE;
-  
-  SFG_player.camera.height = SFG_floorHeightAt( 
-      SFG_currentLevel.levelPointer->playerStart[0],
-      SFG_currentLevel.levelPointer->playerStart[1]) +
-      RCL_CAMERA_COLL_HEIGHT_BELOW;
+      SFG_player.camera.position.y / RCL_UNITS_PER_SQUARE;
+
+  SFG_player.camera.height = SFG_floorHeightAt(
+                                 SFG_currentLevel.levelPointer->playerStart[0],
+                                 SFG_currentLevel.levelPointer->playerStart[1]) +
+                             RCL_CAMERA_COLL_HEIGHT_BELOW;
 
   SFG_player.camera.direction = SFG_currentLevel.levelPointer->playerStart[2] *
-    (RCL_UNITS_PER_SQUARE / 256);
+                                (RCL_UNITS_PER_SQUARE / 256);
 
-  SFG_recomputePLayerDirection(); 
+  SFG_recomputePLayerDirection();
 
   SFG_player.previousVerticalSpeed = 0;
 
@@ -1399,11 +1397,11 @@ void SFG_initPlayer()
 
   SFG_player.previousWeaponDirection = 0;
 
-  SFG_player.cards = 
+  SFG_player.cards =
 #if SFG_UNLOCK_DOOR
-  0x07;
+      0x07;
 #else
-  0;
+      0;
 #endif
 
   SFG_player.justTeleported = 0;
@@ -1416,66 +1414,61 @@ RCL_Unit SFG_ceilingHeightAt(int16_t x, int16_t y)
 {
   uint8_t properties;
   SFG_TileDefinition tile =
-    SFG_getMapTile(SFG_currentLevel.levelPointer,x,y,&properties);
+      SFG_getMapTile(SFG_currentLevel.levelPointer, x, y, &properties);
 
   if (properties == SFG_TILE_PROPERTY_ELEVATOR)
     return SFG_CEILING_MAX_HEIGHT;
 
   uint8_t height = SFG_TILE_CEILING_HEIGHT(tile);
 
-  return properties != SFG_TILE_PROPERTY_SQUEEZER ?
-    (
-      height != SFG_TILE_CEILING_MAX_HEIGHT ?
-      ((SFG_TILE_FLOOR_HEIGHT(tile) + height) * SFG_WALL_HEIGHT_STEP) :
-      SFG_CEILING_MAX_HEIGHT
-    ) :
-    SFG_movingWallHeight(
-      SFG_TILE_FLOOR_HEIGHT(tile) * SFG_WALL_HEIGHT_STEP,
-      (SFG_TILE_CEILING_HEIGHT(tile) + SFG_TILE_FLOOR_HEIGHT(tile))
-         * SFG_WALL_HEIGHT_STEP,
-      SFG_game.frameTime - SFG_currentLevel.timeStart);
+  return properties != SFG_TILE_PROPERTY_SQUEEZER ? (
+                                                        height != SFG_TILE_CEILING_MAX_HEIGHT ? ((SFG_TILE_FLOOR_HEIGHT(tile) + height) * SFG_WALL_HEIGHT_STEP) : SFG_CEILING_MAX_HEIGHT)
+                                                  : SFG_movingWallHeight(
+                                                        SFG_TILE_FLOOR_HEIGHT(tile) * SFG_WALL_HEIGHT_STEP,
+                                                        (SFG_TILE_CEILING_HEIGHT(tile) + SFG_TILE_FLOOR_HEIGHT(tile)) * SFG_WALL_HEIGHT_STEP,
+                                                        SFG_game.frameTime - SFG_currentLevel.timeStart);
 }
 
 /**
   Gets sprite (image and sprite size) for given item.
 */
 void SFG_getItemSprite(
-  uint8_t elementType, const uint8_t **sprite, uint8_t *spriteSize)
+    uint8_t elementType, const uint8_t **sprite, uint8_t *spriteSize)
 {
   *spriteSize = 0;
   *sprite = SFG_itemSprites + (elementType - 1) * SFG_TEXTURE_STORE_SIZE;
 
   switch (elementType)
   {
-    case SFG_LEVEL_ELEMENT_TREE:
-    case SFG_LEVEL_ELEMENT_RUIN:
-    case SFG_LEVEL_ELEMENT_LAMP:
-    case SFG_LEVEL_ELEMENT_TELEPORTER:
-      *spriteSize = 2;
-      break;
+  case SFG_LEVEL_ELEMENT_TREE:
+  case SFG_LEVEL_ELEMENT_RUIN:
+  case SFG_LEVEL_ELEMENT_LAMP:
+  case SFG_LEVEL_ELEMENT_TELEPORTER:
+    *spriteSize = 2;
+    break;
 
-    case SFG_LEVEL_ELEMENT_TERMINAL:
-      *spriteSize = 1;
-      break;
+  case SFG_LEVEL_ELEMENT_TERMINAL:
+    *spriteSize = 1;
+    break;
 
-    case SFG_LEVEL_ELEMENT_FINISH:
-    case SFG_LEVEL_ELEMENT_COLUMN:
-      *spriteSize = 3;
-      break;
+  case SFG_LEVEL_ELEMENT_FINISH:
+  case SFG_LEVEL_ELEMENT_COLUMN:
+    *spriteSize = 3;
+    break;
 
-    case SFG_LEVEL_ELEMENT_CARD0:
-    case SFG_LEVEL_ELEMENT_CARD1:
-    case SFG_LEVEL_ELEMENT_CARD2:
-      *sprite = SFG_itemSprites + 
-        (SFG_LEVEL_ELEMENT_CARD0 - 1) * SFG_TEXTURE_STORE_SIZE;
-      break;
+  case SFG_LEVEL_ELEMENT_CARD0:
+  case SFG_LEVEL_ELEMENT_CARD1:
+  case SFG_LEVEL_ELEMENT_CARD2:
+    *sprite = SFG_itemSprites +
+              (SFG_LEVEL_ELEMENT_CARD0 - 1) * SFG_TEXTURE_STORE_SIZE;
+    break;
 
-    case SFG_LEVEL_ELEMENT_BLOCKER:
-      *sprite = 0;
-      break;
+  case SFG_LEVEL_ELEMENT_BLOCKER:
+    *sprite = 0;
+    break;
 
-    default:
-      break;
+  default:
+    break;
   }
 }
 
@@ -1484,14 +1477,13 @@ void SFG_getItemSprite(
 */
 uint8_t SFG_itemCollides(uint8_t elementType)
 {
-  return 
-    elementType == SFG_LEVEL_ELEMENT_BARREL ||  
-    elementType == SFG_LEVEL_ELEMENT_TREE ||
-    elementType == SFG_LEVEL_ELEMENT_TERMINAL ||
-    elementType == SFG_LEVEL_ELEMENT_COLUMN ||
-    elementType == SFG_LEVEL_ELEMENT_RUIN ||
-    elementType == SFG_LEVEL_ELEMENT_BLOCKER ||
-    elementType == SFG_LEVEL_ELEMENT_LAMP;
+  return elementType == SFG_LEVEL_ELEMENT_BARREL ||
+         elementType == SFG_LEVEL_ELEMENT_TREE ||
+         elementType == SFG_LEVEL_ELEMENT_TERMINAL ||
+         elementType == SFG_LEVEL_ELEMENT_COLUMN ||
+         elementType == SFG_LEVEL_ELEMENT_RUIN ||
+         elementType == SFG_LEVEL_ELEMENT_BLOCKER ||
+         elementType == SFG_LEVEL_ELEMENT_LAMP;
 }
 
 void SFG_setGameState(uint8_t state)
@@ -1501,29 +1493,34 @@ void SFG_setGameState(uint8_t state)
   SFG_game.stateTime = 0;
 }
 
-void SFG_GetExecutablePath(char* buffer, size_t size) {
+void SFG_GetExecutablePath(char *buffer, size_t size)
+{
 #ifdef _WIN32
-    GetModuleFileName(NULL, buffer, size);
-    char* lastBackslash = strrchr(buffer, '\\');
-    if (lastBackslash != NULL) {
-        *lastBackslash = '\0';
-    }
+  GetModuleFileName(NULL, buffer, size);
+  char *lastBackslash = strrchr(buffer, '\\');
+  if (lastBackslash != NULL)
+  {
+    *lastBackslash = '\0';
+  }
 #elif __linux__
-    ssize_t len = readlink("/proc/self/exe", buffer, size - 1);
-    if (len != -1) {
-        buffer[len] = '\0';
-        char* lastSlash = strrchr(buffer, '/');
-        if (lastSlash != NULL) {
-            *lastSlash = '\0';
-        }
-    } else {
-        fprintf(stderr, "Error getting executable path\n");
-        exit(EXIT_FAILURE);
+  ssize_t len = readlink("/proc/self/exe", buffer, size - 1);
+  if (len != -1)
+  {
+    buffer[len] = '\0';
+    char *lastSlash = strrchr(buffer, '/');
+    if (lastSlash != NULL)
+    {
+      *lastSlash = '\0';
     }
+  }
+  else
+  {
+    fprintf(stderr, "Error getting executable path\n");
+    exit(EXIT_FAILURE);
+  }
 #endif
 }
 
- 
 static SFG_Level *level = NULL;
 
 void SFG_setAndInitLevel(uint8_t levelNumber)
@@ -1531,35 +1528,40 @@ void SFG_setAndInitLevel(uint8_t levelNumber)
   SFG_LOG("setting and initializing level");
 
 #if SFG_AVR
-  memcpy_P(&SFG_ramLevel,SFG_levels[levelNumber],sizeof(SFG_Level));
+  memcpy_P(&SFG_ramLevel, SFG_levels[levelNumber], sizeof(SFG_Level));
   level = &SFG_ramLevel;
 #else
-if (!level) {
+  if (!level)
+  {
     // If level is not already allocated, allocate memory
-    level = (SFG_Level*)malloc(sizeof(SFG_Level));
-    memset(level,0,sizeof(SFG_Level));
-    
-    if (level == NULL) {
-        SFG_LOG("Memory allocation failed for SFG_Level.");
-        return;
+    level = (SFG_Level *)malloc(sizeof(SFG_Level));
+    memset(level, 0, sizeof(SFG_Level));
+
+    if (level == NULL)
+    {
+      SFG_LOG("Memory allocation failed for SFG_Level.");
+      return;
     }
-} else {
+  }
+  else
+  {
     // If level is already allocated, free it before reallocating
     free(level);
-    level = (SFG_Level*)malloc(sizeof(SFG_Level));
+    level = (SFG_Level *)malloc(sizeof(SFG_Level));
 
-    if (level == NULL) {
-        SFG_LOG("Memory allocation failed for SFG_Level.");
-        return;
-    }
-}
-    char executablePath[512];  // Adjust the size as needed
-    SFG_GetExecutablePath(executablePath, sizeof(executablePath));
-
-    if (!SFG_loadLevelFromFile(level, levelNumber, executablePath))
+    if (level == NULL)
     {
-        SFG_LOG("Failed to load level from file.");
+      SFG_LOG("Memory allocation failed for SFG_Level.");
+      return;
     }
+  }
+  char executablePath[512]; // Adjust the size as needed
+  SFG_GetExecutablePath(executablePath, sizeof(executablePath));
+
+  if (!SFG_loadLevelFromFile(level, levelNumber, executablePath))
+  {
+    SFG_LOG("Failed to load level from file.");
+  }
 #endif
 
   SFG_game.currentRandom = 0;
@@ -1578,7 +1580,7 @@ if (!level) {
 
   for (uint8_t i = 0; i < 7; ++i)
     SFG_currentLevel.textures[i] =
-      SFG_wallTextures + level->textureIndices[i] * SFG_TEXTURE_STORE_SIZE;
+        SFG_wallTextures + level->textureIndices[i] * SFG_TEXTURE_STORE_SIZE;
 
   SFG_LOG("initializing doors");
 
@@ -1586,11 +1588,11 @@ if (!level) {
   SFG_currentLevel.doorRecordCount = 0;
   SFG_currentLevel.projectileRecordCount = 0;
   SFG_currentLevel.teleporterCount = 0;
-  SFG_currentLevel.mapRevealMask = 
+  SFG_currentLevel.mapRevealMask =
 #if SFG_REVEAL_MAP
-    0xffff;
+      0xffff;
 #else
-    0;
+      0;
 #endif
 
   for (uint8_t j = 0; j < SFG_MAP_SIZE; ++j)
@@ -1598,13 +1600,13 @@ if (!level) {
     for (uint8_t i = 0; i < SFG_MAP_SIZE; ++i)
     {
       uint8_t properties;
-     
-      SFG_getMapTile(level,i,j,&properties);
+
+      SFG_getMapTile(level, i, j, &properties);
 
       if ((properties & SFG_TILE_PROPERTY_MASK) == SFG_TILE_PROPERTY_DOOR)
       {
         SFG_DoorRecord *d =
-          &(SFG_currentLevel.doorRecords[SFG_currentLevel.doorRecordCount]);
+            &(SFG_currentLevel.doorRecords[SFG_currentLevel.doorRecordCount]);
 
         d->coords[0] = i;
         d->coords[1] = j;
@@ -1646,13 +1648,12 @@ if (!level) {
       if (SFG_LEVEL_ELEMENT_TYPE_IS_MOSTER(e->type))
       {
         monster =
-        &(SFG_currentLevel.monsterRecords[SFG_currentLevel.monsterRecordCount]);
+            &(SFG_currentLevel.monsterRecords[SFG_currentLevel.monsterRecordCount]);
 
-        monster->stateType = (SFG_MONSTER_TYPE_TO_INDEX(e->type) << 4)
-          | SFG_MONSTER_STATE_INACTIVE;
- 
+        monster->stateType = (SFG_MONSTER_TYPE_TO_INDEX(e->type) << 4) | SFG_MONSTER_STATE_INACTIVE;
+
         monster->health =
-          SFG_GET_MONSTER_MAX_HEALTH(SFG_MONSTER_TYPE_TO_INDEX(e->type));
+            SFG_GET_MONSTER_MAX_HEALTH(SFG_MONSTER_TYPE_TO_INDEX(e->type));
 
         monster->coords[0] = e->coords[0] * 4 + 2;
         monster->coords[1] = e->coords[1] * 4 + 2;
@@ -1663,7 +1664,7 @@ if (!level) {
           SFG_currentLevel.bossCount++;
       }
       else if ((e->type < SFG_LEVEL_ELEMENT_LOCK0) ||
-        (e->type > SFG_LEVEL_ELEMENT_LOCK2))
+               (e->type > SFG_LEVEL_ELEMENT_LOCK2))
       {
         SFG_currentLevel.itemRecords[SFG_currentLevel.itemRecordCount] = i;
         SFG_currentLevel.itemRecordCount++;
@@ -1672,13 +1673,13 @@ if (!level) {
           SFG_currentLevel.teleporterCount++;
 
         if (SFG_itemCollides(e->type))
-          SFG_setItemCollisionMapBit(e->coords[0],e->coords[1],1);
+          SFG_setItemCollisionMapBit(e->coords[0], e->coords[1], 1);
       }
       else
       {
         uint8_t properties;
-     
-        SFG_getMapTile(level,e->coords[0],e->coords[1],&properties);
+
+        SFG_getMapTile(level, e->coords[0], e->coords[1], &properties);
 
         if ((properties & SFG_TILE_PROPERTY_MASK) == SFG_TILE_PROPERTY_DOOR)
         {
@@ -1700,9 +1701,9 @@ if (!level) {
         }
       }
     }
-  } 
+  }
 
-  SFG_currentLevel.timeStart = SFG_game.frameTime; 
+  SFG_currentLevel.timeStart = SFG_game.frameTime;
   SFG_currentLevel.frameStart = SFG_game.frame;
 
   SFG_game.spriteAnimationFrame = 0;
@@ -1710,14 +1711,14 @@ if (!level) {
   SFG_initPlayer();
   SFG_setGameState(SFG_GAME_STATE_LEVEL_START);
   SFG_setMusic(SFG_MUSIC_NEXT);
-  SFG_processEvent(SFG_EVENT_LEVEL_STARTS,levelNumber);
+  SFG_processEvent(SFG_EVENT_LEVEL_STARTS, levelNumber);
 }
 
 void SFG_createDefaultSaveData(uint8_t *memory)
 {
   for (uint16_t i = 0; i < SFG_SAVE_SIZE; ++i)
     memory[i] = 0;
-    
+
   memory[1] = SFG_DEFAULT_SETTINGS;
 }
 
@@ -1727,27 +1728,27 @@ void SFG_init()
   char executablePath[256];
   SFG_GetExecutablePath(executablePath, sizeof(executablePath));
 
-  char loc[256];    
-  sprintf(loc, "WallTextures/data.TAD");  
-  SFG_loadTexturesFromFile(SFG_wallTextures,loc, SFG_WALL_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);  
-  
+  char loc[256];
+  sprintf(loc, "WallTextures/data.TAD");
+  SFG_loadTexturesFromFile(SFG_wallTextures, loc, SFG_WALL_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
+
   sprintf(loc, "Items/data.TAD");
-  SFG_loadTexturesFromFile(SFG_itemSprites,loc, SFG_ITEM_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);  
+  SFG_loadTexturesFromFile(SFG_itemSprites, loc, SFG_ITEM_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
 
   sprintf(loc, "Backgrounds/data.TAD");
-  SFG_loadTexturesFromFile(SFG_backgroundImages,loc, SFG_BACKGROUND_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
+  SFG_loadTexturesFromFile(SFG_backgroundImages, loc, SFG_BACKGROUND_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
 
   sprintf(loc, "Weapons/data.TAD");
-  SFG_loadTexturesFromFile(SFG_weaponImages,loc, SFG_WEAPON_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
+  SFG_loadTexturesFromFile(SFG_weaponImages, loc, SFG_WEAPON_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
 
   sprintf(loc, "Effects/data.TAD");
-  SFG_loadTexturesFromFile(SFG_effectSprites,loc, SFG_EFFECT_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
+  SFG_loadTexturesFromFile(SFG_effectSprites, loc, SFG_EFFECT_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
 
   sprintf(loc, "Enemies/data.TAD");
-  SFG_loadTexturesFromFile(SFG_monsterSprites,loc, SFG_ENEMY_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
+  SFG_loadTexturesFromFile(SFG_monsterSprites, loc, SFG_ENEMY_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
 
   sprintf(loc, "Title/data.TAD");
-  SFG_loadTexturesFromFile(SFG_logoImage,loc, SFG_TEXTURE_STORE_SIZE);
+  SFG_loadTexturesFromFile(SFG_logoImage, loc, SFG_TEXTURE_STORE_SIZE);
 
   SFG_game.frame = 0;
   SFG_game.frameTime = 0;
@@ -1760,10 +1761,10 @@ void SFG_init()
   SFG_game.rayConstraints.maxSteps = SFG_RAYCASTING_MAX_STEPS;
 
   RCL_initRayConstraints(&SFG_game.visibilityRayConstraints);
-  SFG_game.visibilityRayConstraints.maxHits = 
-    SFG_RAYCASTING_VISIBILITY_MAX_HITS;
+  SFG_game.visibilityRayConstraints.maxHits =
+      SFG_RAYCASTING_VISIBILITY_MAX_HITS;
   SFG_game.visibilityRayConstraints.maxSteps =
-    SFG_RAYCASTING_VISIBILITY_MAX_STEPS;
+      SFG_RAYCASTING_VISIBILITY_MAX_STEPS;
 
   SFG_game.antiSpam = 0;
 
@@ -1783,7 +1784,7 @@ void SFG_init()
       for (uint8_t x = 0; x < SFG_TEXTURE_SIZE; ++x)
       {
         uint8_t color =
-          SFG_getTexel(SFG_wallTextures + i * SFG_TEXTURE_STORE_SIZE,x,y) / 4;
+            SFG_getTexel(SFG_wallTextures + i * SFG_TEXTURE_STORE_SIZE, x, y) / 4;
 
         colorHistogram[color] += 1;
 
@@ -1810,7 +1811,7 @@ void SFG_init()
 
   for (uint16_t i = 0; i < SFG_GAME_RESOLUTION_Y; ++i)
     SFG_game.backgroundScaleMap[i] =
-      (i * SFG_TEXTURE_SIZE) / SFG_GAME_RESOLUTION_Y;
+        (i * SFG_TEXTURE_SIZE) / SFG_GAME_RESOLUTION_Y;
 
   for (uint8_t i = 0; i < SFG_KEY_COUNT; ++i)
     SFG_game.keyStates[i] = 0;
@@ -1829,7 +1830,7 @@ void SFG_init()
   if (SFG_game.saved != SFG_CANT_SAVE)
   {
     SFG_LOG("settings loaded");
-    SFG_game.settings = SFG_game.save[1]; 
+    SFG_game.settings = SFG_game.save[1];
   }
   else
   {
@@ -1841,17 +1842,21 @@ void SFG_init()
   SFG_game.save[0] = SFG_NUMBER_OF_LEVELS - 1;
 #endif
 
-  SFG_setMusic((SFG_game.settings & 0x02) ?
-    SFG_MUSIC_TURN_ON : SFG_MUSIC_TURN_OFF);
+  SFG_setMusic((SFG_game.settings & 0x02) ? SFG_MUSIC_TURN_ON : SFG_MUSIC_TURN_OFF);
 
 #if SFG_START_LEVEL == 0
   SFG_setGameState(SFG_GAME_STATE_INIT);
 #else
   SFG_setAndInitLevel(SFG_START_LEVEL - 1);
 #endif
-  if(SFG_isDebug)
+  if (SFG_isDebug)
   {
     SFG_setAndInitLevel(99);
+  }
+
+  if (SFG_launchWithGodMode)
+  {
+    SFG_game.cheatState |= 0x80;
   }
 }
 
@@ -1862,11 +1867,11 @@ void SFG_init()
 uint8_t SFG_createProjectile(SFG_ProjectileRecord projectile)
 {
   if (SFG_currentLevel.projectileRecordCount >= SFG_MAX_PROJECTILES)
-    return 0; 
+    return 0;
 
   SFG_currentLevel.projectileRecords[SFG_currentLevel.projectileRecordCount] =
-    projectile;
-  
+      projectile;
+
   SFG_currentLevel.projectileRecordCount++;
 
   return 1;
@@ -1878,13 +1883,12 @@ uint8_t SFG_createProjectile(SFG_ProjectileRecord projectile)
   shooting entity). Returns the same value as SFG_createProjectile.
 */
 uint8_t SFG_launchProjectile(
-  uint8_t type,   
-  RCL_Vector2D shootFrom,
-  RCL_Unit shootFromHeight,
-  RCL_Vector2D direction,
-  RCL_Unit verticalSpeed,
-  RCL_Unit offsetDistance
-  )
+    uint8_t type,
+    RCL_Vector2D shootFrom,
+    RCL_Unit shootFromHeight,
+    RCL_Vector2D direction,
+    RCL_Unit verticalSpeed,
+    RCL_Unit offsetDistance)
 {
   if (type == SFG_PROJECTILE_NONE)
     return 0;
@@ -1892,19 +1896,19 @@ uint8_t SFG_launchProjectile(
   SFG_ProjectileRecord p;
 
   p.type = type;
-  p.doubleFramesToLive = 
-    RCL_nonZero(SFG_GET_PROJECTILE_FRAMES_TO_LIVE(type) / 2);
-  
+  p.doubleFramesToLive =
+      RCL_nonZero(SFG_GET_PROJECTILE_FRAMES_TO_LIVE(type) / 2);
+
   p.position[0] =
-    shootFrom.x + (direction.x * offsetDistance) / RCL_UNITS_PER_SQUARE;
-  p.position[1] = 
-    shootFrom.y + (direction.y * offsetDistance) / RCL_UNITS_PER_SQUARE; 
+      shootFrom.x + (direction.x * offsetDistance) / RCL_UNITS_PER_SQUARE;
+  p.position[1] =
+      shootFrom.y + (direction.y * offsetDistance) / RCL_UNITS_PER_SQUARE;
   p.position[2] = shootFromHeight;
 
-  p.direction[0] = 
-    (direction.x * SFG_GET_PROJECTILE_SPEED_UPS(type)) / RCL_UNITS_PER_SQUARE;
+  p.direction[0] =
+      (direction.x * SFG_GET_PROJECTILE_SPEED_UPS(type)) / RCL_UNITS_PER_SQUARE;
   p.direction[1] =
-    (direction.y * SFG_GET_PROJECTILE_SPEED_UPS(type)) / RCL_UNITS_PER_SQUARE;
+      (direction.y * SFG_GET_PROJECTILE_SPEED_UPS(type)) / RCL_UNITS_PER_SQUARE;
   p.direction[2] = verticalSpeed;
 
   return SFG_createProjectile(p);
@@ -1915,11 +1919,11 @@ uint8_t SFG_launchProjectile(
   Returns 1 if push away happened, otherwise 0.
 */
 uint8_t SFG_pushAway(
-  RCL_Unit pos[3],
-  RCL_Unit centerX,
-  RCL_Unit centerY,
-  RCL_Unit preferredDirection,
-  RCL_Unit distance)
+    RCL_Unit pos[3],
+    RCL_Unit centerX,
+    RCL_Unit centerY,
+    RCL_Unit preferredDirection,
+    RCL_Unit distance)
 {
   RCL_Vector2D fromCenter;
 
@@ -1936,8 +1940,8 @@ uint8_t SFG_pushAway(
 
   RCL_Vector2D offset;
 
-  offset.x = (fromCenter.x * distance) / l; 
-  offset.y = (fromCenter.y * distance) / l; 
+  offset.x = (fromCenter.x * distance) / l;
+  offset.y = (fromCenter.y * distance) / l;
 
   RCL_Camera c;
 
@@ -1947,8 +1951,8 @@ uint8_t SFG_pushAway(
   c.position.y = pos[1];
   c.height = pos[2];
 
-  RCL_moveCameraWithCollision(&c,offset,0,SFG_floorCollisionHeightAt,
-    SFG_ceilingHeightAt,1,1);
+  RCL_moveCameraWithCollision(&c, offset, 0, SFG_floorCollisionHeightAt,
+                              SFG_ceilingHeightAt, 1, 1);
 
   pos[0] = c.position.x;
   pos[1] = c.position.y;
@@ -1958,20 +1962,20 @@ uint8_t SFG_pushAway(
 }
 
 uint8_t SFG_pushPlayerAway(
-  RCL_Unit centerX, RCL_Unit centerY, RCL_Unit distance)
+    RCL_Unit centerX, RCL_Unit centerY, RCL_Unit distance)
 {
   RCL_Unit p[3];
 
-  p[0] = SFG_player.camera.position.x; 
-  p[1] = SFG_player.camera.position.y; 
-  p[2] = SFG_player.camera.height; 
+  p[0] = SFG_player.camera.position.x;
+  p[1] = SFG_player.camera.position.y;
+  p[2] = SFG_player.camera.height;
 
-  uint8_t result = SFG_pushAway(p,centerX,centerY,
-    SFG_player.camera.direction - RCL_UNITS_PER_SQUARE / 2,
-    distance);
+  uint8_t result = SFG_pushAway(p, centerX, centerY,
+                                SFG_player.camera.direction - RCL_UNITS_PER_SQUARE / 2,
+                                distance);
 
-  SFG_player.camera.position.x = p[0]; 
-  SFG_player.camera.position.y = p[1]; 
+  SFG_player.camera.position.x = p[0];
+  SFG_player.camera.position.y = p[1];
   SFG_player.camera.height = p[2];
 
   return result;
@@ -1983,7 +1987,7 @@ uint8_t SFG_pushPlayerAway(
   offset.
 */
 RCL_Vector2D SFG_resolveCollisionWithElement(
-  RCL_Vector2D position, RCL_Vector2D moveOffset, RCL_Vector2D elementPos)
+    RCL_Vector2D position, RCL_Vector2D moveOffset, RCL_Vector2D elementPos)
 {
   RCL_Unit dx = RCL_abs(elementPos.x - position.x);
   RCL_Unit dy = RCL_abs(elementPos.y - position.y);
@@ -1994,7 +1998,7 @@ RCL_Vector2D SFG_resolveCollisionWithElement(
 
     if ((moveOffset.x > 0) == (position.x < elementPos.x))
       moveOffset.x = 0;
-      // ^ only stop if heading towards element, to avoid getting stuck
+    // ^ only stop if heading towards element, to avoid getting stuck
   }
   else
   {
@@ -2004,7 +2008,7 @@ RCL_Vector2D SFG_resolveCollisionWithElement(
       moveOffset.y = 0;
   }
 
-  return moveOffset;  
+  return moveOffset;
 }
 
 /**
@@ -2013,7 +2017,7 @@ RCL_Vector2D SFG_resolveCollisionWithElement(
   SFG_PLAYER_DAMAGE_MULTIPLIER in this function.
 */
 void SFG_playerChangeHealth(int8_t healthAdd)
-{          
+{
   if (SFG_game.state != SFG_GAME_STATE_PLAYING)
     return; // don't hurt during level starting phase
 
@@ -2023,28 +2027,28 @@ void SFG_playerChangeHealth(int8_t healthAdd)
       return;
 
     healthAdd =
-      RCL_min(-1,
-      (((RCL_Unit) healthAdd) * SFG_PLAYER_DAMAGE_MULTIPLIER) /
-      RCL_UNITS_PER_SQUARE);
+        RCL_min(-1,
+                (((RCL_Unit)healthAdd) * SFG_PLAYER_DAMAGE_MULTIPLIER) /
+                    RCL_UNITS_PER_SQUARE);
 
     SFG_player.lastHurtFrame = SFG_game.frame;
-    SFG_processEvent(SFG_EVENT_VIBRATE,0);
-    SFG_processEvent(SFG_EVENT_PLAYER_HURT,-1 * healthAdd);
+    SFG_processEvent(SFG_EVENT_VIBRATE, 0);
+    SFG_processEvent(SFG_EVENT_PLAYER_HURT, -1 * healthAdd);
   }
 
   int16_t health = SFG_player.health;
   health += healthAdd;
-  health = RCL_clamp(health,0,SFG_PLAYER_MAX_HEALTH);
+  health = RCL_clamp(health, 0, SFG_PLAYER_MAX_HEALTH);
 
   SFG_player.health = health;
 }
 
 uint8_t SFG_distantSoundVolume(RCL_Unit x, RCL_Unit y, RCL_Unit z)
 {
-  RCL_Unit distance = SFG_taxicabDistance(x,y,z,
-                        SFG_player.camera.position.x,
-                        SFG_player.camera.position.y,
-                        SFG_player.camera.height);
+  RCL_Unit distance = SFG_taxicabDistance(x, y, z,
+                                          SFG_player.camera.position.x,
+                                          SFG_player.camera.position.y,
+                                          SFG_player.camera.height);
 
   if (distance >= SFG_SFX_MAX_DISTANCE)
     return 0;
@@ -2062,24 +2066,24 @@ void SFG_monsterChangeHealth(SFG_MonsterRecord *monster, int8_t healthAdd)
   int16_t health = monster->health;
 
   health += healthAdd;
-  health = RCL_clamp(health,0,255);
+  health = RCL_clamp(health, 0, 255);
   monster->health = health;
 
   if (healthAdd < 0)
   {
     // play hurt sound
-    
-    uint8_t volume = SFG_distantSoundVolume( 
-      SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[0]),
-      SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[1]),
-      SFG_floorHeightAt(
-        SFG_MONSTER_COORD_TO_SQUARES(monster->coords[0]),
-        SFG_MONSTER_COORD_TO_SQUARES(monster->coords[1])));
-    
-      SFG_playGameSound(5,volume);
-    
+
+    uint8_t volume = SFG_distantSoundVolume(
+        SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[0]),
+        SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[1]),
+        SFG_floorHeightAt(
+            SFG_MONSTER_COORD_TO_SQUARES(monster->coords[0]),
+            SFG_MONSTER_COORD_TO_SQUARES(monster->coords[1])));
+
+    SFG_playGameSound(5, volume);
+
     if (monster->health == 0)
-      SFG_playGameSound(2,volume);
+      SFG_playGameSound(2, volume);
   }
 }
 
@@ -2089,9 +2093,9 @@ void SFG_removeItem(uint8_t index)
 
   for (uint16_t j = index; j < SFG_currentLevel.itemRecordCount - 1; ++j)
     SFG_currentLevel.itemRecords[j] =
-      SFG_currentLevel.itemRecords[j + 1];
+        SFG_currentLevel.itemRecords[j + 1];
 
-  SFG_currentLevel.itemRecordCount--; 
+  SFG_currentLevel.itemRecordCount--;
 }
 
 /**
@@ -2100,16 +2104,14 @@ void SFG_removeItem(uint8_t index)
 */
 static inline uint8_t SFG_spriteIsVisible(RCL_Vector2D pos, RCL_Unit height)
 {
-  return
-    RCL_castRay3D(
-      SFG_player.camera.position,
-      SFG_player.camera.height,
-      pos,
-      height,
-      SFG_floorHeightAt,
-      SFG_ceilingHeightAt,
-      SFG_game.visibilityRayConstraints
-    ) == RCL_UNITS_PER_SQUARE;
+  return RCL_castRay3D(
+             SFG_player.camera.position,
+             SFG_player.camera.height,
+             pos,
+             height,
+             SFG_floorHeightAt,
+             SFG_ceilingHeightAt,
+             SFG_game.visibilityRayConstraints) == RCL_UNITS_PER_SQUARE;
 }
 
 RCL_Unit SFG_directionTangent(RCL_Unit dirX, RCL_Unit dirY, RCL_Unit dirZ)
@@ -2130,9 +2132,9 @@ RCL_Unit SFG_autoaimVertically()
   for (uint16_t i = 0; i < SFG_currentLevel.monsterRecordCount; ++i)
   {
     SFG_MonsterRecord m = SFG_currentLevel.monsterRecords[i];
-    
+
     uint8_t state = SFG_MR_STATE(m);
- 
+
     if (state == SFG_MONSTER_STATE_INACTIVE ||
         state == SFG_MONSTER_STATE_DEAD)
       continue;
@@ -2141,27 +2143,25 @@ RCL_Unit SFG_autoaimVertically()
 
     worldPosition.x = SFG_MONSTER_COORD_TO_RCL_UNITS(m.coords[0]);
     worldPosition.y = SFG_MONSTER_COORD_TO_RCL_UNITS(m.coords[1]);
-    
+
     toMonster.x = worldPosition.x - SFG_player.camera.position.x;
     toMonster.y = worldPosition.y - SFG_player.camera.position.y;
 
     if (RCL_abs(
-         RCL_vectorsAngleCos(SFG_player.direction,toMonster) 
-         - RCL_UNITS_PER_SQUARE) < SFG_VERTICAL_AUTOAIM_ANGLE_THRESHOLD)
+            RCL_vectorsAngleCos(SFG_player.direction, toMonster) - RCL_UNITS_PER_SQUARE) < SFG_VERTICAL_AUTOAIM_ANGLE_THRESHOLD)
     {
       uint8_t spriteSize = SFG_GET_MONSTER_SPRITE_SIZE(
-        SFG_MONSTER_TYPE_TO_INDEX(SFG_MR_TYPE(m)));
-        
-      RCL_Unit worldHeight = 
-        SFG_floorHeightAt(
-          SFG_MONSTER_COORD_TO_SQUARES(m.coords[0]),
-          SFG_MONSTER_COORD_TO_SQUARES(m.coords[1]))
-          + 
+          SFG_MONSTER_TYPE_TO_INDEX(SFG_MR_TYPE(m)));
+
+      RCL_Unit worldHeight =
+          SFG_floorHeightAt(
+              SFG_MONSTER_COORD_TO_SQUARES(m.coords[0]),
+              SFG_MONSTER_COORD_TO_SQUARES(m.coords[1])) +
           SFG_SPRITE_SIZE_TO_HEIGHT_ABOVE_GROUND(spriteSize);
-        
-      if (SFG_spriteIsVisible(worldPosition,worldHeight))
-        return SFG_directionTangent(toMonster.x,toMonster.y,
-               worldHeight - (SFG_player.camera.height));
+
+      if (SFG_spriteIsVisible(worldPosition, worldHeight))
+        return SFG_directionTangent(toMonster.x, toMonster.y,
+                                    worldHeight - (SFG_player.camera.height));
     }
   }
 
@@ -2180,7 +2180,7 @@ static inline const SFG_LevelElement *SFG_getActiveItemElement(uint8_t index)
     return 0;
 
   return &(SFG_currentLevel.levelPointer->elements[item &
-           ~SFG_ITEM_RECORD_ACTIVE_MASK]);
+                                                   ~SFG_ITEM_RECORD_ACTIVE_MASK]);
 }
 
 static inline const SFG_LevelElement *SFG_getLevelElement(uint8_t index)
@@ -2188,25 +2188,25 @@ static inline const SFG_LevelElement *SFG_getLevelElement(uint8_t index)
   SFG_ItemRecord item = SFG_currentLevel.itemRecords[index];
 
   return &(SFG_currentLevel.levelPointer->elements[item &
-           ~SFG_ITEM_RECORD_ACTIVE_MASK]);
+                                                   ~SFG_ITEM_RECORD_ACTIVE_MASK]);
 }
-  
+
 void SFG_createExplosion(RCL_Unit, RCL_Unit, RCL_Unit); // forward decl
 
 void SFG_explodeBarrel(uint8_t itemIndex, RCL_Unit x, RCL_Unit y, RCL_Unit z)
 {
   const SFG_LevelElement *e = SFG_getLevelElement(itemIndex);
-  SFG_setItemCollisionMapBit(e->coords[0],e->coords[1],0);
+  SFG_setItemCollisionMapBit(e->coords[0], e->coords[1], 0);
   SFG_removeItem(itemIndex);
-  SFG_createExplosion(x,y,z);
+  SFG_createExplosion(x, y, z);
 }
 
 void SFG_createExplosion(RCL_Unit x, RCL_Unit y, RCL_Unit z)
 {
   SFG_ProjectileRecord explosion;
 
-  SFG_playGameSound(2,SFG_distantSoundVolume(x,y,z));
-  SFG_processEvent(SFG_EVENT_EXPLOSION,0);
+  SFG_playGameSound(2, SFG_distantSoundVolume(x, y, z));
+  SFG_processEvent(SFG_EVENT_EXPLOSION, 0);
 
   explosion.type = SFG_PROJECTILE_EXPLOSION;
 
@@ -2219,43 +2219,42 @@ void SFG_createExplosion(RCL_Unit x, RCL_Unit y, RCL_Unit z)
   explosion.direction[2] = 0;
 
   explosion.doubleFramesToLive = RCL_nonZero(
-    SFG_GET_PROJECTILE_FRAMES_TO_LIVE(SFG_PROJECTILE_EXPLOSION) / 2);
+      SFG_GET_PROJECTILE_FRAMES_TO_LIVE(SFG_PROJECTILE_EXPLOSION) / 2);
 
   SFG_createProjectile(explosion);
 
   uint8_t damage = SFG_getDamageValue(SFG_WEAPON_FIRE_TYPE_FIREBALL);
 
-  if (SFG_taxicabDistance(x,y,z,SFG_player.camera.position.x,
-    SFG_player.camera.position.y,SFG_player.camera.height)
-    <= SFG_EXPLOSION_RADIUS)
+  if (SFG_taxicabDistance(x, y, z, SFG_player.camera.position.x,
+                          SFG_player.camera.position.y, SFG_player.camera.height) <= SFG_EXPLOSION_RADIUS)
   {
     SFG_playerChangeHealth(-1 * damage);
-    SFG_pushPlayerAway(x,y,SFG_EXPLOSION_PUSH_AWAY_DISTANCE);
+    SFG_pushPlayerAway(x, y, SFG_EXPLOSION_PUSH_AWAY_DISTANCE);
   }
 
   for (uint16_t i = 0; i < SFG_currentLevel.monsterRecordCount; ++i)
   {
     SFG_MonsterRecord *monster = &(SFG_currentLevel.monsterRecords[i]);
 
-    uint16_t state = SFG_MR_STATE(*monster); 
+    uint16_t state = SFG_MR_STATE(*monster);
 
     if ((state == SFG_MONSTER_STATE_INACTIVE) ||
         (state == SFG_MONSTER_STATE_DEAD))
-      continue; 
+      continue;
 
     RCL_Unit monsterHeight =
-      SFG_floorHeightAt(
-        SFG_MONSTER_COORD_TO_SQUARES(monster->coords[0]),
-        SFG_MONSTER_COORD_TO_SQUARES(monster->coords[1]))
-        + RCL_UNITS_PER_SQUARE / 2;
+        SFG_floorHeightAt(
+            SFG_MONSTER_COORD_TO_SQUARES(monster->coords[0]),
+            SFG_MONSTER_COORD_TO_SQUARES(monster->coords[1])) +
+        RCL_UNITS_PER_SQUARE / 2;
 
     if (SFG_taxicabDistance(
-      SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[0]),
-      SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[1]),monsterHeight,
-      x,y,z) <= SFG_EXPLOSION_RADIUS)
+            SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[0]),
+            SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[1]), monsterHeight,
+            x, y, z) <= SFG_EXPLOSION_RADIUS)
     {
       SFG_monsterChangeHealth(monster,
-        -1 * SFG_getDamageValue(SFG_WEAPON_FIRE_TYPE_FIREBALL));
+                              -1 * SFG_getDamageValue(SFG_WEAPON_FIRE_TYPE_FIREBALL));
     }
   }
 
@@ -2275,18 +2274,18 @@ void SFG_createExplosion(RCL_Unit x, RCL_Unit y, RCL_Unit z)
         continue;
 
       RCL_Unit elementX =
-        element.coords[0] * RCL_UNITS_PER_SQUARE + RCL_UNITS_PER_SQUARE / 2;
+          element.coords[0] * RCL_UNITS_PER_SQUARE + RCL_UNITS_PER_SQUARE / 2;
 
       RCL_Unit elementY =
-        element.coords[1] * RCL_UNITS_PER_SQUARE + RCL_UNITS_PER_SQUARE / 2;
+          element.coords[1] * RCL_UNITS_PER_SQUARE + RCL_UNITS_PER_SQUARE / 2;
 
       RCL_Unit elementHeight =
-        SFG_floorHeightAt(element.coords[0],element.coords[1]);
+          SFG_floorHeightAt(element.coords[0], element.coords[1]);
 
       if (SFG_taxicabDistance(
-        x,y,z,elementX,elementY,elementHeight) <= SFG_EXPLOSION_RADIUS)
+              x, y, z, elementX, elementY, elementHeight) <= SFG_EXPLOSION_RADIUS)
       {
-        SFG_explodeBarrel(i,elementX,elementY,elementHeight);
+        SFG_explodeBarrel(i, elementX, elementY, elementHeight);
         i--;
       }
     }
@@ -2307,20 +2306,20 @@ void SFG_createDust(RCL_Unit x, RCL_Unit y, RCL_Unit z)
   dust.direction[2] = 0;
 
   dust.doubleFramesToLive =
-    RCL_nonZero(SFG_GET_PROJECTILE_FRAMES_TO_LIVE(SFG_PROJECTILE_DUST) / 2);
+      RCL_nonZero(SFG_GET_PROJECTILE_FRAMES_TO_LIVE(SFG_PROJECTILE_DUST) / 2);
 
   SFG_createProjectile(dust);
 }
 
 void SFG_getMonsterWorldPosition(SFG_MonsterRecord *monster, RCL_Unit *x,
-  RCL_Unit *y, RCL_Unit *z)
+                                 RCL_Unit *y, RCL_Unit *z)
 {
   *x = SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[0]);
   *y = SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[1]);
   *z = SFG_floorHeightAt(
-         SFG_MONSTER_COORD_TO_SQUARES(monster->coords[0]),
-         SFG_MONSTER_COORD_TO_SQUARES(monster->coords[1]))
-       + RCL_UNITS_PER_SQUARE / 2;
+           SFG_MONSTER_COORD_TO_SQUARES(monster->coords[0]),
+           SFG_MONSTER_COORD_TO_SQUARES(monster->coords[1])) +
+       RCL_UNITS_PER_SQUARE / 2;
 }
 
 void SFG_monsterPerformAI(SFG_MonsterRecord *monster)
@@ -2336,109 +2335,98 @@ void SFG_monsterPerformAI(SFG_MonsterRecord *monster)
   coordAdd[1] = 0;
 
   uint8_t notRanged =
-    (attackType == SFG_MONSTER_ATTACK_MELEE) || 
-    (attackType == SFG_MONSTER_ATTACK_EXPLODE); 
+      (attackType == SFG_MONSTER_ATTACK_MELEE) ||
+      (attackType == SFG_MONSTER_ATTACK_EXPLODE);
 
   uint8_t monsterSquare[2];
-   /* because of some insanely retarded C++ compilers that error on narrowing
-      conversion between { } we init this way: */
+  /* because of some insanely retarded C++ compilers that error on narrowing
+     conversion between { } we init this way: */
   monsterSquare[0] = SFG_MONSTER_COORD_TO_SQUARES(monster->coords[0]);
   monsterSquare[1] = SFG_MONSTER_COORD_TO_SQUARES(monster->coords[1]);
 
   RCL_Unit currentHeight =
-    SFG_floorCollisionHeightAt(monsterSquare[0],monsterSquare[1]);
+      SFG_floorCollisionHeightAt(monsterSquare[0], monsterSquare[1]);
 
   if ( // ranged monsters: sometimes randomly attack
-       !notRanged &&
-       (SFG_random() < 
-       SFG_GET_MONSTER_AGGRESSIVITY(SFG_MONSTER_TYPE_TO_INDEX(type)))
-     )
-  { 
+      !notRanged &&
+      (SFG_random() <
+       SFG_GET_MONSTER_AGGRESSIVITY(SFG_MONSTER_TYPE_TO_INDEX(type))))
+  {
     RCL_Vector2D pos;
     pos.x = SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[0]);
     pos.y = SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[1]);
 
     if (SFG_random() % 4 != 0 &&
-      SFG_spriteIsVisible(pos,currentHeight + // only if player is visible
-        SFG_SPRITE_SIZE_TO_HEIGHT_ABOVE_GROUND(
-        SFG_GET_MONSTER_SPRITE_SIZE(
-        SFG_MONSTER_TYPE_TO_INDEX(type)))))
+        SFG_spriteIsVisible(pos, currentHeight + // only if player is visible
+                                     SFG_SPRITE_SIZE_TO_HEIGHT_ABOVE_GROUND(
+                                         SFG_GET_MONSTER_SPRITE_SIZE(
+                                             SFG_MONSTER_TYPE_TO_INDEX(type)))))
     {
       // ranged attack
- 
+
       state = SFG_MONSTER_STATE_ATTACKING;
 
       RCL_Vector2D dir;
 
-      dir.x = SFG_player.camera.position.x - pos.x
-        - 128 * SFG_MONSTER_AIM_RANDOMNESS + 
-        SFG_random() * SFG_MONSTER_AIM_RANDOMNESS;
+      dir.x = SFG_player.camera.position.x - pos.x - 128 * SFG_MONSTER_AIM_RANDOMNESS +
+              SFG_random() * SFG_MONSTER_AIM_RANDOMNESS;
 
-      dir.y = SFG_player.camera.position.y - pos.y
-        - 128 * SFG_MONSTER_AIM_RANDOMNESS + 
-        SFG_random() * SFG_MONSTER_AIM_RANDOMNESS;
+      dir.y = SFG_player.camera.position.y - pos.y - 128 * SFG_MONSTER_AIM_RANDOMNESS +
+              SFG_random() * SFG_MONSTER_AIM_RANDOMNESS;
 
-      uint8_t projectile;  
+      uint8_t projectile;
 
       switch (SFG_GET_MONSTER_ATTACK_TYPE(monsterNumber))
       {
-        case SFG_MONSTER_ATTACK_FIREBALL:
-          projectile = SFG_PROJECTILE_FIREBALL; 
-          break;
+      case SFG_MONSTER_ATTACK_FIREBALL:
+        projectile = SFG_PROJECTILE_FIREBALL;
+        break;
 
-        case SFG_MONSTER_ATTACK_BULLET:
-          projectile = SFG_PROJECTILE_BULLET; 
-          break;
+      case SFG_MONSTER_ATTACK_BULLET:
+        projectile = SFG_PROJECTILE_BULLET;
+        break;
 
-        case SFG_MONSTER_ATTACK_PLASMA:
-          projectile = SFG_PROJECTILE_PLASMA;
-          break;
+      case SFG_MONSTER_ATTACK_PLASMA:
+        projectile = SFG_PROJECTILE_PLASMA;
+        break;
 
-        case SFG_MONSTER_ATTACK_FIREBALL_BULLET:
-          projectile = (SFG_random() < 128) ?
-            SFG_PROJECTILE_FIREBALL : 
-            SFG_PROJECTILE_BULLET;
-          break;
+      case SFG_MONSTER_ATTACK_FIREBALL_BULLET:
+        projectile = (SFG_random() < 128) ? SFG_PROJECTILE_FIREBALL : SFG_PROJECTILE_BULLET;
+        break;
 
-        case SFG_MONSTER_ATTACK_FIREBALL_PLASMA:
-          projectile = (SFG_random() < 128) ?
-            SFG_PROJECTILE_FIREBALL : 
-            SFG_PROJECTILE_PLASMA;
-          break;
+      case SFG_MONSTER_ATTACK_FIREBALL_PLASMA:
+        projectile = (SFG_random() < 128) ? SFG_PROJECTILE_FIREBALL : SFG_PROJECTILE_PLASMA;
+        break;
 
-        default:
-          projectile = SFG_PROJECTILE_NONE; 
-          break;
+      default:
+        projectile = SFG_PROJECTILE_NONE;
+        break;
       }
 
       if (projectile == SFG_PROJECTILE_BULLET)
         SFG_playGameSound(0,
-          SFG_distantSoundVolume( 
-            SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[0]),
-            SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[1]),
-            currentHeight)
-          );
+                          SFG_distantSoundVolume(
+                              SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[0]),
+                              SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[1]),
+                              currentHeight));
 
       RCL_Unit middleHeight = currentHeight +
-        SFG_SPRITE_SIZE_TO_HEIGHT_ABOVE_GROUND(SFG_GET_MONSTER_SPRITE_SIZE(
-        SFG_MONSTER_TYPE_TO_INDEX(SFG_MR_TYPE(*monster))));
+                              SFG_SPRITE_SIZE_TO_HEIGHT_ABOVE_GROUND(SFG_GET_MONSTER_SPRITE_SIZE(
+                                  SFG_MONSTER_TYPE_TO_INDEX(SFG_MR_TYPE(*monster))));
 
-      RCL_Unit verticalSpeed = (
-        ((projectile != SFG_PROJECTILE_NONE) ? 
-        SFG_GET_PROJECTILE_SPEED_UPS(projectile) : 0) * 
-        SFG_directionTangent(dir.x,dir.y,SFG_player.camera.height -
-        middleHeight)) / RCL_UNITS_PER_SQUARE;
-      
+      RCL_Unit verticalSpeed = (((projectile != SFG_PROJECTILE_NONE) ? SFG_GET_PROJECTILE_SPEED_UPS(projectile) : 0) *
+                                SFG_directionTangent(dir.x, dir.y, SFG_player.camera.height - middleHeight)) /
+                               RCL_UNITS_PER_SQUARE;
+
       dir = RCL_normalize(dir);
 
       SFG_launchProjectile(
-        projectile,
-        pos,
-        middleHeight,
-        dir,
-        verticalSpeed,
-        SFG_PROJECTILE_SPAWN_OFFSET
-      );
+          projectile,
+          pos,
+          middleHeight,
+          dir,
+          verticalSpeed,
+          SFG_PROJECTILE_SPAWN_OFFSET);
     } // if visible
     else
       state = SFG_MONSTER_STATE_IDLE;
@@ -2450,13 +2438,13 @@ void SFG_monsterPerformAI(SFG_MonsterRecord *monster)
       // non-ranged monsters: walk towards player
 
       RCL_Unit pX, pY, pZ;
-      SFG_getMonsterWorldPosition(monster,&pX,&pY,&pZ);
+      SFG_getMonsterWorldPosition(monster, &pX, &pY, &pZ);
 
       uint8_t isClose = // close to player?
-        SFG_taxicabDistance(pX,pY,pZ,
-          SFG_player.camera.position.x,
-          SFG_player.camera.position.y,
-          SFG_player.camera.height) <= SFG_MELEE_RANGE;
+          SFG_taxicabDistance(pX, pY, pZ,
+                              SFG_player.camera.position.x,
+                              SFG_player.camera.position.y,
+                              SFG_player.camera.height) <= SFG_MELEE_RANGE;
 
       if (!isClose)
       {
@@ -2499,15 +2487,15 @@ void SFG_monsterPerformAI(SFG_MonsterRecord *monster)
           state = SFG_MONSTER_STATE_ATTACKING;
 
           SFG_playerChangeHealth(
-            -1 * SFG_getDamageValue(SFG_WEAPON_FIRE_TYPE_MELEE)); 
-              
-          SFG_playGameSound(3,255);
+              -1 * SFG_getDamageValue(SFG_WEAPON_FIRE_TYPE_MELEE));
+
+          SFG_playGameSound(3, 255);
         }
         else // SFG_MONSTER_ATTACK_EXPLODE
         {
           // explode
 
-          SFG_createExplosion(pX,pY,pZ);
+          SFG_createExplosion(pX, pY, pZ);
           monster->health = 0;
         }
       }
@@ -2518,15 +2506,32 @@ void SFG_monsterPerformAI(SFG_MonsterRecord *monster)
 
       switch (SFG_random() % 8)
       {
-        case 0: state = SFG_MONSTER_STATE_GOING_E; break;
-        case 1: state = SFG_MONSTER_STATE_GOING_W; break;
-        case 2: state = SFG_MONSTER_STATE_GOING_N; break;
-        case 3: state = SFG_MONSTER_STATE_GOING_S; break;
-        case 4: state = SFG_MONSTER_STATE_GOING_NE; break;
-        case 5: state = SFG_MONSTER_STATE_GOING_NW; break;
-        case 6: state = SFG_MONSTER_STATE_GOING_SE; break;
-        case 7: state = SFG_MONSTER_STATE_GOING_SW; break;
-        default: break;
+      case 0:
+        state = SFG_MONSTER_STATE_GOING_E;
+        break;
+      case 1:
+        state = SFG_MONSTER_STATE_GOING_W;
+        break;
+      case 2:
+        state = SFG_MONSTER_STATE_GOING_N;
+        break;
+      case 3:
+        state = SFG_MONSTER_STATE_GOING_S;
+        break;
+      case 4:
+        state = SFG_MONSTER_STATE_GOING_NE;
+        break;
+      case 5:
+        state = SFG_MONSTER_STATE_GOING_NW;
+        break;
+      case 6:
+        state = SFG_MONSTER_STATE_GOING_SE;
+        break;
+      case 7:
+        state = SFG_MONSTER_STATE_GOING_SW;
+        break;
+      default:
+        break;
       }
     }
   }
@@ -2548,8 +2553,8 @@ void SFG_monsterPerformAI(SFG_MonsterRecord *monster)
         state == SFG_MONSTER_STATE_GOING_SE)
       coordAdd[0] = add;
     else if (state == SFG_MONSTER_STATE_GOING_W ||
-        state == SFG_MONSTER_STATE_GOING_SW ||
-        state == SFG_MONSTER_STATE_GOING_NW)
+             state == SFG_MONSTER_STATE_GOING_SW ||
+             state == SFG_MONSTER_STATE_GOING_NW)
       coordAdd[0] = -1 * add;
 
     if (state == SFG_MONSTER_STATE_GOING_N ||
@@ -2557,17 +2562,18 @@ void SFG_monsterPerformAI(SFG_MonsterRecord *monster)
         state == SFG_MONSTER_STATE_GOING_NW)
       coordAdd[1] = -1 * add;
     else if (state == SFG_MONSTER_STATE_GOING_S ||
-        state == SFG_MONSTER_STATE_GOING_SE ||
-        state == SFG_MONSTER_STATE_GOING_SW)
+             state == SFG_MONSTER_STATE_GOING_SE ||
+             state == SFG_MONSTER_STATE_GOING_SW)
       coordAdd[1] = add;
 
     if ((coordAdd[0] != 0 || coordAdd[1] != 0) && SFG_random() <
-        SFG_MONSTER_SOUND_PROBABILITY)
+                                                      SFG_MONSTER_SOUND_PROBABILITY)
       SFG_playGameSound(5,
-          SFG_distantSoundVolume( 
-          SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[0]),
-          SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[1]),
-          currentHeight) / 2);
+                        SFG_distantSoundVolume(
+                            SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[0]),
+                            SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[1]),
+                            currentHeight) /
+                            2);
 
     state = SFG_MONSTER_STATE_IDLE;
   }
@@ -2594,18 +2600,19 @@ void SFG_monsterPerformAI(SFG_MonsterRecord *monster)
       newPos[0] = monster->coords[0] + (i != 1) * coordAdd[0];
 
       RCL_Unit newHeight =
-        SFG_floorCollisionHeightAt(
-          SFG_MONSTER_COORD_TO_SQUARES(newPos[0]),
-          SFG_MONSTER_COORD_TO_SQUARES(newPos[1]));
+          SFG_floorCollisionHeightAt(
+              SFG_MONSTER_COORD_TO_SQUARES(newPos[0]),
+              SFG_MONSTER_COORD_TO_SQUARES(newPos[1]));
 
       collision =
-        RCL_abs(currentHeight - newHeight) > RCL_CAMERA_COLL_STEP_HEIGHT;
+          RCL_abs(currentHeight - newHeight) > RCL_CAMERA_COLL_STEP_HEIGHT;
 
       if (!collision)
         collision = (SFG_ceilingHeightAt(
-          SFG_MONSTER_COORD_TO_SQUARES(newPos[0]),
-          SFG_MONSTER_COORD_TO_SQUARES(newPos[1])) - newHeight) <
-          SFG_MONSTER_COLLISION_HEIGHT;
+                         SFG_MONSTER_COORD_TO_SQUARES(newPos[0]),
+                         SFG_MONSTER_COORD_TO_SQUARES(newPos[1])) -
+                     newHeight) <
+                    SFG_MONSTER_COLLISION_HEIGHT;
 
       if (collision)
         break;
@@ -2618,38 +2625,36 @@ void SFG_monsterPerformAI(SFG_MonsterRecord *monster)
   {
     state = SFG_MONSTER_STATE_IDLE;
     // ^ will force the monster to choose random direction in the next update
- 
+
     newPos[0] = monster->coords[0];
     newPos[1] = monster->coords[1];
   }
 
   monster->stateType = state | (monsterNumber << 4);
   monster->coords[0] = newPos[0];
-  monster->coords[1] = newPos[1];;
+  monster->coords[1] = newPos[1];
+  ;
 }
 
 static inline uint8_t SFG_elementCollides(
-  RCL_Unit pointX,
-  RCL_Unit pointY,
-  RCL_Unit pointZ,
-  RCL_Unit elementX,
-  RCL_Unit elementY,
-  RCL_Unit elementHeight
-)
+    RCL_Unit pointX,
+    RCL_Unit pointY,
+    RCL_Unit pointZ,
+    RCL_Unit elementX,
+    RCL_Unit elementY,
+    RCL_Unit elementHeight)
 {
-  return
-    SFG_taxicabDistance(pointX,pointY,pointZ,elementX,elementY,elementHeight)
-    <= SFG_ELEMENT_COLLISION_RADIUS;
+  return SFG_taxicabDistance(pointX, pointY, pointZ, elementX, elementY, elementHeight) <= SFG_ELEMENT_COLLISION_RADIUS;
 }
 
 /**
   Checks collision of a projectile with level element at given position.
 */
 uint8_t SFG_projectileCollides(SFG_ProjectileRecord *projectile,
-  RCL_Unit x, RCL_Unit y, RCL_Unit z)
+                               RCL_Unit x, RCL_Unit y, RCL_Unit z)
 {
-  if (!SFG_elementCollides(x,y,z,
-    projectile->position[0],projectile->position[1],projectile->position[2]))
+  if (!SFG_elementCollides(x, y, z,
+                           projectile->position[0], projectile->position[1], projectile->position[2]))
     return 0;
 
   if ((projectile->type == SFG_PROJECTILE_EXPLOSION) ||
@@ -2662,13 +2667,13 @@ uint8_t SFG_projectileCollides(SFG_ProjectileRecord *projectile,
 
   RCL_Vector2D projDir, toElement;
 
-  projDir.x = projectile->direction[0]; 
+  projDir.x = projectile->direction[0];
   projDir.y = projectile->direction[1];
 
   toElement.x = x - projectile->position[0];
   toElement.y = y - projectile->position[1];
-   
-  return RCL_vectorsAngleCos(projDir,toElement) >= 0;
+
+  return RCL_vectorsAngleCos(projDir, toElement) >= 0;
 }
 
 /**
@@ -2680,9 +2685,9 @@ void SFG_updateLevel()
   // update projectiles:
 
   uint8_t substractFrames =
-    ((SFG_game.frame - SFG_currentLevel.frameStart) & 0x01) ? 1 : 0;
-    /* ^ only substract frames to live every other frame because a maximum of
-       256 frames would be too few */
+      ((SFG_game.frame - SFG_currentLevel.frameStart) & 0x01) ? 1 : 0;
+  /* ^ only substract frames to live every other frame because a maximum of
+     256 frames would be too few */
 
   for (int8_t i = 0; i < SFG_currentLevel.projectileRecordCount; ++i)
   { // ^ has to be signed
@@ -2695,18 +2700,18 @@ void SFG_updateLevel()
     else if (p->type == SFG_PROJECTILE_PLASMA)
       attackType = SFG_WEAPON_FIRE_TYPE_PLASMA;
 
-    RCL_Unit pos[3] = {0,0,0}; /* we have to convert from uint16_t because of
-                                  under/overflows */
+    RCL_Unit pos[3] = {0, 0, 0}; /* we have to convert from uint16_t because of
+                                    under/overflows */
     uint8_t eliminate = 0;
 
-    for (uint8_t j = 0; j < 3; ++j) 
+    for (uint8_t j = 0; j < 3; ++j)
     {
       pos[j] = p->position[j];
       pos[j] += p->direction[j];
 
       if ( // projectile outside map?
-        (pos[j] < 0) ||
-        (pos[j] >= (SFG_MAP_SIZE * RCL_UNITS_PER_SQUARE)))
+          (pos[j] < 0) ||
+          (pos[j] >= (SFG_MAP_SIZE * RCL_UNITS_PER_SQUARE)))
       {
         eliminate = 1;
         break;
@@ -2718,36 +2723,34 @@ void SFG_updateLevel()
       eliminate = 1;
     }
     else if (
-      (p->type != SFG_PROJECTILE_EXPLOSION) &&
-      (p->type != SFG_PROJECTILE_DUST))
+        (p->type != SFG_PROJECTILE_EXPLOSION) &&
+        (p->type != SFG_PROJECTILE_DUST))
     {
       if (SFG_projectileCollides( // collides with player?
-            p,
-            SFG_player.camera.position.x,
-            SFG_player.camera.position.y,
-            SFG_player.camera.height))
-        {
-          eliminate = 1;
+              p,
+              SFG_player.camera.position.x,
+              SFG_player.camera.position.y,
+              SFG_player.camera.height))
+      {
+        eliminate = 1;
 
-          SFG_playerChangeHealth(-1 * SFG_getDamageValue(attackType));
-        }
+        SFG_playerChangeHealth(-1 * SFG_getDamageValue(attackType));
+      }
 
       /* Check collision with the map (we don't use SFG_floorCollisionHeightAt
          because collisions with items have to be done differently for
          projectiles). */
 
       if (!eliminate &&
-          ((SFG_floorHeightAt(pos[0] / RCL_UNITS_PER_SQUARE,pos[1] / 
-            RCL_UNITS_PER_SQUARE) >= pos[2])
-          ||
-          (SFG_ceilingHeightAt(pos[0] / RCL_UNITS_PER_SQUARE,pos[1] /
-            RCL_UNITS_PER_SQUARE) <= pos[2]))
-        )
+          ((SFG_floorHeightAt(pos[0] / RCL_UNITS_PER_SQUARE, pos[1] /
+                                                                 RCL_UNITS_PER_SQUARE) >= pos[2]) ||
+           (SFG_ceilingHeightAt(pos[0] / RCL_UNITS_PER_SQUARE, pos[1] /
+                                                                   RCL_UNITS_PER_SQUARE) <= pos[2])))
         eliminate = 1;
 
       // check collision with active level elements
 
-      if (!eliminate) // monsters 
+      if (!eliminate) // monsters
         for (uint16_t j = 0; j < SFG_currentLevel.monsterRecordCount; ++j)
         {
           SFG_MonsterRecord *m = &(SFG_currentLevel.monsterRecords[j]);
@@ -2758,15 +2761,14 @@ void SFG_updateLevel()
               (state != SFG_MONSTER_STATE_DEAD))
           {
             if (SFG_projectileCollides(p,
-                  SFG_MONSTER_COORD_TO_RCL_UNITS(m->coords[0]),
-                  SFG_MONSTER_COORD_TO_RCL_UNITS(m->coords[1]),
-                  SFG_floorHeightAt(
-                    SFG_MONSTER_COORD_TO_SQUARES(m->coords[0]),
-                    SFG_MONSTER_COORD_TO_SQUARES(m->coords[1]))
-                   ))
+                                       SFG_MONSTER_COORD_TO_RCL_UNITS(m->coords[0]),
+                                       SFG_MONSTER_COORD_TO_RCL_UNITS(m->coords[1]),
+                                       SFG_floorHeightAt(
+                                           SFG_MONSTER_COORD_TO_SQUARES(m->coords[0]),
+                                           SFG_MONSTER_COORD_TO_SQUARES(m->coords[1]))))
             {
               eliminate = 1;
-              SFG_monsterChangeHealth(m,-1 * SFG_getDamageValue(attackType));
+              SFG_monsterChangeHealth(m, -1 * SFG_getDamageValue(attackType));
               break;
             }
           }
@@ -2781,17 +2783,16 @@ void SFG_updateLevel()
           {
             RCL_Unit x = SFG_ELEMENT_COORD_TO_RCL_UNITS(e->coords[0]);
             RCL_Unit y = SFG_ELEMENT_COORD_TO_RCL_UNITS(e->coords[1]);
-            RCL_Unit z = SFG_floorHeightAt(e->coords[0],e->coords[1]);
+            RCL_Unit z = SFG_floorHeightAt(e->coords[0], e->coords[1]);
 
-            if (SFG_projectileCollides(p,x,y,z))
+            if (SFG_projectileCollides(p, x, y, z))
             {
               if (
-                   (e->type == SFG_LEVEL_ELEMENT_BARREL) &&
-                   (SFG_getDamageValue(attackType) >= 
-                     SFG_BARREL_EXPLOSION_DAMAGE_THRESHOLD)
-                 )
+                  (e->type == SFG_LEVEL_ELEMENT_BARREL) &&
+                  (SFG_getDamageValue(attackType) >=
+                   SFG_BARREL_EXPLOSION_DAMAGE_THRESHOLD))
               {
-                SFG_explodeBarrel(j,x,y,z);
+                SFG_explodeBarrel(j, x, y, z);
               }
 
               eliminate = 1;
@@ -2804,17 +2805,17 @@ void SFG_updateLevel()
     if (eliminate)
     {
       if (p->type == SFG_PROJECTILE_FIREBALL)
-        SFG_createExplosion(p->position[0],p->position[1],p->position[2]);
+        SFG_createExplosion(p->position[0], p->position[1], p->position[2]);
       else if (p->type == SFG_PROJECTILE_BULLET)
-        SFG_createDust(p->position[0],p->position[1],p->position[2]);
+        SFG_createDust(p->position[0], p->position[1], p->position[2]);
       else if (p->type == SFG_PROJECTILE_PLASMA)
-        SFG_playGameSound(4,SFG_distantSoundVolume(pos[0],pos[1],pos[2]));
+        SFG_playGameSound(4, SFG_distantSoundVolume(pos[0], pos[1], pos[2]));
 
       // remove the projectile
 
       for (uint8_t j = i; j < SFG_currentLevel.projectileRecordCount - 1; ++j)
         SFG_currentLevel.projectileRecords[j] =
-          SFG_currentLevel.projectileRecords[j + 1];
+            SFG_currentLevel.projectileRecords[j + 1];
 
       SFG_currentLevel.projectileRecordCount--;
 
@@ -2836,39 +2837,37 @@ void SFG_updateLevel()
     /* Check door on whether a player is standing nearby. For performance
        reasons we only check a few doors and move to others in the next
        frame. */
-   
+
     if (SFG_currentLevel.checkedDoorIndex == 0)
     {
       uint8_t count = SFG_player.cards >> 6;
 
-      SFG_player.cards = (count <= 1) ?
-        (SFG_player.cards & 0x07) :
-        ((SFG_player.cards & 0x7f) | ((count - 1) << 6));
+      SFG_player.cards = (count <= 1) ? (SFG_player.cards & 0x07) : ((SFG_player.cards & 0x7f) | ((count - 1) << 6));
     }
- 
+
     for (uint16_t i = 0;
          i < RCL_min(SFG_ELEMENT_DISTANCES_CHECKED_PER_FRAME,
-           SFG_currentLevel.doorRecordCount);
-         ++i) 
+                     SFG_currentLevel.doorRecordCount);
+         ++i)
     {
       SFG_DoorRecord *door =
-        &(SFG_currentLevel.doorRecords[SFG_currentLevel.checkedDoorIndex]);
+          &(SFG_currentLevel.doorRecords[SFG_currentLevel.checkedDoorIndex]);
 
       uint8_t upDownState = door->state & SFG_DOOR_UP_DOWN_MASK;
 
       uint8_t newUpDownState = 0;
-      
+
       uint8_t lock = SFG_DOOR_LOCK(door->state);
 
       if ( // player near door?
-        (door->coords[0] >= (SFG_player.squarePosition[0] - 1)) &&
-        (door->coords[0] <= (SFG_player.squarePosition[0] + 1)) &&
-        (door->coords[1] >= (SFG_player.squarePosition[1] - 1)) &&
-        (door->coords[1] <= (SFG_player.squarePosition[1] + 1)))
+          (door->coords[0] >= (SFG_player.squarePosition[0] - 1)) &&
+          (door->coords[0] <= (SFG_player.squarePosition[0] + 1)) &&
+          (door->coords[1] >= (SFG_player.squarePosition[1] - 1)) &&
+          (door->coords[1] <= (SFG_player.squarePosition[1] + 1)))
       {
         if (lock == 0)
         {
-          newUpDownState = SFG_DOOR_UP_DOWN_MASK;    
+          newUpDownState = SFG_DOOR_UP_DOWN_MASK;
         }
         else
         {
@@ -2877,13 +2876,13 @@ void SFG_updateLevel()
           if (SFG_player.cards & lock) // player has the card?
             newUpDownState = SFG_DOOR_UP_DOWN_MASK;
           else
-            SFG_player.cards = 
-              (SFG_player.cards & 0x07) | (lock << 3) | (2 << 6);
+            SFG_player.cards =
+                (SFG_player.cards & 0x07) | (lock << 3) | (2 << 6);
         }
       }
 
       if (upDownState != newUpDownState)
-        SFG_playGameSound(1,255);
+        SFG_playGameSound(1, 255);
 
       door->state = (door->state & ~SFG_DOOR_UP_DOWN_MASK) | newUpDownState;
 
@@ -2900,9 +2899,7 @@ void SFG_updateLevel()
 
       int8_t height = door->state & SFG_DOOR_VERTICAL_POSITION_MASK;
 
-      height = (door->state & SFG_DOOR_UP_DOWN_MASK) ?
-            RCL_min(0x1f,height + SFG_DOOR_INCREMENT_PER_FRAME) :
-            RCL_max(0x00,height - SFG_DOOR_INCREMENT_PER_FRAME);
+      height = (door->state & SFG_DOOR_UP_DOWN_MASK) ? RCL_min(0x1f, height + SFG_DOOR_INCREMENT_PER_FRAME) : RCL_max(0x00, height - SFG_DOOR_INCREMENT_PER_FRAME);
 
       door->state = (door->state & ~SFG_DOOR_VERTICAL_POSITION_MASK) | height;
     }
@@ -2915,23 +2912,22 @@ void SFG_updateLevel()
 
     for (uint16_t i = 0;
          i < RCL_min(SFG_ELEMENT_DISTANCES_CHECKED_PER_FRAME,
-           SFG_currentLevel.itemRecordCount);
-         ++i) 
+                     SFG_currentLevel.itemRecordCount);
+         ++i)
     {
       SFG_ItemRecord item =
-        SFG_currentLevel.itemRecords[SFG_currentLevel.checkedItemIndex];
+          SFG_currentLevel.itemRecords[SFG_currentLevel.checkedItemIndex];
 
       item &= ~SFG_ITEM_RECORD_ACTIVE_MASK;
 
       SFG_LevelElement e =
-        SFG_currentLevel.levelPointer->elements[item];
+          SFG_currentLevel.levelPointer->elements[item];
 
       if (
-        SFG_isInActiveDistanceFromPlayer(
-          e.coords[0] * RCL_UNITS_PER_SQUARE + RCL_UNITS_PER_SQUARE / 2,
-          e.coords[1] * RCL_UNITS_PER_SQUARE + RCL_UNITS_PER_SQUARE / 2,
-          SFG_floorHeightAt(e.coords[0],e.coords[1]) + RCL_UNITS_PER_SQUARE / 2)
-        )
+          SFG_isInActiveDistanceFromPlayer(
+              e.coords[0] * RCL_UNITS_PER_SQUARE + RCL_UNITS_PER_SQUARE / 2,
+              e.coords[1] * RCL_UNITS_PER_SQUARE + RCL_UNITS_PER_SQUARE / 2,
+              SFG_floorHeightAt(e.coords[0], e.coords[1]) + RCL_UNITS_PER_SQUARE / 2))
         item |= SFG_ITEM_RECORD_ACTIVE_MASK;
 
       SFG_currentLevel.itemRecords[SFG_currentLevel.checkedItemIndex] = item;
@@ -2950,65 +2946,63 @@ void SFG_updateLevel()
 
     for (uint16_t i = 0;
          i < RCL_min(SFG_ELEMENT_DISTANCES_CHECKED_PER_FRAME,
-           SFG_currentLevel.monsterRecordCount);
-         ++i) 
+                     SFG_currentLevel.monsterRecordCount);
+         ++i)
     {
       SFG_MonsterRecord *monster =
-      &(SFG_currentLevel.monsterRecords[SFG_currentLevel.checkedMonsterIndex]);
+          &(SFG_currentLevel.monsterRecords[SFG_currentLevel.checkedMonsterIndex]);
 
       if ( // far away from the player?
-        !SFG_isInActiveDistanceFromPlayer(
-          SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[0]),
-          SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[1]),
-          SFG_floorHeightAt(
-            SFG_MONSTER_COORD_TO_SQUARES(monster->coords[0]),
-            SFG_MONSTER_COORD_TO_SQUARES(monster->coords[1]))
-            + RCL_UNITS_PER_SQUARE / 2
-          )
-        )
+          !SFG_isInActiveDistanceFromPlayer(
+              SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[0]),
+              SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[1]),
+              SFG_floorHeightAt(
+                  SFG_MONSTER_COORD_TO_SQUARES(monster->coords[0]),
+                  SFG_MONSTER_COORD_TO_SQUARES(monster->coords[1])) +
+                  RCL_UNITS_PER_SQUARE / 2))
       {
-        monster->stateType = 
-           (monster->stateType & SFG_MONSTER_MASK_TYPE) |
-           SFG_MONSTER_STATE_INACTIVE;
+        monster->stateType =
+            (monster->stateType & SFG_MONSTER_MASK_TYPE) |
+            SFG_MONSTER_STATE_INACTIVE;
       }
       else if (SFG_MR_STATE(*monster) == SFG_MONSTER_STATE_INACTIVE)
       {
-        monster->stateType = 
-          (monster->stateType & SFG_MONSTER_MASK_TYPE) |
-          (monster->health != 0 ? 
-            SFG_MONSTER_STATE_IDLE : SFG_MONSTER_STATE_DEAD);
+        monster->stateType =
+            (monster->stateType & SFG_MONSTER_MASK_TYPE) |
+            (monster->health != 0 ? SFG_MONSTER_STATE_IDLE : SFG_MONSTER_STATE_DEAD);
       }
 
       SFG_currentLevel.checkedMonsterIndex++;
 
       if (SFG_currentLevel.checkedMonsterIndex >=
-        SFG_currentLevel.monsterRecordCount)
+          SFG_currentLevel.monsterRecordCount)
         SFG_currentLevel.checkedMonsterIndex = 0;
     }
   }
 
   // update AI and handle dead monsters:
   if ((SFG_game.frame - SFG_currentLevel.frameStart) %
-      SFG_AI_UPDATE_FRAME_INTERVAL == 0)
+          SFG_AI_UPDATE_FRAME_INTERVAL ==
+      0)
   {
     for (uint16_t i = 0; i < SFG_currentLevel.monsterRecordCount; ++i)
     {
       SFG_MonsterRecord *monster = &(SFG_currentLevel.monsterRecords[i]);
       uint8_t state = SFG_MR_STATE(*monster);
 
-      if ((state == SFG_MONSTER_STATE_INACTIVE) || 
+      if ((state == SFG_MONSTER_STATE_INACTIVE) ||
           (state == SFG_MONSTER_STATE_DEAD))
         continue;
 
       if (state == SFG_MONSTER_STATE_DYING)
       {
         monster->stateType =
-          (monster->stateType & 0xf0) | SFG_MONSTER_STATE_DEAD;
+            (monster->stateType & 0xf0) | SFG_MONSTER_STATE_DEAD;
       }
       else if (monster->health == 0)
       {
         monster->stateType = (monster->stateType & SFG_MONSTER_MASK_TYPE) |
-          SFG_MONSTER_STATE_DYING;
+                             SFG_MONSTER_STATE_DYING;
 
         if (SFG_MR_TYPE(*monster) == SFG_LEVEL_ELEMENT_MONSTER_ENDER)
         {
@@ -3023,16 +3017,16 @@ void SFG_updateLevel()
           }
         }
 
-        SFG_processEvent(SFG_EVENT_MONSTER_DIES,SFG_MR_TYPE(*monster));
+        SFG_processEvent(SFG_EVENT_MONSTER_DIES, SFG_MR_TYPE(*monster));
 
         if (SFG_MR_TYPE(*monster) == SFG_LEVEL_ELEMENT_MONSTER_EXPLODER)
           SFG_createExplosion(
-            SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[0]),
-            SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[1]),
-            SFG_floorCollisionHeightAt(
-              SFG_MONSTER_COORD_TO_SQUARES(monster->coords[0]),
-              SFG_MONSTER_COORD_TO_SQUARES(monster->coords[0])) +
-            RCL_UNITS_PER_SQUARE / 2);
+              SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[0]),
+              SFG_MONSTER_COORD_TO_RCL_UNITS(monster->coords[1]),
+              SFG_floorCollisionHeightAt(
+                  SFG_MONSTER_COORD_TO_SQUARES(monster->coords[0]),
+                  SFG_MONSTER_COORD_TO_SQUARES(monster->coords[0])) +
+                  RCL_UNITS_PER_SQUARE / 2);
       }
       else
       {
@@ -3056,13 +3050,13 @@ static inline uint16_t SFG_getMapRevealBit(uint8_t squareX, uint8_t squareY)
   Draws text on screen using the bitmap font stored in assets.
 */
 void SFG_drawText(
-  const char *text,
-  uint16_t x,
-  uint16_t y,
-  uint8_t size,
-  uint8_t color,
-  uint16_t maxLength,
-  uint16_t limitX)
+    const char *text,
+    uint16_t x,
+    uint16_t y,
+    uint8_t size,
+    uint8_t color,
+    uint16_t maxLength,
+    uint16_t limitX)
 {
   if (size == 0)
     size = 1;
@@ -3080,9 +3074,9 @@ void SFG_drawText(
 
   while (pos < maxLength && text[pos] != 0) // for each character
   {
-    uint16_t character = 
-      //SFG_PROGRAM_MEMORY_U8(SFG_font + SFG_charToFontIndex(text[pos]));
-      SFG_font[SFG_charToFontIndex(text[pos])];
+    uint16_t character =
+        // SFG_PROGRAM_MEMORY_U8(SFG_font + SFG_charToFontIndex(text[pos]));
+        SFG_font[SFG_charToFontIndex(text[pos])];
 
     for (uint8_t i = 0; i < SFG_FONT_CHARACTER_SIZE; ++i) // for each line
     {
@@ -3098,8 +3092,8 @@ void SFG_drawText(
               uint16_t drawY = currentY + l;
 
               if (drawX < SFG_GAME_RESOLUTION_X &&
-                drawY < SFG_GAME_RESOLUTION_Y)
-                SFG_setGamePixel(drawX,drawY,color);
+                  drawY < SFG_GAME_RESOLUTION_Y)
+                SFG_setGamePixel(drawX, drawY, color);
             }
 
         currentY += size;
@@ -3108,16 +3102,16 @@ void SFG_drawText(
 
       currentX += size;
     }
-    
+
     currentX += size; // space
-      
+
     if (currentX > limitX)
     {
       currentX = x;
       y += (SFG_FONT_CHARACTER_SIZE + 1) * size;
     }
 
-    pos++;    
+    pos++;
   }
 }
 
@@ -3134,20 +3128,29 @@ void SFG_drawLevelStartOverlay()
 
       switch (stage)
       {
-        case 0: draw = 1; break;
-        case 1: draw = (x % 2) || (y % 2); break;
-        case 2: draw = (x % 2) == (y % 2); break;
-        case 3: draw = (x % 2) && (y % 2); break;
-        default: break;
+      case 0:
+        draw = 1;
+        break;
+      case 1:
+        draw = (x % 2) || (y % 2);
+        break;
+      case 2:
+        draw = (x % 2) == (y % 2);
+        break;
+      case 3:
+        draw = (x % 2) && (y % 2);
+        break;
+      default:
+        break;
       }
 
       if (draw)
-        SFG_setGamePixel(x,y,0);
+        SFG_setGamePixel(x, y, 0);
     }
 
   if (SFG_game.saved == 1)
-    SFG_drawText(SFG_TEXT_SAVED,SFG_HUD_MARGIN,SFG_HUD_MARGIN,
-      SFG_FONT_SIZE_MEDIUM,7,255,0);
+    SFG_drawText(SFG_TEXT_SAVED, SFG_HUD_MARGIN, SFG_HUD_MARGIN,
+                 SFG_FONT_SIZE_MEDIUM, 7, 255, 0);
 }
 
 /**
@@ -3156,8 +3159,8 @@ void SFG_drawLevelStartOverlay()
 void SFG_updatePlayerHeight()
 {
   SFG_player.camera.height =
-    SFG_floorCollisionHeightAt(
-      SFG_player.squarePosition[0],SFG_player.squarePosition[1]) +
+      SFG_floorCollisionHeightAt(
+          SFG_player.squarePosition[0], SFG_player.squarePosition[1]) +
       RCL_CAMERA_COLL_HEIGHT_BELOW;
 }
 
@@ -3165,9 +3168,9 @@ void SFG_winLevel()
 {
   SFG_levelEnds();
   SFG_setGameState(SFG_GAME_STATE_WIN);
-  SFG_playGameSound(2,255); 
-  SFG_processEvent(SFG_EVENT_VIBRATE,0);
-  SFG_processEvent(SFG_EVENT_LEVEL_WON,SFG_currentLevel.levelNumber + 1);
+  SFG_playGameSound(2, 255);
+  SFG_processEvent(SFG_EVENT_VIBRATE, 0);
+  SFG_processEvent(SFG_EVENT_LEVEL_WON, SFG_currentLevel.levelNumber + 1);
 }
 
 /**
@@ -3181,11 +3184,11 @@ void SFG_gameStepPlaying()
 #endif
 
   if (
-    (SFG_keyIsDown(SFG_KEY_C) && SFG_keyIsDown(SFG_KEY_DOWN)) ||
-    SFG_keyIsDown(SFG_KEY_MENU))
+      (SFG_keyIsDown(SFG_KEY_C) && SFG_keyIsDown(SFG_KEY_DOWN)) ||
+      SFG_keyIsDown(SFG_KEY_MENU))
   {
     SFG_setGameState(SFG_GAME_STATE_MENU);
-    SFG_playGameSound(3,SFG_MENU_CLICK_VOLUME);
+    SFG_playGameSound(3, SFG_MENU_CLICK_VOLUME);
     return;
   }
 
@@ -3212,8 +3215,7 @@ void SFG_gameStepPlaying()
     SFG_player.weaponCooldownFrames--;
 
   if (SFG_keyJustPressed(SFG_KEY_TOGGLE_FREELOOK))
-    SFG_game.settings = (SFG_game.settings & 0x04) ?
-      (SFG_game.settings & ~0x0c) : (SFG_game.settings | 0x0c);
+    SFG_game.settings = (SFG_game.settings & 0x04) ? (SFG_game.settings & ~0x0c) : (SFG_game.settings | 0x0c);
 
   int8_t canSwitchWeapon = SFG_player.weaponCooldownFrames == 0;
 
@@ -3222,35 +3224,35 @@ void SFG_gameStepPlaying()
   else if (SFG_keyJustPressed(SFG_KEY_PREVIOUS_WEAPON) && canSwitchWeapon)
     SFG_playerRotateWeapon(0);
   else if (SFG_keyJustPressed(SFG_KEY_CYCLE_WEAPON) &&
-    SFG_player.previousWeaponDirection)
+           SFG_player.previousWeaponDirection)
     SFG_playerRotateWeapon(SFG_player.previousWeaponDirection > 0);
 
   uint8_t shearingOn = SFG_game.settings & 0x04;
 
   if (SFG_keyIsDown(SFG_KEY_B))
   {
-    if (shearingOn)                      // B + U/D: shearing (if on)
+    if (shearingOn) // B + U/D: shearing (if on)
     {
       if (SFG_keyIsDown(SFG_KEY_UP))
       {
         SFG_player.camera.shear =
-          RCL_min(SFG_CAMERA_MAX_SHEAR_PIXELS,
-                  SFG_player.camera.shear + SFG_CAMERA_SHEAR_STEP_PER_FRAME);
+            RCL_min(SFG_CAMERA_MAX_SHEAR_PIXELS,
+                    SFG_player.camera.shear + SFG_CAMERA_SHEAR_STEP_PER_FRAME);
 
         shearing = 1;
       }
       else if (SFG_keyIsDown(SFG_KEY_DOWN))
       {
         SFG_player.camera.shear =
-          RCL_max(-1 * SFG_CAMERA_MAX_SHEAR_PIXELS,
-                  SFG_player.camera.shear - SFG_CAMERA_SHEAR_STEP_PER_FRAME);
+            RCL_max(-1 * SFG_CAMERA_MAX_SHEAR_PIXELS,
+                    SFG_player.camera.shear - SFG_CAMERA_SHEAR_STEP_PER_FRAME);
 
         shearing = 1;
       }
     }
 
     if (!SFG_keyIsDown(SFG_KEY_C))
-    {                                    // B + L/R: strafing
+    { // B + L/R: strafing
       if (SFG_keyIsDown(SFG_KEY_LEFT))
         strafe = -1;
       else if (SFG_keyIsDown(SFG_KEY_RIGHT))
@@ -3258,17 +3260,17 @@ void SFG_gameStepPlaying()
     }
   }
 
-  if (SFG_keyIsDown(SFG_KEY_C))          // C + A/B/L/R: weapon switching
+  if (SFG_keyIsDown(SFG_KEY_C)) // C + A/B/L/R: weapon switching
   {
     if ((SFG_keyJustPressed(SFG_KEY_LEFT) || SFG_keyJustPressed(SFG_KEY_A)) &&
-      canSwitchWeapon)
+        canSwitchWeapon)
       SFG_playerRotateWeapon(0);
     else if (
-      (SFG_keyJustPressed(SFG_KEY_RIGHT) || SFG_keyJustPressed(SFG_KEY_B)) &&
-      canSwitchWeapon)
+        (SFG_keyJustPressed(SFG_KEY_RIGHT) || SFG_keyJustPressed(SFG_KEY_B)) &&
+        canSwitchWeapon)
       SFG_playerRotateWeapon(1);
   }
-  else if (!SFG_keyIsDown(SFG_KEY_B))    // L/R: turning
+  else if (!SFG_keyIsDown(SFG_KEY_B)) // L/R: turning
   {
     if (SFG_keyIsDown(SFG_KEY_LEFT))
     {
@@ -3279,10 +3281,10 @@ void SFG_gameStepPlaying()
     {
       SFG_player.camera.direction += SFG_PLAYER_TURN_UNITS_PER_FRAME;
       recomputeDirection = 1;
-    } 
+    }
   }
 
-  if (!SFG_keyIsDown(SFG_KEY_B) || !shearingOn)     // U/D: movement
+  if (!SFG_keyIsDown(SFG_KEY_B) || !shearingOn) // U/D: movement
   {
     if (SFG_keyIsDown(SFG_KEY_UP))
     {
@@ -3304,23 +3306,23 @@ void SFG_gameStepPlaying()
 
   int16_t mouseX = 0, mouseY = 0;
 
-  SFG_getMouseOffset(&mouseX,&mouseY);
+  SFG_getMouseOffset(&mouseX, &mouseY);
 
-  if (mouseX != 0)                                  // mouse turning
+  if (mouseX != 0) // mouse turning
   {
-    SFG_player.camera.direction += 
-      (mouseX * SFG_MOUSE_SENSITIVITY_HORIZONTAL) / 128;
+    SFG_player.camera.direction +=
+        (mouseX * SFG_MOUSE_SENSITIVITY_HORIZONTAL) / 128;
 
     recomputeDirection = 1;
   }
 
-  if ((mouseY != 0) && shearingOn)                  // mouse shearing
+  if ((mouseY != 0) && shearingOn) // mouse shearing
     SFG_player.camera.shear =
-      RCL_max(RCL_min(
-        SFG_player.camera.shear - 
-        (mouseY * SFG_MOUSE_SENSITIVITY_VERTICAL) / 128,
-        SFG_CAMERA_MAX_SHEAR_PIXELS),
-        -1 * SFG_CAMERA_MAX_SHEAR_PIXELS);
+        RCL_max(RCL_min(
+                    SFG_player.camera.shear -
+                        (mouseY * SFG_MOUSE_SENSITIVITY_VERTICAL) / 128,
+                    SFG_CAMERA_MAX_SHEAR_PIXELS),
+                -1 * SFG_CAMERA_MAX_SHEAR_PIXELS);
 
   if (recomputeDirection)
     SFG_recomputePLayerDirection();
@@ -3343,11 +3345,9 @@ void SFG_gameStepPlaying()
 
       moveOffset = RCL_normalize(moveOffset);
 
-      moveOffset.x = (moveOffset.x * SFG_PLAYER_MOVE_UNITS_PER_FRAME)
-        / RCL_UNITS_PER_SQUARE;
+      moveOffset.x = (moveOffset.x * SFG_PLAYER_MOVE_UNITS_PER_FRAME) / RCL_UNITS_PER_SQUARE;
 
-      moveOffset.y = (moveOffset.y * SFG_PLAYER_MOVE_UNITS_PER_FRAME)
-        / RCL_UNITS_PER_SQUARE;
+      moveOffset.y = (moveOffset.y * SFG_PLAYER_MOVE_UNITS_PER_FRAME) / RCL_UNITS_PER_SQUARE;
     }
   }
 
@@ -3359,16 +3359,15 @@ void SFG_gameStepPlaying()
   else
     SFG_player.verticalSpeed = 0;
 #else
-  RCL_Unit verticalOffset = 
-    (  
-      (
-        SFG_keyIsDown(SFG_KEY_JUMP) ||
-        (SFG_keyIsDown(SFG_KEY_UP) && SFG_keyIsDown(SFG_KEY_C))
-      ) &&
-      (SFG_player.verticalSpeed == 0) &&
-      (SFG_player.previousVerticalSpeed == 0)) ?
-    SFG_PLAYER_JUMP_OFFSET_PER_FRAME : // jump
-    (SFG_player.verticalSpeed - SFG_GRAVITY_SPEED_INCREASE_PER_FRAME);
+  RCL_Unit verticalOffset =
+      ((
+           SFG_keyIsDown(SFG_KEY_JUMP) ||
+           (SFG_keyIsDown(SFG_KEY_UP) && SFG_keyIsDown(SFG_KEY_C))) &&
+       (SFG_player.verticalSpeed == 0) &&
+       (SFG_player.previousVerticalSpeed == 0))
+          ? SFG_PLAYER_JUMP_OFFSET_PER_FRAME
+          : // jump
+          (SFG_player.verticalSpeed - SFG_GRAVITY_SPEED_INCREASE_PER_FRAME);
 #endif
 
   if (!shearing && SFG_player.camera.shear != 0 && !(SFG_game.settings & 0x08))
@@ -3376,22 +3375,20 @@ void SFG_gameStepPlaying()
     // gradually shear back to zero
 
     SFG_player.camera.shear =
-      (SFG_player.camera.shear > 0) ?
-      RCL_max(0,SFG_player.camera.shear - SFG_CAMERA_SHEAR_STEP_PER_FRAME) :
-      RCL_min(0,SFG_player.camera.shear + SFG_CAMERA_SHEAR_STEP_PER_FRAME);
+        (SFG_player.camera.shear > 0) ? RCL_max(0, SFG_player.camera.shear - SFG_CAMERA_SHEAR_STEP_PER_FRAME) : RCL_min(0, SFG_player.camera.shear + SFG_CAMERA_SHEAR_STEP_PER_FRAME);
   }
 
 #if SFG_HEADBOB_ENABLED && !SFG_PREVIEW_MODE
   if (bobbing)
   {
-    SFG_player.headBobFrame += SFG_HEADBOB_FRAME_INCREASE_PER_FRAME; 
+    SFG_player.headBobFrame += SFG_HEADBOB_FRAME_INCREASE_PER_FRAME;
   }
   else if (SFG_player.headBobFrame != 0)
   {
     // smoothly stop bobbing
 
     uint8_t quadrant = (SFG_player.headBobFrame % RCL_UNITS_PER_SQUARE) /
-      (RCL_UNITS_PER_SQUARE / 4);
+                       (RCL_UNITS_PER_SQUARE / 4);
 
     /* When in quadrant in which sin is going away from zero, switch to the
        same value of the next quadrant, so that bobbing starts to go towards
@@ -3399,18 +3396,19 @@ void SFG_gameStepPlaying()
 
     if (quadrant % 2 == 0)
       SFG_player.headBobFrame =
-        ((quadrant + 1) * RCL_UNITS_PER_SQUARE / 4) +
-        (RCL_UNITS_PER_SQUARE / 4 - SFG_player.headBobFrame %
-        (RCL_UNITS_PER_SQUARE / 4));
+          ((quadrant + 1) * RCL_UNITS_PER_SQUARE / 4) +
+          (RCL_UNITS_PER_SQUARE / 4 - SFG_player.headBobFrame %
+                                          (RCL_UNITS_PER_SQUARE / 4));
 
     RCL_Unit currentFrame = SFG_player.headBobFrame;
     RCL_Unit nextFrame = SFG_player.headBobFrame + 16;
 
     // only stop bobbing when we pass a frame at which sin crosses zero
     SFG_player.headBobFrame =
-      (currentFrame / (RCL_UNITS_PER_SQUARE / 2) ==
-       nextFrame / (RCL_UNITS_PER_SQUARE / 2)) ?
-       nextFrame : 0;
+        (currentFrame / (RCL_UNITS_PER_SQUARE / 2) ==
+         nextFrame / (RCL_UNITS_PER_SQUARE / 2))
+            ? nextFrame
+            : 0;
   }
 #endif
 
@@ -3434,20 +3432,18 @@ void SFG_gameStepPlaying()
     mPos.y = SFG_MONSTER_COORD_TO_RCL_UNITS(m->coords[1]);
 
     if (
-         SFG_elementCollides(
-           SFG_player.camera.position.x,
-           SFG_player.camera.position.y,
-           SFG_player.camera.height,
-           mPos.x,
-           mPos.y,
-           SFG_floorHeightAt(
-               SFG_MONSTER_COORD_TO_SQUARES(m->coords[0]),
-               SFG_MONSTER_COORD_TO_SQUARES(m->coords[1]))
-         )
-       )
+        SFG_elementCollides(
+            SFG_player.camera.position.x,
+            SFG_player.camera.position.y,
+            SFG_player.camera.height,
+            mPos.x,
+            mPos.y,
+            SFG_floorHeightAt(
+                SFG_MONSTER_COORD_TO_SQUARES(m->coords[0]),
+                SFG_MONSTER_COORD_TO_SQUARES(m->coords[1]))))
     {
       moveOffset = SFG_resolveCollisionWithElement(
-        SFG_player.camera.position,moveOffset,mPos);
+          SFG_player.camera.position, moveOffset, mPos);
     }
   }
 
@@ -3456,7 +3452,7 @@ void SFG_gameStepPlaying()
   /* item collisions with player (only those that don't stop player's movement,
      as those are handled differently, via itemCollisionMap): */
   for (int16_t i = 0; i < SFG_currentLevel.itemRecordCount; ++i)
-    // ^ has to be int16_t (signed)
+  // ^ has to be int16_t (signed)
   {
     if (!(SFG_currentLevel.itemRecords[i] & SFG_ITEM_RECORD_ACTIVE_MASK))
       continue;
@@ -3472,13 +3468,12 @@ void SFG_gameStepPlaying()
 
       if (!SFG_itemCollides(e->type) &&
           SFG_elementCollides(
-            SFG_player.camera.position.x,
-            SFG_player.camera.position.y,
-            SFG_player.camera.height,
-            ePos.x,
-            ePos.y,
-            SFG_floorHeightAt(e->coords[0],e->coords[1]))
-         )
+              SFG_player.camera.position.x,
+              SFG_player.camera.position.y,
+              SFG_player.camera.height,
+              ePos.x,
+              ePos.y,
+              SFG_floorHeightAt(e->coords[0], e->coords[1])))
       {
         uint8_t eliminate = 1;
 
@@ -3493,56 +3488,54 @@ void SFG_gameStepPlaying()
 
         switch (e->type)
         {
-          case SFG_LEVEL_ELEMENT_HEALTH:
-            if (SFG_player.health < SFG_PLAYER_MAX_HEALTH)
-              SFG_playerChangeHealth(SFG_HEALTH_KIT_VALUE);
-            else
-              eliminate = 0;
-            break;
+        case SFG_LEVEL_ELEMENT_HEALTH:
+          if (SFG_player.health < SFG_PLAYER_MAX_HEALTH)
+            SFG_playerChangeHealth(SFG_HEALTH_KIT_VALUE);
+          else
+            eliminate = 0;
+          break;
 
-#define addAmmo(type) \
-  if (SFG_player.ammo[SFG_AMMO_##type] < SFG_AMMO_MAX_##type) \
-  {\
-    SFG_player.ammo[SFG_AMMO_##type] = RCL_min(SFG_AMMO_MAX_##type,\
-      SFG_player.ammo[SFG_AMMO_##type] + SFG_AMMO_INCREASE_##type);\
-    if (onlyKnife) SFG_playerRotateWeapon(1); \
-  }\
-  else\
+#define addAmmo(type)                                                                                        \
+  if (SFG_player.ammo[SFG_AMMO_##type] < SFG_AMMO_MAX_##type)                                                \
+  {                                                                                                          \
+    SFG_player.ammo[SFG_AMMO_##type] = RCL_min(SFG_AMMO_MAX_##type,                                          \
+                                               SFG_player.ammo[SFG_AMMO_##type] + SFG_AMMO_INCREASE_##type); \
+    if (onlyKnife)                                                                                           \
+      SFG_playerRotateWeapon(1);                                                                             \
+  }                                                                                                          \
+  else                                                                                                       \
     eliminate = 0;
 
-          case SFG_LEVEL_ELEMENT_BULLETS:
-            addAmmo(BULLETS)
-            break;
+        case SFG_LEVEL_ELEMENT_BULLETS:
+          addAmmo(BULLETS) break;
 
-          case SFG_LEVEL_ELEMENT_ROCKETS:
-            addAmmo(ROCKETS)
-            break;
+        case SFG_LEVEL_ELEMENT_ROCKETS:
+          addAmmo(ROCKETS) break;
 
-          case SFG_LEVEL_ELEMENT_PLASMA:
-            addAmmo(PLASMA)
-            break;
+        case SFG_LEVEL_ELEMENT_PLASMA:
+          addAmmo(PLASMA) break;
 
 #undef addAmmo
 
-          case SFG_LEVEL_ELEMENT_CARD0:
-          case SFG_LEVEL_ELEMENT_CARD1:
-          case SFG_LEVEL_ELEMENT_CARD2:
-            SFG_player.cards |= 1 << (e->type - SFG_LEVEL_ELEMENT_CARD0);
-            break;
+        case SFG_LEVEL_ELEMENT_CARD0:
+        case SFG_LEVEL_ELEMENT_CARD1:
+        case SFG_LEVEL_ELEMENT_CARD2:
+          SFG_player.cards |= 1 << (e->type - SFG_LEVEL_ELEMENT_CARD0);
+          break;
 
-          case SFG_LEVEL_ELEMENT_TELEPORTER:
-            collidesWithTeleporter = 1;
-            eliminate = 0;
-            break;
+        case SFG_LEVEL_ELEMENT_TELEPORTER:
+          collidesWithTeleporter = 1;
+          eliminate = 0;
+          break;
 
-          case SFG_LEVEL_ELEMENT_FINISH:
-            SFG_winLevel();
-            eliminate = 0;
-            break;
+        case SFG_LEVEL_ELEMENT_FINISH:
+          SFG_winLevel();
+          eliminate = 0;
+          break;
 
-          default:
-            eliminate = 0;
-            break;
+        default:
+          eliminate = 0;
+          break;
         }
 
         if (eliminate) // take the item
@@ -3551,26 +3544,26 @@ void SFG_gameStepPlaying()
           SFG_removeItem(i);
           SFG_player.lastItemTakenFrame = SFG_game.frame;
           i--;
-          SFG_playGameSound(3,255);
-          SFG_processEvent(SFG_EVENT_PLAYER_TAKES_ITEM,e->type);
+          SFG_playGameSound(3, 255);
+          SFG_processEvent(SFG_EVENT_PLAYER_TAKES_ITEM, e->type);
 #endif
         }
         else if (
-          e->type == SFG_LEVEL_ELEMENT_TELEPORTER &&
-          SFG_currentLevel.teleporterCount > 1 &&
-          !SFG_player.justTeleported)
+            e->type == SFG_LEVEL_ELEMENT_TELEPORTER &&
+            SFG_currentLevel.teleporterCount > 1 &&
+            !SFG_player.justTeleported)
         {
           // teleport to random destination teleporter
 
           uint8_t teleporterNumber =
-            SFG_random() % (SFG_currentLevel.teleporterCount - 1) + 1;
+              SFG_random() % (SFG_currentLevel.teleporterCount - 1) + 1;
 
           for (uint16_t j = 0; j < SFG_currentLevel.itemRecordCount; ++j)
           {
-            SFG_LevelElement e2 = 
-              SFG_currentLevel.levelPointer->elements
-                [SFG_currentLevel.itemRecords[j] &
-                ~SFG_ITEM_RECORD_ACTIVE_MASK];
+            SFG_LevelElement e2 =
+                SFG_currentLevel.levelPointer->elements
+                    [SFG_currentLevel.itemRecords[j] &
+                     ~SFG_ITEM_RECORD_ACTIVE_MASK];
 
             if ((e2.type == SFG_LEVEL_ELEMENT_TELEPORTER) && (j != i))
               teleporterNumber--;
@@ -3578,14 +3571,14 @@ void SFG_gameStepPlaying()
             if (teleporterNumber == 0)
             {
               SFG_player.camera.position.x =
-                SFG_ELEMENT_COORD_TO_RCL_UNITS(e2.coords[0]);
+                  SFG_ELEMENT_COORD_TO_RCL_UNITS(e2.coords[0]);
 
               SFG_player.camera.position.y =
-                SFG_ELEMENT_COORD_TO_RCL_UNITS(e2.coords[1]);
+                  SFG_ELEMENT_COORD_TO_RCL_UNITS(e2.coords[1]);
 
               SFG_player.camera.height =
-                SFG_floorHeightAt(e2.coords[0],e2.coords[1]) +
-                RCL_CAMERA_COLL_HEIGHT_BELOW;
+                  SFG_floorHeightAt(e2.coords[0], e2.coords[1]) +
+                  RCL_CAMERA_COLL_HEIGHT_BELOW;
 
               SFG_currentLevel.itemRecords[j] |= SFG_ITEM_RECORD_ACTIVE_MASK;
               /* ^ we have to make the new teleporter immediately active so
@@ -3593,57 +3586,57 @@ void SFG_gameStepPlaying()
 
               SFG_player.justTeleported = 1;
 
-              SFG_playGameSound(4,255);
-              SFG_processEvent(SFG_EVENT_PLAYER_TELEPORTS,0);
+              SFG_playGameSound(4, 255);
+              SFG_processEvent(SFG_EVENT_PLAYER_TELEPORTS, 0);
 
               break;
             } // if teleporterNumber == 0
-          } // for level items
-        } // if eliminate
-      } // if item collides
-    } // if element != 0 
-  } // for, item collision check
+          }   // for level items
+        }     // if eliminate
+      }       // if item collides
+    }         // if element != 0
+  }           // for, item collision check
 
   if (!collidesWithTeleporter)
     SFG_player.justTeleported = 0;
 
 #if SFG_PREVIEW_MODE
   SFG_player.camera.position.x +=
-    SFG_PREVIEW_MODE_SPEED_MULTIPLIER * moveOffset.x;
+      SFG_PREVIEW_MODE_SPEED_MULTIPLIER * moveOffset.x;
 
   SFG_player.camera.position.y +=
-    SFG_PREVIEW_MODE_SPEED_MULTIPLIER * moveOffset.y;
+      SFG_PREVIEW_MODE_SPEED_MULTIPLIER * moveOffset.y;
 
-  SFG_player.camera.height += 
-    SFG_PREVIEW_MODE_SPEED_MULTIPLIER * SFG_player.verticalSpeed;
+  SFG_player.camera.height +=
+      SFG_PREVIEW_MODE_SPEED_MULTIPLIER * SFG_player.verticalSpeed;
 #else
-  RCL_moveCameraWithCollision(&(SFG_player.camera),moveOffset,
-    verticalOffset,SFG_floorCollisionHeightAt,SFG_ceilingHeightAt,1,1);
+  RCL_moveCameraWithCollision(&(SFG_player.camera), moveOffset,
+                              verticalOffset, SFG_floorCollisionHeightAt, SFG_ceilingHeightAt, 1, 1);
 
   SFG_player.previousVerticalSpeed = SFG_player.verticalSpeed;
 
-  RCL_Unit limit = RCL_max(RCL_max(0,verticalOffset),SFG_player.verticalSpeed);
-  
+  RCL_Unit limit = RCL_max(RCL_max(0, verticalOffset), SFG_player.verticalSpeed);
+
   SFG_player.verticalSpeed =
-    RCL_min(limit,SFG_player.camera.height - previousHeight);
+      RCL_min(limit, SFG_player.camera.height - previousHeight);
   /* ^ By "limit" we assure height increase caused by climbing a step doesn't
      add vertical velocity. */
 #endif
 
 #if SFG_PREVIEW_MODE == 0
   if (
-    SFG_keyIsDown(SFG_KEY_A) &&
-    !SFG_keyIsDown(SFG_KEY_C) &&
-    (SFG_player.weaponCooldownFrames == 0) &&
-    (SFG_game.stateTime > 400) // don't immediately shoot if returning from menu
-    )
+      SFG_keyIsDown(SFG_KEY_A) &&
+      !SFG_keyIsDown(SFG_KEY_C) &&
+      (SFG_player.weaponCooldownFrames == 0) &&
+      (SFG_game.stateTime > 400) // don't immediately shoot if returning from menu
+  )
   {
     /* Player attack/shoot/fire, this has to be done AFTER the player is moved,
        otherwise he could shoot himself while running forward. */
 
     uint8_t ammo, projectileCount, canShoot;
 
-    SFG_getPlayerWeaponInfo(&ammo,&projectileCount,&canShoot);
+    SFG_getPlayerWeaponInfo(&ammo, &projectileCount, &canShoot);
 
     if (canShoot)
     {
@@ -3651,16 +3644,24 @@ void SFG_gameStepPlaying()
 
       switch (SFG_player.weapon)
       {
-        case SFG_WEAPON_KNIFE:           sound = 255; break;
-        case SFG_WEAPON_ROCKET_LAUNCHER: 
-        case SFG_WEAPON_SHOTGUN:         sound = 2; break; 
-        case SFG_WEAPON_PLASMAGUN:
-        case SFG_WEAPON_SOLUTION:        sound = 4; break;
-        default:                         sound = 0; break;
+      case SFG_WEAPON_KNIFE:
+        sound = 255;
+        break;
+      case SFG_WEAPON_ROCKET_LAUNCHER:
+      case SFG_WEAPON_SHOTGUN:
+        sound = 2;
+        break;
+      case SFG_WEAPON_PLASMAGUN:
+      case SFG_WEAPON_SOLUTION:
+        sound = 4;
+        break;
+      default:
+        sound = 0;
+        break;
       }
 
       if (sound != 255)
-        SFG_playGameSound(sound,255);
+        SFG_playGameSound(sound, 255);
 
       if (ammo != SFG_AMMO_NONE)
         SFG_player.ammo[ammo] -= projectileCount;
@@ -3669,55 +3670,51 @@ void SFG_gameStepPlaying()
 
       switch (SFG_GET_WEAPON_FIRE_TYPE(SFG_player.weapon))
       {
-        case SFG_WEAPON_FIRE_TYPE_PLASMA:
-          projectile = SFG_PROJECTILE_PLASMA;
-          break;
+      case SFG_WEAPON_FIRE_TYPE_PLASMA:
+        projectile = SFG_PROJECTILE_PLASMA;
+        break;
 
-        case SFG_WEAPON_FIRE_TYPE_FIREBALL:
-          projectile = SFG_PROJECTILE_FIREBALL;
-          break;
+      case SFG_WEAPON_FIRE_TYPE_FIREBALL:
+        projectile = SFG_PROJECTILE_FIREBALL;
+        break;
 
-        case SFG_WEAPON_FIRE_TYPE_BULLET:
-          projectile = SFG_PROJECTILE_BULLET;
-          break;
+      case SFG_WEAPON_FIRE_TYPE_BULLET:
+        projectile = SFG_PROJECTILE_BULLET;
+        break;
 
-        case SFG_WEAPON_FIRE_TYPE_MELEE:
-          projectile = SFG_PROJECTILE_NONE;
-          break;
+      case SFG_WEAPON_FIRE_TYPE_MELEE:
+        projectile = SFG_PROJECTILE_NONE;
+        break;
 
-        default:
-          projectile = 255;
-          break;
+      default:
+        projectile = 255;
+        break;
       }
-          
+
       if (projectile != SFG_PROJECTILE_NONE)
       {
         uint16_t angleAdd = SFG_PROJECTILE_SPREAD_ANGLE / (projectileCount + 1);
 
         RCL_Unit direction =
-          (SFG_player.camera.direction - SFG_PROJECTILE_SPREAD_ANGLE / 2) 
-          + angleAdd;
-          
+            (SFG_player.camera.direction - SFG_PROJECTILE_SPREAD_ANGLE / 2) + angleAdd;
+
         RCL_Unit projectileSpeed = SFG_GET_PROJECTILE_SPEED_UPS(projectile);
-        
+
         /* Vertical speed will be either determined by autoaim (if shearing is
            off) or the camera shear value. */
-        RCL_Unit verticalSpeed = (SFG_game.settings & 0x04) ?
-          (SFG_player.camera.shear * projectileSpeed * 2) / // only approximate
-            SFG_CAMERA_MAX_SHEAR_PIXELS
-          :
-          (projectileSpeed * SFG_autoaimVertically()) / RCL_UNITS_PER_SQUARE;
+        RCL_Unit verticalSpeed = (SFG_game.settings & 0x04) ? (SFG_player.camera.shear * projectileSpeed * 2) / // only approximate
+                                                                  SFG_CAMERA_MAX_SHEAR_PIXELS
+                                                            : (projectileSpeed * SFG_autoaimVertically()) / RCL_UNITS_PER_SQUARE;
 
         for (uint8_t i = 0; i < projectileCount; ++i)
         {
           SFG_launchProjectile(
-            projectile,
-            SFG_player.camera.position,
-            SFG_player.camera.height,
-            RCL_angleToDirection(direction),
-            verticalSpeed,  
-            SFG_PROJECTILE_SPAWN_OFFSET
-            );
+              projectile,
+              SFG_player.camera.position,
+              SFG_player.camera.height,
+              RCL_angleToDirection(direction),
+              verticalSpeed,
+              SFG_PROJECTILE_SPAWN_OFFSET);
 
           direction += angleAdd;
         }
@@ -3732,31 +3729,31 @@ void SFG_gameStepPlaying()
 
           uint8_t state = SFG_MR_STATE(*m);
 
-          if ((state == SFG_MONSTER_STATE_INACTIVE) || 
+          if ((state == SFG_MONSTER_STATE_INACTIVE) ||
               (state == SFG_MONSTER_STATE_DEAD))
             continue;
 
           RCL_Unit pX, pY, pZ;
-          SFG_getMonsterWorldPosition(m,&pX,&pY,&pZ);
+          SFG_getMonsterWorldPosition(m, &pX, &pY, &pZ);
 
-          if (SFG_taxicabDistance(pX,pY,pZ,
-              SFG_player.camera.position.x,
-              SFG_player.camera.position.y,
-              SFG_player.camera.height) > SFG_MELEE_RANGE)
+          if (SFG_taxicabDistance(pX, pY, pZ,
+                                  SFG_player.camera.position.x,
+                                  SFG_player.camera.position.y,
+                                  SFG_player.camera.height) > SFG_MELEE_RANGE)
             continue;
-   
+
           RCL_Vector2D toMonster;
 
           toMonster.x = pX - SFG_player.camera.position.x;
           toMonster.y = pY - SFG_player.camera.position.y;
 
-          if (RCL_vectorsAngleCos(SFG_player.direction,toMonster) >=
+          if (RCL_vectorsAngleCos(SFG_player.direction, toMonster) >=
               (RCL_UNITS_PER_SQUARE - SFG_PLAYER_MELEE_ANGLE))
           {
             SFG_monsterChangeHealth(m,
-              -1 * SFG_getDamageValue(SFG_WEAPON_FIRE_TYPE_MELEE));
+                                    -1 * SFG_getDamageValue(SFG_WEAPON_FIRE_TYPE_MELEE));
 
-            SFG_createDust(pX,pY,pZ);
+            SFG_createDust(pX, pY, pZ);
 
             break;
           }
@@ -3764,11 +3761,11 @@ void SFG_gameStepPlaying()
       }
 
       SFG_player.weaponCooldownFrames =
-        RCL_max(
-          SFG_GET_WEAPON_FIRE_COOLDOWN_FRAMES(SFG_player.weapon),
-          SFG_MIN_WEAPON_COOLDOWN_FRAMES);
+          RCL_max(
+              SFG_GET_WEAPON_FIRE_COOLDOWN_FRAMES(SFG_player.weapon),
+              SFG_MIN_WEAPON_COOLDOWN_FRAMES);
 
-      SFG_getPlayerWeaponInfo(&ammo,&projectileCount,&canShoot);
+      SFG_getPlayerWeaponInfo(&ammo, &projectileCount, &canShoot);
 
       if (!canShoot)
       {
@@ -3783,34 +3780,33 @@ void SFG_gameStepPlaying()
         if (previousWeapon > SFG_player.weapon)
           SFG_playerRotateWeapon(1);
       }
-    } // endif: has enough ammo?
-  } // attack
+    }  // endif: has enough ammo?
+  }    // attack
 #endif // SFG_PREVIEW_MODE == 0
 
   SFG_player.squarePosition[0] =
-    SFG_player.camera.position.x / RCL_UNITS_PER_SQUARE;
+      SFG_player.camera.position.x / RCL_UNITS_PER_SQUARE;
 
   SFG_player.squarePosition[1] =
-    SFG_player.camera.position.y / RCL_UNITS_PER_SQUARE;
+      SFG_player.camera.position.y / RCL_UNITS_PER_SQUARE;
 
-  SFG_currentLevel.mapRevealMask |= 
-    SFG_getMapRevealBit(
-      SFG_player.squarePosition[0],
-      SFG_player.squarePosition[1]);
-              
+  SFG_currentLevel.mapRevealMask |=
+      SFG_getMapRevealBit(
+          SFG_player.squarePosition[0],
+          SFG_player.squarePosition[1]);
+
   uint8_t properties;
 
-  SFG_getMapTile(SFG_currentLevel.levelPointer,SFG_player.squarePosition[0],
-    SFG_player.squarePosition[1],&properties);
+  SFG_getMapTile(SFG_currentLevel.levelPointer, SFG_player.squarePosition[0],
+                 SFG_player.squarePosition[1], &properties);
 
   if ( // squeezer check
-     (properties == SFG_TILE_PROPERTY_SQUEEZER) &&
-     ((SFG_ceilingHeightAt(
-       SFG_player.squarePosition[0],SFG_player.squarePosition[1]) -
-     SFG_floorHeightAt(
-       SFG_player.squarePosition[0],SFG_player.squarePosition[1]))
-     <
-     (RCL_CAMERA_COLL_HEIGHT_ABOVE + RCL_CAMERA_COLL_HEIGHT_BELOW)))
+      (properties == SFG_TILE_PROPERTY_SQUEEZER) &&
+      ((SFG_ceilingHeightAt(
+            SFG_player.squarePosition[0], SFG_player.squarePosition[1]) -
+        SFG_floorHeightAt(
+            SFG_player.squarePosition[0], SFG_player.squarePosition[1])) <
+       (RCL_CAMERA_COLL_HEIGHT_ABOVE + RCL_CAMERA_COLL_HEIGHT_BELOW)))
   {
     SFG_LOG("player is squeezed");
     SFG_player.health = 0;
@@ -3826,7 +3822,7 @@ void SFG_gameStepPlaying()
       SFG_player.previousWeaponDirection = 0;
 
     SFG_player.weaponCooldownFrames =
-      SFG_GET_WEAPON_FIRE_COOLDOWN_FRAMES(SFG_player.weapon) / 2;
+        SFG_GET_WEAPON_FIRE_COOLDOWN_FRAMES(SFG_player.weapon) / 2;
   }
 
 #if SFG_IMMORTAL == 0
@@ -3834,8 +3830,8 @@ void SFG_gameStepPlaying()
   {
     SFG_LOG("player dies");
     SFG_levelEnds();
-    SFG_processEvent(SFG_EVENT_VIBRATE,0);
-    SFG_processEvent(SFG_EVENT_PLAYER_DIES,0);
+    SFG_processEvent(SFG_EVENT_VIBRATE, 0);
+    SFG_processEvent(SFG_EVENT_PLAYER_DIES, 0);
     SFG_setGameState(SFG_GAME_STATE_LOSE);
   }
 #endif
@@ -3851,16 +3847,14 @@ uint8_t SFG_getMenuItem(uint8_t index)
   while (1) // find first legitimate item
   {
     if ( // skip non-legitimate items
-      ((current <= SFG_MENU_ITEM_MAP) && (SFG_currentLevel.levelPointer == 0))
-      || ((current == SFG_MENU_ITEM_LOAD) && ((SFG_game.save[0] >> 4) == 0)))
+        ((current <= SFG_MENU_ITEM_MAP) && (SFG_currentLevel.levelPointer == 0)) || ((current == SFG_MENU_ITEM_LOAD) && ((SFG_game.save[0] >> 4) == 0)))
     {
       current++;
       continue;
     }
 
     if (index == 0)
-      return (current <= (SFG_MENU_ITEM_EXIT - (SFG_CAN_EXIT ? 0 : 1))
-        ) ? current : SFG_MENU_ITEM_NONE;
+      return (current <= (SFG_MENU_ITEM_EXIT - (SFG_CAN_EXIT ? 0 : 1))) ? current : SFG_MENU_ITEM_NONE;
 
     current++;
     index--;
@@ -3877,16 +3871,28 @@ void SFG_handleCheats()
 
   switch (SFG_game.cheatState & 0x0f)
   {
-    case 0: case 3: case 5: case 7: case 10:
-      expectedKey = SFG_KEY_A; break;
-    case 1: case 8:
-      expectedKey = SFG_KEY_B; break;
-    case 2: case 9:
-      expectedKey = SFG_KEY_RIGHT; break;
-    case 4:
-      expectedKey = SFG_KEY_C; break;
-    case 6: default:
-      expectedKey = SFG_KEY_DOWN; break;
+  case 0:
+  case 3:
+  case 5:
+  case 7:
+  case 10:
+    expectedKey = SFG_KEY_A;
+    break;
+  case 1:
+  case 8:
+    expectedKey = SFG_KEY_B;
+    break;
+  case 2:
+  case 9:
+    expectedKey = SFG_KEY_RIGHT;
+    break;
+  case 4:
+    expectedKey = SFG_KEY_C;
+    break;
+  case 6:
+  default:
+    expectedKey = SFG_KEY_DOWN;
+    break;
   }
 
   for (uint8_t i = 0; i < SFG_KEY_COUNT; ++i) // no other keys must be pressed
@@ -3895,7 +3901,7 @@ void SFG_handleCheats()
       SFG_game.cheatState &= 0xf0; // back to start state
       return;
     }
- 
+
   if (!SFG_keyJustPressed(expectedKey))
     return;
 
@@ -3911,7 +3917,7 @@ void SFG_handleCheats()
     else
     {
       SFG_LOG("cheat activated");
-      SFG_playGameSound(4,255);
+      SFG_playGameSound(4, 255);
       SFG_playerChangeHealth(SFG_PLAYER_MAX_HEALTH);
       SFG_player.ammo[SFG_AMMO_BULLETS] = SFG_AMMO_MAX_BULLETS;
       SFG_player.ammo[SFG_AMMO_ROCKETS] = SFG_AMMO_MAX_ROCKETS;
@@ -3932,129 +3938,128 @@ void SFG_gameStepMenu()
 
   uint8_t item = SFG_getMenuItem(SFG_game.selectedMenuItem);
 
-  if (SFG_keyRegisters(SFG_KEY_DOWN) && 
-    (SFG_game.selectedMenuItem < menuItems - 1))
+  if (SFG_keyRegisters(SFG_KEY_DOWN) &&
+      (SFG_game.selectedMenuItem < menuItems - 1))
   {
     SFG_game.selectedMenuItem++;
-    SFG_playGameSound(3,SFG_MENU_CLICK_VOLUME);
+    SFG_playGameSound(3, SFG_MENU_CLICK_VOLUME);
   }
   else if (SFG_keyRegisters(SFG_KEY_UP) && (SFG_game.selectedMenuItem > 0))
   {
     SFG_game.selectedMenuItem--;
-    SFG_playGameSound(3,SFG_MENU_CLICK_VOLUME);
+    SFG_playGameSound(3, SFG_MENU_CLICK_VOLUME);
   }
   else if (SFG_keyJustPressed(SFG_KEY_A))
   {
     switch (item)
     {
-      case SFG_MENU_ITEM_PLAY:
-        for (uint8_t i = 6; i < SFG_SAVE_SIZE; ++i) // reset totals in save
-          SFG_game.save[i] = 0;
+    case SFG_MENU_ITEM_PLAY:
+      for (uint8_t i = 6; i < SFG_SAVE_SIZE; ++i) // reset totals in save
+        SFG_game.save[i] = 0;
 
-        if (SFG_game.selectedLevel == 0)
+      if (SFG_game.selectedLevel == 0)
+      {
+        SFG_currentLevel.levelNumber = 0; // to draw intro, not outro
+        if (SFG_SKIP_INTRO)
         {
-          SFG_currentLevel.levelNumber = 0; // to draw intro, not outro
-          if(SFG_SKIP_INTRO)
-          {
-            SFG_setAndInitLevel(SFG_game.selectedLevel);
-          }
-          else
-          {
-            SFG_setGameState(SFG_GAME_STATE_INTRO);
-          }
+          SFG_setAndInitLevel(SFG_game.selectedLevel);
         }
         else
-          SFG_setAndInitLevel(SFG_game.selectedLevel);
-
-        break;
-
-      case SFG_MENU_ITEM_LOAD:
-      {
-        SFG_gameLoad();
-
-        uint8_t saveBackup[SFG_SAVE_SIZE];
-
-        for (uint8_t i = 0; i < SFG_SAVE_SIZE; ++i)
-          saveBackup[i] = SFG_game.save[i];
-
-        SFG_setAndInitLevel(SFG_game.save[0] >> 4);
-
-        for (uint8_t i = 0; i < SFG_SAVE_SIZE; ++i)
-          SFG_game.save[i] = saveBackup[i];
-
-        SFG_player.health = SFG_game.save[2];
-        SFG_player.ammo[0] = SFG_game.save[3];
-        SFG_player.ammo[1] = SFG_game.save[4];
-        SFG_player.ammo[2] = SFG_game.save[5];
-
-        SFG_playerRotateWeapon(1); // this chooses weapon with ammo available
-        break;
+        {
+          SFG_setGameState(SFG_GAME_STATE_INTRO);
+        }
       }
+      else
+        SFG_setAndInitLevel(SFG_game.selectedLevel);
 
-      case SFG_MENU_ITEM_CONTINUE:
-        SFG_setGameState(SFG_GAME_STATE_PLAYING);
-        break;
+      break;
 
-      case SFG_MENU_ITEM_MAP:
-        SFG_setGameState(SFG_GAME_STATE_MAP);
-        break;
+    case SFG_MENU_ITEM_LOAD:
+    {
+      SFG_gameLoad();
 
-      case SFG_MENU_ITEM_SOUND:
-        SFG_LOG("sound changed");
+      uint8_t saveBackup[SFG_SAVE_SIZE];
 
-        SFG_game.settings = 
-          (SFG_game.settings & ~0x03) | ((SFG_game.settings + 1)  & 0x03);
+      for (uint8_t i = 0; i < SFG_SAVE_SIZE; ++i)
+        saveBackup[i] = SFG_game.save[i];
 
-        SFG_playGameSound(3,SFG_MENU_CLICK_VOLUME);
+      SFG_setAndInitLevel(SFG_game.save[0] >> 4);
 
-        if ((SFG_game.settings & 0x02) !=
-            ((SFG_game.settings - 1) & 0x02))
-            SFG_setMusic((SFG_game.settings & 0x02) ? 
-              SFG_MUSIC_TURN_ON : SFG_MUSIC_TURN_OFF);
+      for (uint8_t i = 0; i < SFG_SAVE_SIZE; ++i)
+        SFG_game.save[i] = saveBackup[i];
 
-        SFG_game.save[1] = SFG_game.settings;
-        SFG_gameSave();
+      SFG_player.health = SFG_game.save[2];
+      SFG_player.ammo[0] = SFG_game.save[3];
+      SFG_player.ammo[1] = SFG_game.save[4];
+      SFG_player.ammo[2] = SFG_game.save[5];
 
-        break;
+      SFG_playerRotateWeapon(1); // this chooses weapon with ammo available
+      break;
+    }
 
-      case SFG_MENU_ITEM_SHEAR:
-      {
-        uint8_t current = (SFG_game.settings >> 2) & 0x03;
+    case SFG_MENU_ITEM_CONTINUE:
+      SFG_setGameState(SFG_GAME_STATE_PLAYING);
+      break;
 
+    case SFG_MENU_ITEM_MAP:
+      SFG_setGameState(SFG_GAME_STATE_MAP);
+      break;
+
+    case SFG_MENU_ITEM_SOUND:
+      SFG_LOG("sound changed");
+
+      SFG_game.settings =
+          (SFG_game.settings & ~0x03) | ((SFG_game.settings + 1) & 0x03);
+
+      SFG_playGameSound(3, SFG_MENU_CLICK_VOLUME);
+
+      if ((SFG_game.settings & 0x02) !=
+          ((SFG_game.settings - 1) & 0x02))
+        SFG_setMusic((SFG_game.settings & 0x02) ? SFG_MUSIC_TURN_ON : SFG_MUSIC_TURN_OFF);
+
+      SFG_game.save[1] = SFG_game.settings;
+      SFG_gameSave();
+
+      break;
+
+    case SFG_MENU_ITEM_SHEAR:
+    {
+      uint8_t current = (SFG_game.settings >> 2) & 0x03;
+
+      current++;
+
+      if (current == 2) // option that doesn't make sense, skip
         current++;
 
-        if (current == 2) // option that doesn't make sense, skip
-          current++;
-
-        SFG_game.settings = 
+      SFG_game.settings =
           (SFG_game.settings & ~0x0c) | ((current & 0x03) << 2);
 
-        SFG_game.save[1] = SFG_game.settings;
-        SFG_gameSave();
+      SFG_game.save[1] = SFG_game.settings;
+      SFG_gameSave();
 
-        break;
-      }
+      break;
+    }
 
-      case SFG_MENU_ITEM_EXIT:
-        SFG_game.continues = 0;
-        break;
+    case SFG_MENU_ITEM_EXIT:
+      SFG_game.continues = 0;
+      break;
 
-      default:
-        break;
+    default:
+      break;
     }
   }
   else if (item == SFG_MENU_ITEM_PLAY)
   {
-    if (SFG_keyRegisters(SFG_KEY_RIGHT) && 
-      (SFG_game.selectedLevel < (SFG_game.save[0] & 0x0f)))
+    if (SFG_keyRegisters(SFG_KEY_RIGHT) &&
+        (SFG_game.selectedLevel < (SFG_game.save[0] & 0x0f)))
     {
       SFG_game.selectedLevel++;
-      SFG_playGameSound(3,SFG_MENU_CLICK_VOLUME);
+      SFG_playGameSound(3, SFG_MENU_CLICK_VOLUME);
     }
     else if (SFG_keyRegisters(SFG_KEY_LEFT) && SFG_game.selectedLevel > 0)
     {
       SFG_game.selectedLevel--;
-      SFG_playGameSound(3,SFG_MENU_CLICK_VOLUME);
+      SFG_playGameSound(3, SFG_MENU_CLICK_VOLUME);
     }
   }
 }
@@ -4068,7 +4073,7 @@ void SFG_gameStep()
   SFG_GAME_STEP_COMMAND
 
   SFG_game.soundsPlayedThisFrame = 0;
-  
+
   SFG_game.blink = (SFG_game.frame / SFG_BLINK_PERIOD_FRAMES) % 2;
 
   for (uint8_t i = 0; i < SFG_KEY_COUNT; ++i)
@@ -4078,149 +4083,151 @@ void SFG_gameStep()
       SFG_game.keyStates[i]++;
 
   if ((SFG_currentLevel.frameStart - SFG_game.frame) %
-      SFG_SPRITE_ANIMATION_FRAME_DURATION == 0)
+          SFG_SPRITE_ANIMATION_FRAME_DURATION ==
+      0)
     SFG_game.spriteAnimationFrame++;
 
   switch (SFG_game.state)
   {
-    case SFG_GAME_STATE_PLAYING:
-      SFG_handleCheats();
-      SFG_gameStepPlaying();
-      break;
+  case SFG_GAME_STATE_PLAYING:
+    SFG_handleCheats();
+    SFG_gameStepPlaying();
+    break;
 
-    case SFG_GAME_STATE_MENU: 
-      SFG_gameStepMenu();
-      break;
+  case SFG_GAME_STATE_MENU:
+    SFG_gameStepMenu();
+    break;
 
-    case SFG_GAME_STATE_LOSE:
-    { 
-      // player die animation (lose)
+  case SFG_GAME_STATE_LOSE:
+  {
+    // player die animation (lose)
 
-      SFG_updateLevel(); // let monsters and other things continue moving
-      SFG_updatePlayerHeight(); // in case player is on elevator 
+    SFG_updateLevel();        // let monsters and other things continue moving
+    SFG_updatePlayerHeight(); // in case player is on elevator
 
-      int32_t t = SFG_game.stateTime;
+    int32_t t = SFG_game.stateTime;
 
-      RCL_Unit h = SFG_floorHeightAt(SFG_player.squarePosition[0],
-        SFG_player.squarePosition[1]); 
+    RCL_Unit h = SFG_floorHeightAt(SFG_player.squarePosition[0],
+                                   SFG_player.squarePosition[1]);
 
-      SFG_player.camera.height = 
-        RCL_max(h,h + ((SFG_LOSE_ANIMATION_DURATION - t) *
-            RCL_CAMERA_COLL_HEIGHT_BELOW) / SFG_LOSE_ANIMATION_DURATION);
+    SFG_player.camera.height =
+        RCL_max(h, h + ((SFG_LOSE_ANIMATION_DURATION - t) *
+                        RCL_CAMERA_COLL_HEIGHT_BELOW) /
+                           SFG_LOSE_ANIMATION_DURATION);
 
-      SFG_player.camera.shear = 
+    SFG_player.camera.shear =
         RCL_min(SFG_CAMERA_MAX_SHEAR_PIXELS / 4,
-        (t * (SFG_CAMERA_MAX_SHEAR_PIXELS / 4)) / SFG_LOSE_ANIMATION_DURATION);
+                (t * (SFG_CAMERA_MAX_SHEAR_PIXELS / 4)) / SFG_LOSE_ANIMATION_DURATION);
 
-      if (t > SFG_LOSE_ANIMATION_DURATION && 
+    if (t > SFG_LOSE_ANIMATION_DURATION &&
         (SFG_keyIsDown(SFG_KEY_A) || SFG_keyIsDown(SFG_KEY_B)))
-      {
-        for (uint8_t i = 6; i < SFG_SAVE_SIZE; ++i)
-          SFG_game.save[i] = 0;
+    {
+      for (uint8_t i = 6; i < SFG_SAVE_SIZE; ++i)
+        SFG_game.save[i] = 0;
 
-        SFG_setAndInitLevel(SFG_currentLevel.levelNumber);
-      }
-
-      break;
+      SFG_setAndInitLevel(SFG_currentLevel.levelNumber);
     }
 
-    case SFG_GAME_STATE_WIN:
+    break;
+  }
+
+  case SFG_GAME_STATE_WIN:
+  {
+    // win animation
+
+    SFG_updateLevel();
+
+    int32_t t = SFG_game.stateTime;
+
+    if (t > SFG_WIN_ANIMATION_DURATION)
     {
-      // win animation
-     
-      SFG_updateLevel();
-
-      int32_t t = SFG_game.stateTime;
-
-      if (t > SFG_WIN_ANIMATION_DURATION)
+      if (SFG_currentLevel.levelNumber == (SFG_NUMBER_OF_LEVELS - 1))
       {
-        if (SFG_currentLevel.levelNumber == (SFG_NUMBER_OF_LEVELS - 1))
+        if (SFG_keyIsDown(SFG_KEY_A))
         {
-          if (SFG_keyIsDown(SFG_KEY_A))
-          {
-            SFG_setGameState(SFG_GAME_STATE_OUTRO);
-            SFG_setMusic(SFG_MUSIC_TURN_OFF);
-          }
+          SFG_setGameState(SFG_GAME_STATE_OUTRO);
+          SFG_setMusic(SFG_MUSIC_TURN_OFF);
         }
-        else if (SFG_keyIsDown(SFG_KEY_RIGHT) ||
-            SFG_keyIsDown(SFG_KEY_LEFT) ||
-            SFG_keyIsDown(SFG_KEY_STRAFE_LEFT) ||
-            SFG_keyIsDown(SFG_KEY_STRAFE_RIGHT))
-        {
-          SFG_setAndInitLevel(SFG_currentLevel.levelNumber + 1);
-          
-          SFG_player.health = SFG_game.save[2];
-          SFG_player.ammo[0] = SFG_game.save[3];
-          SFG_player.ammo[1] = SFG_game.save[4];
-          SFG_player.ammo[2] = SFG_game.save[5];
-        
-          SFG_playerRotateWeapon(1);
+      }
+      else if (SFG_keyIsDown(SFG_KEY_RIGHT) ||
+               SFG_keyIsDown(SFG_KEY_LEFT) ||
+               SFG_keyIsDown(SFG_KEY_STRAFE_LEFT) ||
+               SFG_keyIsDown(SFG_KEY_STRAFE_RIGHT))
+      {
+        SFG_setAndInitLevel(SFG_currentLevel.levelNumber + 1);
 
-          if (SFG_keyIsDown(SFG_KEY_RIGHT) || SFG_keyIsDown(SFG_KEY_STRAFE_RIGHT))
-          {
-            // save the current position
-            SFG_game.save[0] = 
+        SFG_player.health = SFG_game.save[2];
+        SFG_player.ammo[0] = SFG_game.save[3];
+        SFG_player.ammo[1] = SFG_game.save[4];
+        SFG_player.ammo[2] = SFG_game.save[5];
+
+        SFG_playerRotateWeapon(1);
+
+        if (SFG_keyIsDown(SFG_KEY_RIGHT) || SFG_keyIsDown(SFG_KEY_STRAFE_RIGHT))
+        {
+          // save the current position
+          SFG_game.save[0] =
               (SFG_game.save[0] & 0x0f) | (SFG_currentLevel.levelNumber << 4);
 
-            SFG_gameSave();
-            SFG_game.saved = 1;
-          }
+          SFG_gameSave();
+          SFG_game.saved = 1;
         }
       }
-
-      break;
     }
 
-    case SFG_GAME_STATE_MAP:
-      if (SFG_keyIsDown(SFG_KEY_B))
-        SFG_setGameState(SFG_GAME_STATE_MENU);
+    break;
+  }
 
-      break;
+  case SFG_GAME_STATE_MAP:
+    if (SFG_keyIsDown(SFG_KEY_B))
+      SFG_setGameState(SFG_GAME_STATE_MENU);
 
-    case SFG_GAME_STATE_INTRO:
-      if (SFG_keyJustPressed(SFG_KEY_A) || SFG_keyJustPressed(SFG_KEY_B))
-        SFG_setAndInitLevel(0);
+    break;
 
-      break;
+  case SFG_GAME_STATE_INTRO:
+    if (SFG_keyJustPressed(SFG_KEY_A) || SFG_keyJustPressed(SFG_KEY_B))
+      SFG_setAndInitLevel(0);
 
-    case SFG_GAME_STATE_OUTRO:
-      if ((SFG_game.stateTime > SFG_STORYTEXT_DURATION) &&
-           (SFG_keyIsDown(SFG_KEY_A) ||
-           SFG_keyIsDown(SFG_KEY_B)))
-      {
-        SFG_currentLevel.levelPointer = 0;
-        SFG_currentLevel.levelNumber = 0;
-        SFG_setGameState(SFG_GAME_STATE_MENU);
-        SFG_playGameSound(3,SFG_MENU_CLICK_VOLUME);
-        SFG_setMusic(SFG_MUSIC_TURN_ON);
-      }
+    break;
 
-      break;
-
-    case SFG_GAME_STATE_LEVEL_START:
+  case SFG_GAME_STATE_OUTRO:
+    if ((SFG_game.stateTime > SFG_STORYTEXT_DURATION) &&
+        (SFG_keyIsDown(SFG_KEY_A) ||
+         SFG_keyIsDown(SFG_KEY_B)))
     {
-      SFG_updateLevel();
-      SFG_updatePlayerHeight(); // in case player is on elevator
-
-      int16_t x = 0, y = 0;
-      
-      SFG_getMouseOffset(&x,&y); // this keeps centering the mouse
-
-      if (SFG_game.stateTime >= SFG_LEVEL_START_DURATION)
-        SFG_setGameState(SFG_GAME_STATE_PLAYING);
-
-      break;
+      SFG_currentLevel.levelPointer = 0;
+      SFG_currentLevel.levelNumber = 0;
+      SFG_setGameState(SFG_GAME_STATE_MENU);
+      SFG_playGameSound(3, SFG_MENU_CLICK_VOLUME);
+      SFG_setMusic(SFG_MUSIC_TURN_ON);
     }
 
-    default:
-      break;
+    break;
+
+  case SFG_GAME_STATE_LEVEL_START:
+  {
+    SFG_updateLevel();
+    SFG_updatePlayerHeight(); // in case player is on elevator
+
+    int16_t x = 0, y = 0;
+
+    SFG_getMouseOffset(&x, &y); // this keeps centering the mouse
+
+    if (SFG_game.stateTime >= SFG_LEVEL_START_DURATION)
+      SFG_setGameState(SFG_GAME_STATE_PLAYING);
+
+    break;
+  }
+
+  default:
+    break;
   }
 
   SFG_game.stateTime += SFG_MS_PER_FRAME;
 }
 
 void SFG_fillRectangle(
-  uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t color)
+    uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t color)
 {
   if ((x + width > SFG_GAME_RESOLUTION_X) ||
       (y + height > SFG_GAME_RESOLUTION_Y))
@@ -4228,13 +4235,13 @@ void SFG_fillRectangle(
 
   for (uint16_t j = y; j < y + height; ++j)
     for (uint16_t i = x; i < x + width; ++i)
-      SFG_setGamePixel(i,j,color);
+      SFG_setGamePixel(i, j, color);
 }
 
 static inline void SFG_clearScreen(uint8_t color)
 {
-  SFG_fillRectangle(0,0,SFG_GAME_RESOLUTION_X,
-    SFG_GAME_RESOLUTION_Y,color);
+  SFG_fillRectangle(0, 0, SFG_GAME_RESOLUTION_X,
+                    SFG_GAME_RESOLUTION_Y, color);
 }
 
 /**
@@ -4243,26 +4250,24 @@ static inline void SFG_clearScreen(uint8_t color)
 void SFG_drawMap()
 {
   SFG_clearScreen(0);
-   
+
   uint16_t maxJ =
-    (SFG_MAP_PIXEL_SIZE * SFG_MAP_SIZE) < SFG_GAME_RESOLUTION_Y ?
-    (SFG_MAP_SIZE) : (SFG_GAME_RESOLUTION_Y / SFG_MAP_PIXEL_SIZE);
+      (SFG_MAP_PIXEL_SIZE * SFG_MAP_SIZE) < SFG_GAME_RESOLUTION_Y ? (SFG_MAP_SIZE) : (SFG_GAME_RESOLUTION_Y / SFG_MAP_PIXEL_SIZE);
 
   uint16_t maxI =
-    (SFG_MAP_PIXEL_SIZE * SFG_MAP_SIZE) < SFG_GAME_RESOLUTION_X ?
-    (SFG_MAP_SIZE) : (SFG_GAME_RESOLUTION_X / SFG_MAP_PIXEL_SIZE);
+      (SFG_MAP_PIXEL_SIZE * SFG_MAP_SIZE) < SFG_GAME_RESOLUTION_X ? (SFG_MAP_SIZE) : (SFG_GAME_RESOLUTION_X / SFG_MAP_PIXEL_SIZE);
 
   uint16_t topLeftX =
-    (SFG_GAME_RESOLUTION_X - (maxI * SFG_MAP_PIXEL_SIZE)) / 2;
+      (SFG_GAME_RESOLUTION_X - (maxI * SFG_MAP_PIXEL_SIZE)) / 2;
 
   uint16_t topLeftY =
-    (SFG_GAME_RESOLUTION_Y - (maxJ * SFG_MAP_PIXEL_SIZE)) / 2;
+      (SFG_GAME_RESOLUTION_Y - (maxJ * SFG_MAP_PIXEL_SIZE)) / 2;
 
   uint16_t x;
   uint16_t y = topLeftY;
 
-  uint8_t playerColor = 
-    SFG_game.blink ? SFG_MAP_PLAYER_COLOR1 : SFG_MAP_PLAYER_COLOR2;
+  uint8_t playerColor =
+      SFG_game.blink ? SFG_MAP_PLAYER_COLOR1 : SFG_MAP_PLAYER_COLOR2;
 
   for (int16_t j = 0; j < maxJ; ++j)
   {
@@ -4272,12 +4277,12 @@ void SFG_drawMap()
     {
       uint8_t color = 0; // init with non-revealed color
 
-      if (SFG_currentLevel.mapRevealMask & SFG_getMapRevealBit(i,j)) 
+      if (SFG_currentLevel.mapRevealMask & SFG_getMapRevealBit(i, j))
       {
         uint8_t properties;
 
         SFG_TileDefinition tile =
-          SFG_getMapTile(SFG_currentLevel.levelPointer,i,j,&properties);
+            SFG_getMapTile(SFG_currentLevel.levelPointer, i, j, &properties);
 
         color = playerColor; // start with player color
 
@@ -4304,13 +4309,13 @@ void SFG_drawMap()
 
       for (int_fast16_t k = 0; k < SFG_MAP_PIXEL_SIZE; ++k)
         for (int_fast16_t l = 0; l < SFG_MAP_PIXEL_SIZE; ++l)
-          SFG_setGamePixel(x + l, y + k,color);
+          SFG_setGamePixel(x + l, y + k, color);
 
       x += SFG_MAP_PIXEL_SIZE;
     }
 
     y += SFG_MAP_PIXEL_SIZE;
-  } 
+  }
 }
 
 /**
@@ -4323,21 +4328,21 @@ void SFG_drawStoryText()
   uint8_t clearColor = 9;
   uint8_t sprite = 18;
 
-  if (SFG_currentLevel.levelNumber != (SFG_NUMBER_OF_LEVELS - 1)) // intro?  
+  if (SFG_currentLevel.levelNumber != (SFG_NUMBER_OF_LEVELS - 1)) // intro?
   {
     text = SFG_introText;
-    textColor = 7; 
+    textColor = 7;
     clearColor = 0;
     sprite = SFG_game.blink * 2;
   }
-    
+
   SFG_clearScreen(clearColor);
 
-  if (SFG_GAME_RESOLUTION_Y > 50) 
+  if (SFG_GAME_RESOLUTION_Y > 50)
     SFG_blitImage(SFG_monsterSprites + sprite * SFG_TEXTURE_STORE_SIZE,
-        (SFG_GAME_RESOLUTION_X - SFG_TEXTURE_SIZE * SFG_FONT_SIZE_SMALL) / 2,
-        SFG_GAME_RESOLUTION_Y - (SFG_TEXTURE_SIZE + 3) * SFG_FONT_SIZE_SMALL,
-        SFG_FONT_SIZE_SMALL);  
+                  (SFG_GAME_RESOLUTION_X - SFG_TEXTURE_SIZE * SFG_FONT_SIZE_SMALL) / 2,
+                  SFG_GAME_RESOLUTION_Y - (SFG_TEXTURE_SIZE + 3) * SFG_FONT_SIZE_SMALL,
+                  SFG_FONT_SIZE_SMALL);
 
   uint16_t textLen = 0;
 
@@ -4345,14 +4350,13 @@ void SFG_drawStoryText()
     textLen++;
 
   uint16_t drawLen = RCL_min(
-    textLen,(SFG_game.stateTime * textLen) / SFG_STORYTEXT_DURATION + 1);
+      textLen, (SFG_game.stateTime * textLen) / SFG_STORYTEXT_DURATION + 1);
 
 #define CHAR_SIZE (SFG_FONT_SIZE_SMALL * (SFG_FONT_CHARACTER_SIZE + 1))
 #define LINE_LENGTH (SFG_GAME_RESOLUTION_X / CHAR_SIZE)
-#define MAX_LENGTH (((SFG_GAME_RESOLUTION_Y / CHAR_SIZE) / 2) * LINE_LENGTH  )
+#define MAX_LENGTH (((SFG_GAME_RESOLUTION_Y / CHAR_SIZE) / 2) * LINE_LENGTH)
 
-  uint16_t drawShift = (drawLen < MAX_LENGTH) ? 0 :
-    (((drawLen - MAX_LENGTH) / LINE_LENGTH) * LINE_LENGTH);
+  uint16_t drawShift = (drawLen < MAX_LENGTH) ? 0 : (((drawLen - MAX_LENGTH) / LINE_LENGTH) * LINE_LENGTH);
 
 #undef CHAR_SIZE
 #undef LINE_LENGTH
@@ -4361,19 +4365,19 @@ void SFG_drawStoryText()
   text += drawShift;
   drawLen -= drawShift;
 
-  SFG_drawText(text,SFG_HUD_MARGIN,SFG_HUD_MARGIN,SFG_FONT_SIZE_SMALL,textColor,
-    drawLen,SFG_GAME_RESOLUTION_X - SFG_HUD_MARGIN);
+  SFG_drawText(text, SFG_HUD_MARGIN, SFG_HUD_MARGIN, SFG_FONT_SIZE_SMALL, textColor,
+               drawLen, SFG_GAME_RESOLUTION_X - SFG_HUD_MARGIN);
 }
 
 /**
   Draws a number as text on screen, returns the number of characters drawn.
 */
 uint8_t SFG_drawNumber(
-  int16_t number,
-  uint16_t x,
-  uint16_t y,
-  uint8_t size,
-  uint8_t color)
+    int16_t number,
+    uint16_t x,
+    uint16_t y,
+    uint8_t size,
+    uint8_t color)
 {
   char text[7];
 
@@ -4406,7 +4410,7 @@ uint8_t SFG_drawNumber(
     position--;
   }
 
-  SFG_drawText(text + position + 1,x,y,size,color,0,0);
+  SFG_drawText(text + position + 1, x, y, size, color, 0, 0);
 
   return 5 - position;
 }
@@ -4425,8 +4429,8 @@ void SFG_drawIndicationBorder(uint16_t width, uint8_t color)
     {
       if ((i & 0x01) == (j & 0x01))
       {
-        SFG_setGamePixel(i,j,color);
-        SFG_setGamePixel(i,j2,color);
+        SFG_setGamePixel(i, j, color);
+        SFG_setGamePixel(i, j2, color);
       }
     }
   }
@@ -4439,8 +4443,8 @@ void SFG_drawIndicationBorder(uint16_t width, uint8_t color)
     {
       if ((i & 0x01) == (j & 0x01))
       {
-        SFG_setGamePixel(i,j,color);
-        SFG_setGamePixel(i2,j,color);
+        SFG_setGamePixel(i, j, color);
+        SFG_setGamePixel(i2, j, color);
       }
     }
   }
@@ -4452,45 +4456,43 @@ void SFG_drawIndicationBorder(uint16_t width, uint8_t color)
 void SFG_drawWeapon(int16_t bobOffset)
 {
   uint32_t animationLength =
-    RCL_max(SFG_MIN_WEAPON_COOLDOWN_FRAMES,
-      SFG_GET_WEAPON_FIRE_COOLDOWN_FRAMES(SFG_player.weapon));
+      RCL_max(SFG_MIN_WEAPON_COOLDOWN_FRAMES,
+              SFG_GET_WEAPON_FIRE_COOLDOWN_FRAMES(SFG_player.weapon));
 
   uint32_t shotAnimationFrame =
-    animationLength - SFG_player.weaponCooldownFrames;
+      animationLength - SFG_player.weaponCooldownFrames;
 
   bobOffset -= SFG_HUD_BAR_HEIGHT;
-     
+
   uint8_t fireType = SFG_GET_WEAPON_FIRE_TYPE(SFG_player.weapon);
 
   if (shotAnimationFrame < animationLength)
   {
     if (fireType == SFG_WEAPON_FIRE_TYPE_MELEE)
     {
-      bobOffset = shotAnimationFrame < animationLength / 2 ? 0 :
-        2 * SFG_WEAPONBOB_OFFSET_PIXELS;
+      bobOffset = shotAnimationFrame < animationLength / 2 ? 0 : 2 * SFG_WEAPONBOB_OFFSET_PIXELS;
     }
     else
     {
-      bobOffset +=  
-          ((animationLength - shotAnimationFrame) * SFG_WEAPON_IMAGE_SCALE * 20)
-          / animationLength;
-   
+      bobOffset +=
+          ((animationLength - shotAnimationFrame) * SFG_WEAPON_IMAGE_SCALE * 20) / animationLength;
+
       if (
-        ((fireType == SFG_WEAPON_FIRE_TYPE_FIREBALL) ||
-         (fireType == SFG_WEAPON_FIRE_TYPE_BULLET)) &&
-        shotAnimationFrame < animationLength / 2)
+          ((fireType == SFG_WEAPON_FIRE_TYPE_FIREBALL) ||
+           (fireType == SFG_WEAPON_FIRE_TYPE_BULLET)) &&
+          shotAnimationFrame < animationLength / 2)
         SFG_blitImage(SFG_effectSprites,
-          SFG_WEAPON_IMAGE_POSITION_X,
-          SFG_WEAPON_IMAGE_POSITION_Y -
-            (SFG_TEXTURE_SIZE / 3) * SFG_WEAPON_IMAGE_SCALE + bobOffset,
-          SFG_WEAPON_IMAGE_SCALE);
+                      SFG_WEAPON_IMAGE_POSITION_X,
+                      SFG_WEAPON_IMAGE_POSITION_Y -
+                          (SFG_TEXTURE_SIZE / 3) * SFG_WEAPON_IMAGE_SCALE + bobOffset,
+                      SFG_WEAPON_IMAGE_SCALE);
     }
   }
 
   SFG_blitImage(SFG_weaponImages + SFG_player.weapon * SFG_TEXTURE_STORE_SIZE,
-  SFG_WEAPON_IMAGE_POSITION_X,
-  SFG_WEAPON_IMAGE_POSITION_Y + bobOffset - 1,
-  SFG_WEAPON_IMAGE_SCALE);
+                SFG_WEAPON_IMAGE_POSITION_X,
+                SFG_WEAPON_IMAGE_POSITION_Y + bobOffset - 1,
+                SFG_WEAPON_IMAGE_SCALE);
 }
 
 uint16_t SFG_textLen(const char *text)
@@ -4509,43 +4511,39 @@ static inline uint16_t SFG_characterSize(uint8_t textSize)
 }
 
 static inline uint16_t
-  SFG_textHorizontalSize(const char *text, uint8_t textSize)
+SFG_textHorizontalSize(const char *text, uint8_t textSize)
 {
   return (SFG_textLen(text) * SFG_characterSize(textSize));
 }
 
 void SFG_drawMenu()
 {
-  #define BACKGROUND_SCALE (SFG_GAME_RESOLUTION_X / (4 * SFG_TEXTURE_SIZE))
+#define BACKGROUND_SCALE (SFG_GAME_RESOLUTION_X / (4 * SFG_TEXTURE_SIZE))
 
-  #if BACKGROUND_SCALE == 0
-    #undef BACKGROUND_SCALE
-    #define BACKGROUND_SCALE 1
-  #endif
+#if BACKGROUND_SCALE == 0
+#undef BACKGROUND_SCALE
+#define BACKGROUND_SCALE 1
+#endif
 
-  #define SCROLL_PIXELS_PER_FRAME ((64 * SFG_GAME_RESOLUTION_X) / (8 * SFG_FPS))
+#define SCROLL_PIXELS_PER_FRAME ((64 * SFG_GAME_RESOLUTION_X) / (8 * SFG_FPS))
 
-  #if SCROLL_PIXELS_PER_FRAME == 0
-    #undef SCROLL_PIXELS_PER_FRAME
-    #define SCROLL_PIXELS_PER_FRAME 1
-  #endif
+#if SCROLL_PIXELS_PER_FRAME == 0
+#undef SCROLL_PIXELS_PER_FRAME
+#define SCROLL_PIXELS_PER_FRAME 1
+#endif
 
-  #define SELECTION_START_X ((SFG_GAME_RESOLUTION_X - 12 * SFG_FONT_SIZE_MEDIUM\
-    * (SFG_FONT_CHARACTER_SIZE + 1)) / 2)
+#define SELECTION_START_X ((SFG_GAME_RESOLUTION_X - 12 * SFG_FONT_SIZE_MEDIUM * (SFG_FONT_CHARACTER_SIZE + 1)) / 2)
 
   uint16_t scroll = (SFG_game.frame * SCROLL_PIXELS_PER_FRAME) / 64;
 
   for (uint16_t y = 0; y < SFG_GAME_RESOLUTION_Y; ++y)
     for (uint16_t x = 0; x < SFG_GAME_RESOLUTION_X; ++x)
-      SFG_setGamePixel(x,y,
-        (y >= (SFG_TEXTURE_SIZE * BACKGROUND_SCALE)) ? 0 :
-        SFG_getTexel(SFG_backgroundImages,((x + scroll) / BACKGROUND_SCALE)
-          % SFG_TEXTURE_SIZE,y / BACKGROUND_SCALE));
+      SFG_setGamePixel(x, y,
+                       (y >= (SFG_TEXTURE_SIZE * BACKGROUND_SCALE)) ? 0 : SFG_getTexel(SFG_backgroundImages, ((x + scroll) / BACKGROUND_SCALE) % SFG_TEXTURE_SIZE, y / BACKGROUND_SCALE));
 
   uint16_t y = SFG_characterSize(SFG_FONT_SIZE_MEDIUM);
 
-  SFG_blitImage(SFG_logoImage,SFG_GAME_RESOLUTION_X / 2 - 
-    (SFG_TEXTURE_SIZE / 2) * SFG_FONT_SIZE_SMALL,y,SFG_FONT_SIZE_SMALL);
+  SFG_blitImage(SFG_logoImage, SFG_GAME_RESOLUTION_X / 2 - (SFG_TEXTURE_SIZE / 2) * SFG_FONT_SIZE_SMALL, y, SFG_FONT_SIZE_SMALL);
 
 #if SFG_GAME_RESOLUTION_Y > 50
   y += 32 * SFG_FONT_SIZE_MEDIUM + SFG_characterSize(SFG_FONT_SIZE_MEDIUM);
@@ -4576,7 +4574,8 @@ void SFG_drawMenu()
     uint8_t textLen = SFG_textLen(text);
 
     uint16_t drawX = (SFG_GAME_RESOLUTION_X -
-      SFG_textHorizontalSize(text,SFG_FONT_SIZE_MEDIUM)) / 2;
+                      SFG_textHorizontalSize(text, SFG_FONT_SIZE_MEDIUM)) /
+                     2;
 
     uint8_t textColor = 7;
 
@@ -4584,29 +4583,28 @@ void SFG_drawMenu()
       textColor = 23;
     else
       SFG_fillRectangle( // menu item highlight
-        SELECTION_START_X,
-        y - SFG_FONT_SIZE_MEDIUM,
-        SFG_GAME_RESOLUTION_X - SELECTION_START_X * 2,
-        SFG_characterSize(SFG_FONT_SIZE_MEDIUM),2);
-  
-    SFG_drawText(text,drawX,y,SFG_FONT_SIZE_MEDIUM,textColor,0,0);
+          SELECTION_START_X,
+          y - SFG_FONT_SIZE_MEDIUM,
+          SFG_GAME_RESOLUTION_X - SELECTION_START_X * 2,
+          SFG_characterSize(SFG_FONT_SIZE_MEDIUM), 2);
 
-    if ((item == SFG_MENU_ITEM_PLAY || item == SFG_MENU_ITEM_SOUND
-         || item == SFG_MENU_ITEM_SHEAR) &&
+    SFG_drawText(text, drawX, y, SFG_FONT_SIZE_MEDIUM, textColor, 0, 0);
+
+    if ((item == SFG_MENU_ITEM_PLAY || item == SFG_MENU_ITEM_SOUND || item == SFG_MENU_ITEM_SHEAR) &&
         ((i != SFG_game.selectedMenuItem) || SFG_game.blink))
     {
       uint32_t x =
-        drawX + SFG_characterSize(SFG_FONT_SIZE_MEDIUM) * (textLen + 1);
+          drawX + SFG_characterSize(SFG_FONT_SIZE_MEDIUM) * (textLen + 1);
 
       uint8_t c = 93;
 
       if (item == SFG_MENU_ITEM_PLAY)
-        SFG_drawNumber(SFG_game.selectedLevel + 1,x,y,SFG_FONT_SIZE_MEDIUM,c);
+        SFG_drawNumber(SFG_game.selectedLevel + 1, x, y, SFG_FONT_SIZE_MEDIUM, c);
       else if (item == SFG_MENU_ITEM_SHEAR)
       {
         uint8_t n = (SFG_game.settings >> 2) & 0x03;
 
-        SFG_drawNumber(n == 3 ? 2 : n,x,y,SFG_FONT_SIZE_MEDIUM,c);
+        SFG_drawNumber(n == 3 ? 2 : n, x, y, SFG_FONT_SIZE_MEDIUM, c);
       }
       else
       {
@@ -4615,17 +4613,16 @@ void SFG_drawMenu()
         settingText[0] = (SFG_game.settings & 0x01) ? 'S' : ' ';
         settingText[1] = (SFG_game.settings & 0x02) ? 'M' : ' ';
 
-        SFG_drawText(settingText,x,y,SFG_FONT_SIZE_MEDIUM,c,0,0);
+        SFG_drawText(settingText, x, y, SFG_FONT_SIZE_MEDIUM, c, 0, 0);
       }
     }
 
     y += SFG_characterSize(SFG_FONT_SIZE_MEDIUM) + SFG_FONT_SIZE_MEDIUM;
     i++;
   }
-  
-  SFG_drawText(SFG_VERSION_STRING " CC0",SFG_HUD_MARGIN,SFG_GAME_RESOLUTION_Y -
-    SFG_HUD_MARGIN - SFG_FONT_SIZE_SMALL * SFG_FONT_CHARACTER_SIZE,
-    SFG_FONT_SIZE_SMALL,4,0,0);
+
+  SFG_drawText(SFG_VERSION_STRING " CC0", SFG_HUD_MARGIN, SFG_GAME_RESOLUTION_Y - SFG_HUD_MARGIN - SFG_FONT_SIZE_SMALL * SFG_FONT_CHARACTER_SIZE,
+               SFG_FONT_SIZE_SMALL, 4, 0, 0);
 
   // #if SFG_OS_IS_MALWARE
   //   if (SFG_game.blink)
@@ -4633,103 +4630,110 @@ void SFG_drawMenu()
   //       SFG_FONT_SIZE_MEDIUM,95,0,0);
   // #endif
 
-  #undef MAX_ITEMS
-  #undef BACKGROUND_SCALE
-  #undef SCROLL_PIXELS_PER_FRAME
+#undef MAX_ITEMS
+#undef BACKGROUND_SCALE
+#undef SCROLL_PIXELS_PER_FRAME
 }
 
 void SFG_drawWinOverlay()
 {
-  uint32_t t = RCL_min(SFG_WIN_ANIMATION_DURATION,SFG_game.stateTime);
+  uint32_t t = RCL_min(SFG_WIN_ANIMATION_DURATION, SFG_game.stateTime);
 
-  uint32_t t2 = RCL_min(t,SFG_WIN_ANIMATION_DURATION / 4);
+  uint32_t t2 = RCL_min(t, SFG_WIN_ANIMATION_DURATION / 4);
 
-  #define STRIP_HEIGHT (SFG_GAME_RESOLUTION_Y / 2)
-  #define INNER_STRIP_HEIGHT ((STRIP_HEIGHT * 3) / 4)
-  #define STRIP_START ((SFG_GAME_RESOLUTION_Y - STRIP_HEIGHT) / 2)
+#define STRIP_HEIGHT (SFG_GAME_RESOLUTION_Y / 2)
+#define INNER_STRIP_HEIGHT ((STRIP_HEIGHT * 3) / 4)
+#define STRIP_START ((SFG_GAME_RESOLUTION_Y - STRIP_HEIGHT) / 2)
 
   RCL_Unit l = (t2 * STRIP_HEIGHT * 4) / SFG_WIN_ANIMATION_DURATION;
 
   for (uint16_t y = STRIP_START; y < STRIP_START + l; ++y)
     for (uint16_t x = 0; x < SFG_GAME_RESOLUTION_X; ++x)
-      SFG_setGamePixel(x,y, 
-        RCL_abs(y - (SFG_GAME_RESOLUTION_Y / 2)) <= (INNER_STRIP_HEIGHT / 2) ?
-          0 : 172);
+      SFG_setGamePixel(x, y,
+                       RCL_abs(y - (SFG_GAME_RESOLUTION_Y / 2)) <= (INNER_STRIP_HEIGHT / 2) ? 0 : 172);
 
   char textLine[] = SFG_TEXT_LEVEL_COMPLETE;
 
-  uint16_t y = SFG_GAME_RESOLUTION_Y / 2 - 
-    ((STRIP_HEIGHT + INNER_STRIP_HEIGHT) / 2) / 2;
+  uint16_t y = SFG_GAME_RESOLUTION_Y / 2 -
+               ((STRIP_HEIGHT + INNER_STRIP_HEIGHT) / 2) / 2;
 
-  uint16_t x = (SFG_GAME_RESOLUTION_X - 
-    SFG_textHorizontalSize(textLine,SFG_FONT_SIZE_BIG)) / 2;
+  uint16_t x = (SFG_GAME_RESOLUTION_X -
+                SFG_textHorizontalSize(textLine, SFG_FONT_SIZE_BIG)) /
+               2;
 
-  SFG_drawText(textLine,x,y,SFG_FONT_SIZE_BIG,7 + SFG_game.blink * 95,255,0);
+  SFG_drawText(textLine, x, y, SFG_FONT_SIZE_BIG, 7 + SFG_game.blink * 95, 255, 0);
 
   uint32_t timeTotal = SFG_SAVE_TOTAL_TIME;
 
   // don't show totals in level 1:
-  uint8_t blink = (SFG_game.blink) && (SFG_currentLevel.levelNumber != 0)
-    && (timeTotal != 0);
+  uint8_t blink = (SFG_game.blink) && (SFG_currentLevel.levelNumber != 0) && (timeTotal != 0);
 
   if (t >= (SFG_WIN_ANIMATION_DURATION / 2))
   {
     y += (SFG_FONT_SIZE_BIG + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
     x = SFG_HUD_MARGIN;
 
-    #define CHAR_SIZE (SFG_FONT_SIZE_SMALL * SFG_FONT_CHARACTER_SIZE)
+#define CHAR_SIZE (SFG_FONT_SIZE_SMALL * SFG_FONT_CHARACTER_SIZE)
 
     uint32_t time = blink ? timeTotal : SFG_currentLevel.completionTime10sOfS;
 
-    x += SFG_drawNumber(time / 10,x,y,SFG_FONT_SIZE_SMALL,7) *
-      CHAR_SIZE + SFG_FONT_SIZE_SMALL;
+    x += SFG_drawNumber(time / 10, x, y, SFG_FONT_SIZE_SMALL, 7) *
+             CHAR_SIZE +
+         SFG_FONT_SIZE_SMALL;
 
     char timeRest[5] = ".X s";
 
     timeRest[1] = '0' + (time % 10);
-    
-    SFG_drawText(timeRest,x,y,SFG_FONT_SIZE_SMALL,7,4,0);
+
+    SFG_drawText(timeRest, x, y, SFG_FONT_SIZE_SMALL, 7, 4, 0);
 
     x = SFG_HUD_MARGIN;
     y += (SFG_FONT_SIZE_BIG + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
 
     if (blink)
     {
-      x += (SFG_drawNumber(SFG_game.save[10] + SFG_game.save[11] * 256,x,y,
-        SFG_FONT_SIZE_SMALL,7) + 1) * CHAR_SIZE;
+      x += (SFG_drawNumber(SFG_game.save[10] + SFG_game.save[11] * 256, x, y,
+                           SFG_FONT_SIZE_SMALL, 7) +
+            1) *
+           CHAR_SIZE;
     }
     else
     {
-      x += SFG_drawNumber(SFG_currentLevel.monstersDead,x,y,
-        SFG_FONT_SIZE_SMALL,7) * CHAR_SIZE;
+      x += SFG_drawNumber(SFG_currentLevel.monstersDead, x, y,
+                          SFG_FONT_SIZE_SMALL, 7) *
+           CHAR_SIZE;
 
-      SFG_drawText("/",x,y,SFG_FONT_SIZE_SMALL,7,1,0);
+      SFG_drawText("/", x, y, SFG_FONT_SIZE_SMALL, 7, 1, 0);
 
       x += CHAR_SIZE;
 
-      x += (SFG_drawNumber(SFG_currentLevel.monsterRecordCount,x,y,
-        SFG_FONT_SIZE_SMALL,7) + 1) * CHAR_SIZE;
+      x += (SFG_drawNumber(SFG_currentLevel.monsterRecordCount, x, y,
+                           SFG_FONT_SIZE_SMALL, 7) +
+            1) *
+           CHAR_SIZE;
     }
-    
-    SFG_drawText(SFG_TEXT_KILLS,x,y,SFG_FONT_SIZE_SMALL,7,255,0);
 
-    if ((t >= (SFG_WIN_ANIMATION_DURATION - 1)) && 
-      (SFG_currentLevel.levelNumber != (SFG_NUMBER_OF_LEVELS - 1)) &&
-      SFG_game.blink)
+    SFG_drawText(SFG_TEXT_KILLS, x, y, SFG_FONT_SIZE_SMALL, 7, 255, 0);
+
+    if ((t >= (SFG_WIN_ANIMATION_DURATION - 1)) &&
+        (SFG_currentLevel.levelNumber != (SFG_NUMBER_OF_LEVELS - 1)) &&
+        SFG_game.blink)
     {
       y += (SFG_FONT_SIZE_BIG + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
 
       SFG_drawText(SFG_TEXT_SAVE_PROMPT,
-        (SFG_GAME_RESOLUTION_X - SFG_textHorizontalSize(SFG_TEXT_SAVE_PROMPT,
-          SFG_FONT_SIZE_MEDIUM)) / 2,y,SFG_FONT_SIZE_MEDIUM,7,255,0);
+                   (SFG_GAME_RESOLUTION_X - SFG_textHorizontalSize(SFG_TEXT_SAVE_PROMPT,
+                                                                   SFG_FONT_SIZE_MEDIUM)) /
+                       2,
+                   y, SFG_FONT_SIZE_MEDIUM, 7, 255, 0);
     }
 
-    #undef CHAR_SIZE
+#undef CHAR_SIZE
   }
 
-  #undef STRIP_HEIGHT
-  #undef STRIP_START
-  #undef INNER_STRIP_HEIGHT
+#undef STRIP_HEIGHT
+#undef STRIP_START
+#undef INNER_STRIP_HEIGHT
 }
 
 void SFG_draw()
@@ -4754,9 +4758,9 @@ void SFG_draw()
   if (SFG_keyIsDown(SFG_KEY_MAP) || (SFG_game.state == SFG_GAME_STATE_MAP))
   {
     SFG_drawMap();
-  } 
+  }
   else
-  { 
+  {
     for (int_fast16_t i = 0; i < SFG_Z_BUFFER_SIZE; ++i)
       SFG_game.zBuffer[i] = 255;
 
@@ -4781,30 +4785,30 @@ void SFG_draw()
 #endif
 
       weaponBobOffset =
-        (bobSin * SFG_WEAPONBOB_OFFSET_PIXELS) / (RCL_UNITS_PER_SQUARE) + 
-        SFG_WEAPONBOB_OFFSET_PIXELS;
+          (bobSin * SFG_WEAPONBOB_OFFSET_PIXELS) / (RCL_UNITS_PER_SQUARE) +
+          SFG_WEAPONBOB_OFFSET_PIXELS;
     }
     else
     {
       // player die animation
 
       weaponBobOffset =
-        (SFG_WEAPON_IMAGE_SCALE * SFG_TEXTURE_SIZE * SFG_game.stateTime) /
-        SFG_LOSE_ANIMATION_DURATION;
+          (SFG_WEAPON_IMAGE_SCALE * SFG_TEXTURE_SIZE * SFG_game.stateTime) /
+          SFG_LOSE_ANIMATION_DURATION;
     }
-      
+
     // add head bob just for the rendering (we'll will substract it back later)
 
     SFG_player.camera.height += headBobOffset;
 #endif // headbob enabled?
 
     RCL_renderComplex(
-      SFG_player.camera,
-      SFG_floorHeightAt,
-      SFG_ceilingHeightAt,
-      SFG_texturesAt,
-      SFG_game.rayConstraints);
- 
+        SFG_player.camera,
+        SFG_floorHeightAt,
+        SFG_ceilingHeightAt,
+        SFG_texturesAt,
+        SFG_game.rayConstraints);
+
     // draw sprites:
 
     // monster sprites:
@@ -4821,32 +4825,32 @@ void SFG_draw()
         worldPosition.y = SFG_MONSTER_COORD_TO_RCL_UNITS(m.coords[1]);
 
         uint8_t spriteSize = SFG_GET_MONSTER_SPRITE_SIZE(
-          SFG_MONSTER_TYPE_TO_INDEX(SFG_MR_TYPE(m)));
+            SFG_MONSTER_TYPE_TO_INDEX(SFG_MR_TYPE(m)));
 
-        RCL_Unit worldHeight = 
-          SFG_floorHeightAt(
-            SFG_MONSTER_COORD_TO_SQUARES(m.coords[0]),
-            SFG_MONSTER_COORD_TO_SQUARES(m.coords[1]))
-            + SFG_SPRITE_SIZE_TO_HEIGHT_ABOVE_GROUND(spriteSize);
+        RCL_Unit worldHeight =
+            SFG_floorHeightAt(
+                SFG_MONSTER_COORD_TO_SQUARES(m.coords[0]),
+                SFG_MONSTER_COORD_TO_SQUARES(m.coords[1])) +
+            SFG_SPRITE_SIZE_TO_HEIGHT_ABOVE_GROUND(spriteSize);
 
         RCL_PixelInfo p =
-          RCL_mapToScreen(worldPosition,worldHeight,SFG_player.camera);
+            RCL_mapToScreen(worldPosition, worldHeight, SFG_player.camera);
 
         if (p.depth > 0 &&
-          SFG_spriteIsVisible(worldPosition,worldHeight))
+            SFG_spriteIsVisible(worldPosition, worldHeight))
         {
           const uint8_t *s =
-            SFG_getMonsterSprite(
-              SFG_MR_TYPE(m),
-              state,
-              SFG_game.spriteAnimationFrame & 0x01);
+              SFG_getMonsterSprite(
+                  SFG_MR_TYPE(m),
+                  state,
+                  SFG_game.spriteAnimationFrame & 0x01);
 
           SFG_drawScaledSprite(s,
-            p.position.x * SFG_RAYCASTING_SUBSAMPLE,p.position.y,
-            RCL_perspectiveScaleVertical(
-            SFG_SPRITE_SIZE_PIXELS(spriteSize),
-            p.depth),
-            p.depth / (RCL_UNITS_PER_SQUARE * 2),p.depth);
+                               p.position.x * SFG_RAYCASTING_SUBSAMPLE, p.position.y,
+                               RCL_perspectiveScaleVertical(
+                                   SFG_SPRITE_SIZE_PIXELS(spriteSize),
+                                   p.depth),
+                               p.depth / (RCL_UNITS_PER_SQUARE * 2), p.depth);
         }
       }
     }
@@ -4857,35 +4861,34 @@ void SFG_draw()
       {
         RCL_Vector2D worldPosition;
 
-        SFG_LevelElement e = 
-          SFG_currentLevel.levelPointer->elements[
-            SFG_currentLevel.itemRecords[i] & ~SFG_ITEM_RECORD_ACTIVE_MASK];
+        SFG_LevelElement e =
+            SFG_currentLevel.levelPointer->elements[SFG_currentLevel.itemRecords[i] & ~SFG_ITEM_RECORD_ACTIVE_MASK];
 
         worldPosition.x =
-          SFG_ELEMENT_COORD_TO_RCL_UNITS(e.coords[0]);
+            SFG_ELEMENT_COORD_TO_RCL_UNITS(e.coords[0]);
 
         worldPosition.y =
-          SFG_ELEMENT_COORD_TO_RCL_UNITS(e.coords[1]);
+            SFG_ELEMENT_COORD_TO_RCL_UNITS(e.coords[1]);
 
         const uint8_t *sprite;
         uint8_t spriteSize;
 
-        SFG_getItemSprite(e.type,&sprite,&spriteSize);
+        SFG_getItemSprite(e.type, &sprite, &spriteSize);
 
         if (sprite != 0)
         {
-          RCL_Unit worldHeight = SFG_floorHeightAt(e.coords[0],e.coords[1])
-            + SFG_SPRITE_SIZE_TO_HEIGHT_ABOVE_GROUND(spriteSize);
+          RCL_Unit worldHeight = SFG_floorHeightAt(e.coords[0], e.coords[1]) + SFG_SPRITE_SIZE_TO_HEIGHT_ABOVE_GROUND(spriteSize);
 
           RCL_PixelInfo p =
-            RCL_mapToScreen(worldPosition,worldHeight,SFG_player.camera);
+              RCL_mapToScreen(worldPosition, worldHeight, SFG_player.camera);
 
           if (p.depth > 0 &&
-            SFG_spriteIsVisible(worldPosition,worldHeight))
-            SFG_drawScaledSprite(sprite,p.position.x * SFG_RAYCASTING_SUBSAMPLE,
-              p.position.y,
-              RCL_perspectiveScaleVertical(SFG_SPRITE_SIZE_PIXELS(spriteSize),
-              p.depth),p.depth / (RCL_UNITS_PER_SQUARE * 2),p.depth);
+              SFG_spriteIsVisible(worldPosition, worldHeight))
+            SFG_drawScaledSprite(sprite, p.position.x * SFG_RAYCASTING_SUBSAMPLE,
+                                 p.position.y,
+                                 RCL_perspectiveScaleVertical(SFG_SPRITE_SIZE_PIXELS(spriteSize),
+                                                              p.depth),
+                                 p.depth / (RCL_UNITS_PER_SQUARE * 2), p.depth);
         }
       }
 
@@ -4903,10 +4906,10 @@ void SFG_draw()
       worldPosition.y = proj->position[1];
 
       RCL_PixelInfo p =
-        RCL_mapToScreen(worldPosition,proj->position[2],SFG_player.camera);
-       
+          RCL_mapToScreen(worldPosition, proj->position[2], SFG_player.camera);
+
       const uint8_t *s =
-        SFG_effectSprites + proj->type * SFG_TEXTURE_STORE_SIZE;
+          SFG_effectSprites + proj->type * SFG_TEXTURE_STORE_SIZE;
 
       int16_t spriteSize = SFG_SPRITE_SIZE_PIXELS(0);
 
@@ -4914,25 +4917,25 @@ void SFG_draw()
           proj->type == SFG_PROJECTILE_DUST)
       {
         int16_t doubleFramesToLive =
-          RCL_nonZero(SFG_GET_PROJECTILE_FRAMES_TO_LIVE(proj->type) / 2);
+            RCL_nonZero(SFG_GET_PROJECTILE_FRAMES_TO_LIVE(proj->type) / 2);
 
         // grow the explosion/dust sprite as an animation
-        spriteSize = (
-            SFG_SPRITE_SIZE_PIXELS(2) *
-            RCL_sin(          
-              ((doubleFramesToLive -
-               proj->doubleFramesToLive) * RCL_UNITS_PER_SQUARE / 4)
-               / doubleFramesToLive) 
-          ) / RCL_UNITS_PER_SQUARE;
+        spriteSize = (SFG_SPRITE_SIZE_PIXELS(2) *
+                      RCL_sin(
+                          ((doubleFramesToLive -
+                            proj->doubleFramesToLive) *
+                           RCL_UNITS_PER_SQUARE / 4) /
+                          doubleFramesToLive)) /
+                     RCL_UNITS_PER_SQUARE;
       }
 
-      if (p.depth > 0 && 
-        SFG_spriteIsVisible(worldPosition,proj->position[2]))
+      if (p.depth > 0 &&
+          SFG_spriteIsVisible(worldPosition, proj->position[2]))
         SFG_drawScaledSprite(s,
-            p.position.x * SFG_RAYCASTING_SUBSAMPLE,p.position.y,
-            RCL_perspectiveScaleVertical(spriteSize,p.depth),
-            SFG_fogValueDiminish(p.depth),
-            p.depth);  
+                             p.position.x * SFG_RAYCASTING_SUBSAMPLE, p.position.y,
+                             RCL_perspectiveScaleVertical(spriteSize, p.depth),
+                             SFG_fogValueDiminish(p.depth),
+                             p.depth);
     }
 
 #if SFG_HEADBOB_ENABLED
@@ -4963,58 +4966,54 @@ void SFG_draw()
     }
 
     for (uint16_t j = SFG_GAME_RESOLUTION_Y - SFG_HUD_BAR_HEIGHT;
-      j < SFG_GAME_RESOLUTION_Y; ++j)
+         j < SFG_GAME_RESOLUTION_Y; ++j)
     {
       for (uint16_t i = 0; i < SFG_GAME_RESOLUTION_X; ++i)
-        SFG_setGamePixel(i,j,color);
+        SFG_setGamePixel(i, j, color);
 
       color = color2;
     }
 
-    #define TEXT_Y (SFG_GAME_RESOLUTION_Y - SFG_HUD_MARGIN - \
-      SFG_FONT_CHARACTER_SIZE * SFG_FONT_SIZE_MEDIUM)
+#define TEXT_Y (SFG_GAME_RESOLUTION_Y - SFG_HUD_MARGIN - \
+                SFG_FONT_CHARACTER_SIZE * SFG_FONT_SIZE_MEDIUM)
 
     SFG_drawNumber( // health
-      SFG_player.health,
-      SFG_HUD_MARGIN,
-      TEXT_Y,
-      SFG_FONT_SIZE_MEDIUM,
-      SFG_player.health > SFG_PLAYER_HEALTH_WARNING_LEVEL ? 6 : 175);
+        SFG_player.health,
+        SFG_HUD_MARGIN,
+        TEXT_Y,
+        SFG_FONT_SIZE_MEDIUM,
+        SFG_player.health > SFG_PLAYER_HEALTH_WARNING_LEVEL ? 6 : 175);
 
     SFG_drawNumber( // ammo
-      SFG_player.weapon != SFG_WEAPON_KNIFE ?
-        SFG_player.ammo[SFG_weaponAmmo(SFG_player.weapon)] : 0,
-      SFG_GAME_RESOLUTION_X - SFG_HUD_MARGIN -
-        (SFG_FONT_CHARACTER_SIZE + 1) * SFG_FONT_SIZE_MEDIUM * 3,
-      TEXT_Y,
-      SFG_FONT_SIZE_MEDIUM,
-      6); 
+        SFG_player.weapon != SFG_WEAPON_KNIFE ? SFG_player.ammo[SFG_weaponAmmo(SFG_player.weapon)] : 0,
+        SFG_GAME_RESOLUTION_X - SFG_HUD_MARGIN -
+            (SFG_FONT_CHARACTER_SIZE + 1) * SFG_FONT_SIZE_MEDIUM * 3,
+        TEXT_Y,
+        SFG_FONT_SIZE_MEDIUM,
+        6);
 
     for (uint8_t i = 0; i < 3; ++i) // access cards
-      if ( 
-        ((SFG_player.cards >> i) | ((SFG_player.cards >> (i + 3))
-        & SFG_game.blink)) & 0x01)
+      if (
+          ((SFG_player.cards >> i) | ((SFG_player.cards >> (i + 3)) & SFG_game.blink)) & 0x01)
         SFG_fillRectangle(
-          SFG_HUD_MARGIN + (SFG_FONT_CHARACTER_SIZE + 1) *
-            SFG_FONT_SIZE_MEDIUM * (5 + i),
-          TEXT_Y,
-          SFG_FONT_SIZE_MEDIUM * SFG_FONT_CHARACTER_SIZE,
-          SFG_FONT_SIZE_MEDIUM * SFG_FONT_CHARACTER_SIZE,
-          i == 0 ? 93 : (i == 1 ? 124 : 60));
+            SFG_HUD_MARGIN + (SFG_FONT_CHARACTER_SIZE + 1) *
+                                 SFG_FONT_SIZE_MEDIUM * (5 + i),
+            TEXT_Y,
+            SFG_FONT_SIZE_MEDIUM * SFG_FONT_CHARACTER_SIZE,
+            SFG_FONT_SIZE_MEDIUM * SFG_FONT_CHARACTER_SIZE,
+            i == 0 ? 93 : (i == 1 ? 124 : 60));
 
-    #undef TEXT_Y
+#undef TEXT_Y
 
     // border indicator
 
-    if ((SFG_game.frame - SFG_player.lastHurtFrame
-        <= SFG_HUD_BORDER_INDICATOR_DURATION_FRAMES) ||
+    if ((SFG_game.frame - SFG_player.lastHurtFrame <= SFG_HUD_BORDER_INDICATOR_DURATION_FRAMES) ||
         (SFG_game.state == SFG_GAME_STATE_LOSE))
       SFG_drawIndicationBorder(SFG_HUD_BORDER_INDICATOR_WIDTH_PIXELS,
-      SFG_HUD_HURT_INDICATION_COLOR);
-    else if (SFG_game.frame - SFG_player.lastItemTakenFrame
-        <= SFG_HUD_BORDER_INDICATOR_DURATION_FRAMES)
+                               SFG_HUD_HURT_INDICATION_COLOR);
+    else if (SFG_game.frame - SFG_player.lastItemTakenFrame <= SFG_HUD_BORDER_INDICATOR_DURATION_FRAMES)
       SFG_drawIndicationBorder(SFG_HUD_BORDER_INDICATOR_WIDTH_PIXELS,
-      SFG_HUD_ITEM_TAKEN_INDICATION_COLOR);
+                               SFG_HUD_ITEM_TAKEN_INDICATION_COLOR);
 
     if (SFG_game.state == SFG_GAME_STATE_WIN)
       SFG_drawWinOverlay();
@@ -5054,7 +5053,7 @@ uint8_t SFG_mainLoopBody()
         SFG_gameStep();
 
         if (SFG_player.weapon != previousWeapon)
-          SFG_processEvent(SFG_EVENT_PLAYER_CHANGES_WEAPON,SFG_player.weapon);
+          SFG_processEvent(SFG_EVENT_PLAYER_CHANGES_WEAPON, SFG_player.weapon);
 
         timeSinceLastFrame -= SFG_MS_PER_FRAME;
 
@@ -5081,7 +5080,7 @@ uint8_t SFG_mainLoopBody()
     {
       // wait, relieve CPU
       SFG_sleepMs(RCL_max(1,
-        (3 * (SFG_game.frameTime + SFG_MS_PER_FRAME - timeNow)) / 4));
+                          (3 * (SFG_game.frameTime + SFG_MS_PER_FRAME - timeNow)) / 4));
     }
   }
   else if (!SFG_keyPressed(SFG_KEY_A) && !SFG_keyPressed(SFG_KEY_B))

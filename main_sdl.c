@@ -395,6 +395,8 @@ int main(int argc, char *argv[])
       argForceFullscreen = 1;
     else if (argv[i][0] == '-' && argv[i][1] == 'd' && argv[i][2] == 0)       
       SFG_isDebug = 1;
+    else if (argv[i][0] == '-' && argv[i][1] == 'g' && argv[i][2] == 0)       
+      SFG_launchWithGodMode = 1;
     else
       puts("SDL: unknown argument"); 
   }

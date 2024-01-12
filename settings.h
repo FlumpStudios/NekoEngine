@@ -305,7 +305,7 @@
   will react more quickly and appear less "out of thin air".
 */
 #ifndef SFG_ELEMENT_DISTANCES_CHECKED_PER_FRAME
-  #define SFG_ELEMENT_DISTANCES_CHECKED_PER_FRAME 8
+  #define SFG_ELEMENT_DISTANCES_CHECKED_PER_FRAME 64
 #endif
 
 /**
