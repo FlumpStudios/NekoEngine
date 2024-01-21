@@ -25,3 +25,6 @@ I'll write a proper readme with instructions when I have more time.
 
 IMPORTANT: To update the textures and sounds, you will need to have python(and in your PATH env vars)  and the PIL library installed. If you try and sync to game without these installed, the data will be wiped
 
+
+To find out more, checkout our [Discord server](https://discord.gg/pWCbUA6U).
+
