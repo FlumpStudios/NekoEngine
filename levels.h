@@ -1,7 +1,7 @@
 #ifndef _SFG_LEVELS_H
 #define _SFG_LEVELS_H
 #define SFG_MAP_SIZE 64
-#define SFG_TILE_DICTIONARY_SIZE 64
+#define SFG_TILE_DICTIONARY_SIZE 128
 
 /**
   Defines a single game map tile. The format is following:
@@ -52,8 +52,8 @@ typedef uint8_t SFG_MapArray[SFG_MAP_SIZE * SFG_MAP_SIZE];
 
 #define SFG_TILE_PROPERTY_MASK 0xc0
 #define SFG_TILE_PROPERTY_NORMAL 0x00
-#define SFG_TILE_PROPERTY_ELEVATOR 0x40
-#define SFG_TILE_PROPERTY_SQUEEZER 0x80
+#define SFG_TILE_PROPERTY_ELEVATOR 0x80
+#define SFG_TILE_PROPERTY_SQUEEZER 0x100
 #define SFG_TILE_PROPERTY_DOOR 0xc0
 
 /**
@@ -148,7 +148,7 @@ static inline SFG_TileDefinition SFG_getMapTile
     uint8_t tile = level->mapArray[y * SFG_MAP_SIZE + x];
 
     *properties = tile & 0xc0;
-    return level->tileDictionary[tile & 0x3f];
+    return level->tileDictionary[tile & (SFG_TILE_DICTIONARY_SIZE - 1)];
   }
 
   *properties = SFG_TILE_PROPERTY_NORMAL;
