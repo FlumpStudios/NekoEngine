@@ -1,7 +1,7 @@
 #ifndef _SFG_LEVELS_H
 #define _SFG_LEVELS_H
 #define SFG_MAP_SIZE 64
-#define SFG_TILE_DICTIONARY_SIZE 128
+#define SFG_TILE_DICTIONARY_SIZE 64
 
 /**
   Defines a single game map tile. The format is following:
@@ -52,8 +52,8 @@ typedef uint8_t SFG_MapArray[SFG_MAP_SIZE * SFG_MAP_SIZE];
 
 #define SFG_TILE_PROPERTY_MASK 0xc0
 #define SFG_TILE_PROPERTY_NORMAL 0x00
-#define SFG_TILE_PROPERTY_ELEVATOR 0x80
-#define SFG_TILE_PROPERTY_SQUEEZER 0x100
+#define SFG_TILE_PROPERTY_ELEVATOR 0x40
+#define SFG_TILE_PROPERTY_SQUEEZER 0x80
 #define SFG_TILE_PROPERTY_DOOR 0xc0
 
 /**
@@ -61,8 +61,8 @@ typedef uint8_t SFG_MapArray[SFG_MAP_SIZE * SFG_MAP_SIZE];
 */
 typedef struct
 {
-  uint8_t type;
-  uint8_t coords[2];
+    uint8_t type;
+    uint8_t coords[2];
 } SFG_LevelElement;
 
 #define SFG_MAX_LEVEL_ELEMENTS 128
@@ -117,55 +117,57 @@ typedef struct
 
 typedef struct
 {
-  SFG_MapArray mapArray;
-  SFG_TileDictionary tileDictionary;
-  uint8_t textureIndices[7]; /**< Says which textures are used on the map. There
-                             can be at most 7 because of 3bit indexing (one
-                             value is reserved for special transparent
-                             texture). */
-  uint8_t doorTextureIndex; /**< Index (global, NOT from textureIndices) of a
-                             texture used for door. */
-  uint8_t floorColor;
-  uint8_t ceilingColor;
-  uint8_t playerStart[3];   /**< Player starting location: square X, square Y,
-                                 direction (fourths of RCL_Unit). */
-  uint8_t backgroundImage;  ///< Index of level background image.
-  SFG_LevelElement elements[SFG_MAX_LEVEL_ELEMENTS];
-  uint8_t ceilHeight;
-  uint8_t floorHeight;
+    SFG_MapArray mapArray;
+    SFG_TileDictionary tileDictionary;
+    uint8_t textureIndices[7]; /**< Says which textures are used on the map. There
+                               can be at most 7 because of 3bit indexing (one
+                               value is reserved for special transparent
+                               texture). */
+    uint8_t doorTextureIndex; /**< Index (global, NOT from textureIndices) of a
+                               texture used for door. */
+    uint8_t floorColor;
+    uint8_t ceilingColor;
+    uint8_t playerStart[3];   /**< Player starting location: square X, square Y,
+                                   direction (fourths of RCL_Unit). */
+    uint8_t backgroundImage;  ///< Index of level background image.
+    SFG_LevelElement elements[SFG_MAX_LEVEL_ELEMENTS];
+    uint8_t ceilHeight;
+    uint8_t floorHeight;
+    uint8_t doorLevitation;
+    uint8_t stepSize;
 } SFG_Level;
 
 static inline SFG_TileDefinition SFG_getMapTile
 (
-  const SFG_Level *level,
-  int16_t x,
-  int16_t y,
-  uint8_t *properties
+    const SFG_Level* level,
+    int16_t x,
+    int16_t y,
+    uint8_t* properties
 )
 {
-  if (x >= 0 && x < SFG_MAP_SIZE && y >= 0 && y < SFG_MAP_SIZE)
-  {
-    uint8_t tile = level->mapArray[y * SFG_MAP_SIZE + x];
+    if (x >= 0 && x < SFG_MAP_SIZE && y >= 0 && y < SFG_MAP_SIZE)
+    {
+        uint8_t tile = level->mapArray[y * SFG_MAP_SIZE + x];
 
-    *properties = tile & 0xc0;
-    return level->tileDictionary[tile & (SFG_TILE_DICTIONARY_SIZE - 1)];
-  }
+        *properties = tile & 0xc0;
+        return level->tileDictionary[tile & 0x3f];
+    }
 
-  *properties = SFG_TILE_PROPERTY_NORMAL;
-  return SFG_OUTSIDE_TILE;
+    *properties = SFG_TILE_PROPERTY_NORMAL;
+    return SFG_OUTSIDE_TILE;
 }
 
 #define SFG_NUMBER_OF_LEVELS 10
 
 uint8_t SFG_loadLevelFromFile(SFG_Level* buffer, uint8_t level, const char* executableLocation)
-{   
+{
     if (buffer == NULL || executableLocation == NULL) {
         // Handle the case where pointers are NULL
         return 0;
     }
 
     char levelString[512];
-    snprintf(levelString, sizeof(levelString), "levels/level%02u.HAD",level); 
+    snprintf(levelString, sizeof(levelString), "levels/level%02u.HAD", level);
 
     FILE* file = fopen(levelString, "rb");
     if (file == NULL) {
