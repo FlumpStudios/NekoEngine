@@ -31,4 +31,4 @@ C:\Projects\NekoEngine\game.h(4666,24): warning C4244: 'initializing': conversio
 C:\Projects\NekoEngine\sounds.h(147,18): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Projects\NekoEngine\main_sdl.c(110,13): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Projects\NekoEngine\main_sdl.c(128,13): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  NekoEngine.vcxproj -> C:\Projects\NekoEngine\NekoCorex64\Release\NekoEngine.exe
+  NekoEngine.vcxproj -> C:\Projects\NekoEngine\anarch.exe
