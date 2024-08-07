@@ -1,8 +1,6 @@
 #ifndef _SFG_CONSTANTS_H
 #define _SFG_CONSTANTS_H
-
 #define SFG_SKIP_INTRO 1
-
 
 /**
   Default enemy behavior between 0 and 255
