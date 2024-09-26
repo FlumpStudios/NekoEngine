@@ -28,7 +28,9 @@ C:\Projects\NekoEngine\game.h(4280,67): warning C4244: 'function': conversion fr
 C:\Projects\NekoEngine\game.h(4368,75): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
 C:\Projects\NekoEngine\game.h(4574,23): warning C4244: 'initializing': conversion from 'uint16_t' to 'uint8_t', possible loss of data
 C:\Projects\NekoEngine\game.h(4666,24): warning C4244: 'initializing': conversion from '__int64' to 'uint32_t', possible loss of data
-C:\Projects\NekoEngine\sounds.h(145,18): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\sounds.h(100,67): warning C4146: unary minus operator applied to unsigned type, result still unsigned
+C:\Projects\NekoEngine\sounds.h(100,80): warning C4293: '>>': shift count negative or too big, undefined behavior
+C:\Projects\NekoEngine\sounds.h(131,18): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Projects\NekoEngine\main_sdl.c(110,13): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Projects\NekoEngine\main_sdl.c(128,13): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   NekoEngine.vcxproj -> C:\Projects\NekoEngine\anarch.exe
