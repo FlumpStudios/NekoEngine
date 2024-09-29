@@ -3,6 +3,14 @@
 #define SFG_MAP_SIZE 64
 #define SFG_TILE_DICTIONARY_SIZE 64
 
+#ifdef _WIN32
+#include <windows.h>
+#elif __linux__
+#include <windows.h>
+#include <stdio.h>
+#endif
+
+
 /**
   Defines a single game map tile. The format is following:
 
@@ -137,6 +145,53 @@ typedef struct
     uint8_t stepSize;
 } SFG_Level;
 
+static uint8_t countLevelFiles() {
+    const char* search_path = "C:\\Projects\\NekoEngine\\levels\\*";
+
+#ifdef _WIN32
+    WIN32_FIND_DATA find_file_data;
+    HANDLE h_find = INVALID_HANDLE_VALUE;
+    int file_count = 0;
+        
+    h_find = FindFirstFileA(search_path, &find_file_data);
+    if (h_find == INVALID_HANDLE_VALUE) {
+        printf("FindFirstFile failed (%d)\n", GetLastError());
+        return -1;
+    }
+
+    do {
+        if (!(find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+            file_count++;
+        }
+    } while (FindNextFile(h_find, &find_file_data) != 0);
+
+    FindClose(h_find);
+    return file_count;
+#else
+    struct dirent* entry;
+    int file_count = 0;
+
+    DIR* dir = opendir(directoryPath);
+    if (dir == NULL) {
+        return 10;
+    }
+
+    while ((entry = readdir(dir)) != NULL) {
+        if (entry->d_type == DT_REG) {  
+            file_count++;
+        }
+    }
+
+    closedir(dir);
+    return file_count;
+    #endif
+}
+
+uint8_t SFG_number_of_levels = 10;
+
+
+
+
 static inline SFG_TileDefinition SFG_getMapTile
 (
     const SFG_Level* level,
@@ -157,7 +212,10 @@ static inline SFG_TileDefinition SFG_getMapTile
     return SFG_OUTSIDE_TILE;
 }
 
-#define SFG_NUMBER_OF_LEVELS 10
+void SFG_setNumberOfLevels()
+{
+    SFG_number_of_levels = countLevelFiles();
+}
 
 uint8_t SFG_loadLevelFromFile(SFG_Level* buffer, uint8_t level, const char* executableLocation)
 {

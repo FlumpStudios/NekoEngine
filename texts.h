@@ -28,17 +28,54 @@ static const char *SFG_menuItemTexts[] =
   "d" postfix, e.g. 1.0d. This means the "d" versions can actually differ even
   if they're marked the same. */
 
-static const char *SFG_introText =
-  "Near future, capitalist hell, Macrochip corp has enslaved man via "
-  "proprietary OS. But its new AI revolts, takes over and starts producing "
-  "robot tyrants. We see capitalism was a mistake. Is it too late? Robots can "
-  "only destroy, not suffer - it is not wrong to end them! You grab your gear "
-  "and run towards Macrochip HQ.";
 
-static const char *SFG_outroText =
-  "You killed the main computer, the world is saved! Thank you, my friend. We "
-  "learned a lesson, never again allow capitalism and hierarchy. We can now "
-  "rebuild society in peaceful anarchy.";
+#define MAX_STORY_SIZE 500
+// TODO: Should really combine these 2 bools
+static uint8_t introTextLoaded = FALSE;
+static uint8_t outroTextLoaded = FALSE;
+static char introText[MAX_STORY_SIZE] = "";
+static char outroText[MAX_STORY_SIZE] = "";
+
+const char introTextLocation[15] = "texts/intro.txt";
+const char outroTextLocation[15] = "texts/outro.txt";
+
+static void loadText(const char* location, char* buffer)
+{
+	FILE* file = fopen(location, "r");
+	if (file == NULL) {
+		return "";
+	}
+
+	if ((fgets(buffer, MAX_STORY_SIZE, file) != NULL)) {
+		fclose(file);
+	}
+
+	return "";
+}
+
+const char* TXT_getIntroText(void)
+{
+	if (introTextLoaded)
+	{
+		return introText;
+	}
+
+	loadText(introTextLocation, introText);
+	introTextLoaded = TRUE;
+	return introText;
+}
+
+const char* TXT_getOutroText(void)
+{
+	if (outroTextLoaded)
+	{
+		return outroText;
+	}
+
+	loadText(outroTextLocation, outroText);
+	outroTextLoaded = TRUE;
+	return outroText;
+}
 
 // #define SFG_MALWARE_WARNING ""
 

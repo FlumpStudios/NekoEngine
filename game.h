@@ -669,7 +669,7 @@ void SFG_levelEnds()
   if (
       (SFG_player.health != 0) &&
       (SFG_currentLevel.levelNumber >= (SFG_game.save[0] & 0x0f)) &&
-      ((SFG_currentLevel.levelNumber + 1) < SFG_NUMBER_OF_LEVELS))
+      ((SFG_currentLevel.levelNumber + 1) < SFG_number_of_levels))
   {
     SFG_game.save[0] = // save progress
         (SFG_game.save[0] & 0xf0) | (SFG_currentLevel.levelNumber + 1);
@@ -1750,6 +1750,10 @@ void SFG_init()
   sprintf(loc, "Title/data.TAD");
   SFG_loadTexturesFromFile(SFG_logoImage, loc, SFG_TEXTURE_STORE_SIZE);
 
+  
+  SFG_setNumberOfLevels();
+  printf("Number of levels found: %u", SFG_number_of_levels);
+
   SFG_game.frame = 0;
   SFG_game.frameTime = 0;
   SFG_game.currentRandom = 0;
@@ -1835,11 +1839,11 @@ void SFG_init()
   else
   {
     SFG_LOG("saving/loading not possible");
-    SFG_game.save[0] = SFG_NUMBER_OF_LEVELS - 1; // revealed all levels
+    SFG_game.save[0] = SFG_number_of_levels - 1; // revealed all levels
   }
 
 #if SFG_ALL_LEVELS
-  SFG_game.save[0] = SFG_NUMBER_OF_LEVELS - 1;
+  SFG_game.save[0] = SFG_number_of_levels - 1;
 #endif
 
   SFG_setMusic((SFG_game.settings & 0x02) ? SFG_MUSIC_TURN_ON : SFG_MUSIC_TURN_OFF);
@@ -4141,7 +4145,7 @@ void SFG_gameStep()
 
     if (t > SFG_WIN_ANIMATION_DURATION)
     {
-      if (SFG_currentLevel.levelNumber == (SFG_NUMBER_OF_LEVELS - 1))
+      if (SFG_currentLevel.levelNumber == (SFG_number_of_levels - 1))
       {
         if (SFG_keyIsDown(SFG_KEY_A))
         {
@@ -4323,14 +4327,20 @@ void SFG_drawMap()
 */
 void SFG_drawStoryText()
 {
-  const char *text = SFG_outroText;
+  char* text = TXT_getOutroText();
   uint16_t textColor = 23;
   uint8_t clearColor = 9;
   uint8_t sprite = 18;
 
-  if (SFG_currentLevel.levelNumber != (SFG_NUMBER_OF_LEVELS - 1)) // intro?
+  if (SFG_currentLevel.levelNumber != (SFG_number_of_levels - 1)) // intro?
   {
-    text = SFG_introText;
+    text = TXT_getIntroText();
+    if (strlen(text) < 1)
+    {
+        // If no intro text found, skip the intro
+        SFG_setAndInitLevel(SFG_game.selectedLevel);
+        return;
+    }
     textColor = 7;
     clearColor = 0;
     sprite = SFG_game.blink * 2;
@@ -4716,7 +4726,7 @@ void SFG_drawWinOverlay()
     SFG_drawText(SFG_TEXT_KILLS, x, y, SFG_FONT_SIZE_SMALL, 7, 255, 0);
 
     if ((t >= (SFG_WIN_ANIMATION_DURATION - 1)) &&
-        (SFG_currentLevel.levelNumber != (SFG_NUMBER_OF_LEVELS - 1)) &&
+        (SFG_currentLevel.levelNumber != (SFG_number_of_levels - 1)) &&
         SFG_game.blink)
     {
       y += (SFG_FONT_SIZE_BIG + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;

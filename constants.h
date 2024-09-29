@@ -1,6 +1,6 @@
 #ifndef _SFG_CONSTANTS_H
 #define _SFG_CONSTANTS_H
-#define SFG_SKIP_INTRO 1
+#define SFG_SKIP_INTRO 0
 
 /**
   Default enemy behavior between 0 and 255
@@ -24,9 +24,9 @@
 
 
 /**
-  How quickly player moves, in squares per second.
+  How quickly player moves, in squares per second.t
 */
-#define SFG_PLAYER_MOVE_SPEED 7
+#define SFG_PLAYER_MOVE_SPEED 9
 
 /**
   Gravity acceleration in squares / (second^2).
@@ -124,7 +124,7 @@
 /**
   Maximum player health.
 */
-#define SFG_PLAYER_MAX_HEALTH 125
+#define SFG_PLAYER_MAX_HEALTH 150
 
 /**
   Start health of player.

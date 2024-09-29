@@ -403,11 +403,10 @@ int main(int argc, char *argv[])
 
   if (argHelp)
   {
-    puts("Anarch (SDL), version " SFG_VERSION_STRING "\n");
-    puts("Anarch is a unique suckless FPS game. Collect weapons and items and destroy");
-    puts("robot enemies in your way in order to get to the level finish. Some door are");
-    puts("locked and require access cards. Good luck!\n");
-    puts("created by Miloslav \"drummyfish\" Ciz, 2020, released under CC0 1.0 (public domain)\n");
+    puts("Ruyn is a modified version of the awesome Anarch created by Miloslav \"drummyfish\"\n");
+    puts("For more info on Anarch check it out here https://gitlab.com/drummyfish/anarch \n");
+    puts("Modified by Paul Marrable \"flump studios\"\n");
+    puts("For more info on Flump Studios check out http://flumpstudios.co.uk \n");
     puts("CLI flags:\n");
     puts("-h   print this help and exit");
     puts("-w   force window");
@@ -439,7 +438,7 @@ int main(int argc, char *argv[])
   SDL_Init(SDL_INIT_AUDIO | SDL_INIT_JOYSTICK);
 
   window =
-    SDL_CreateWindow("Anarch", SDL_WINDOWPOS_UNDEFINED,
+    SDL_CreateWindow("Ruyn", SDL_WINDOWPOS_UNDEFINED,
     SDL_WINDOWPOS_UNDEFINED, SFG_SCREEN_RESOLUTION_X, SFG_SCREEN_RESOLUTION_Y,
     SDL_WINDOW_SHOWN); 
 
