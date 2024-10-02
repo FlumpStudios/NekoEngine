@@ -435,6 +435,9 @@ struct
   int8_t previousWeaponDirection; ///< Direction (+/0/-) of previous weapon.
 } SFG_player;
 
+uint16_t SFG_level_time = 0;
+uint8_t SFG_enemy_killed_count = 0;
+
 /**
   Stores the current level and helper precomputed values for better performance.
 */
@@ -1568,7 +1571,8 @@ void SFG_setAndInitLevel(uint8_t levelNumber)
 
   if (SFG_game.saved != SFG_CANT_SAVE)
     SFG_game.saved = 0;
-
+  SFG_level_time = 0;
+  SFG_enemy_killed_count = 0;
   SFG_currentLevel.levelNumber = levelNumber;
   SFG_currentLevel.monstersDead = 0;
   SFG_currentLevel.backgroundImage = level->backgroundImage;
@@ -2086,8 +2090,9 @@ void SFG_monsterChangeHealth(SFG_MonsterRecord *monster, int8_t healthAdd)
 
     SFG_playGameSound(5, volume);
 
-    if (monster->health == 0)
-      SFG_playGameSound(2, volume);
+    if (monster->health == 0) {
+      SFG_playGameSound(2, volume);      
+    }
   }
 }
 
@@ -3005,6 +3010,7 @@ void SFG_updateLevel()
       }
       else if (monster->health == 0)
       {
+        SFG_enemy_killed_count++;
         monster->stateType = (monster->stateType & SFG_MONSTER_MASK_TYPE) |
                              SFG_MONSTER_STATE_DYING;
 
@@ -4348,7 +4354,7 @@ void SFG_drawStoryText()
 
   SFG_clearScreen(clearColor);
 
-  if (SFG_GAME_RESOLUTION_Y > 50)
+  if (SFG_GAME_RESOLUTION_Y > 50 && DRAW_ENEMY_ON_STORY)
     SFG_blitImage(SFG_monsterSprites + sprite * SFG_TEXTURE_STORE_SIZE,
                   (SFG_GAME_RESOLUTION_X - SFG_TEXTURE_SIZE * SFG_FONT_SIZE_SMALL) / 2,
                   SFG_GAME_RESOLUTION_Y - (SFG_TEXTURE_SIZE + 3) * SFG_FONT_SIZE_SMALL,
@@ -4548,12 +4554,11 @@ void SFG_drawMenu()
 
   for (uint16_t y = 0; y < SFG_GAME_RESOLUTION_Y; ++y)
     for (uint16_t x = 0; x < SFG_GAME_RESOLUTION_X; ++x)
-      SFG_setGamePixel(x, y,
-                       (y >= (SFG_TEXTURE_SIZE * BACKGROUND_SCALE)) ? 0 : SFG_getTexel(SFG_backgroundImages, ((x + scroll) / BACKGROUND_SCALE) % SFG_TEXTURE_SIZE, y / BACKGROUND_SCALE));
+      SFG_setGamePixel(x, y, 0);
 
   uint16_t y = SFG_characterSize(SFG_FONT_SIZE_MEDIUM);
 
-  SFG_blitImage(SFG_logoImage, SFG_GAME_RESOLUTION_X / 2 - (SFG_TEXTURE_SIZE / 2) * SFG_FONT_SIZE_SMALL, y, SFG_FONT_SIZE_SMALL);
+  SFG_blitImage(SFG_logoImage, SFG_GAME_RESOLUTION_X / 2 - (SFG_TEXTURE_SIZE / 2) * SFG_FONT_SIZE_MEDIUM, y, SFG_FONT_SIZE_MEDIUM);
 
 #if SFG_GAME_RESOLUTION_Y > 50
   y += 32 * SFG_FONT_SIZE_MEDIUM + SFG_characterSize(SFG_FONT_SIZE_MEDIUM);
@@ -4631,7 +4636,7 @@ void SFG_drawMenu()
     i++;
   }
 
-  SFG_drawText(SFG_VERSION_STRING " CC0", SFG_HUD_MARGIN, SFG_GAME_RESOLUTION_Y - SFG_HUD_MARGIN - SFG_FONT_SIZE_SMALL * SFG_FONT_CHARACTER_SIZE,
+  SFG_drawText(SFG_VERSION_STRING " CC0 - www.flumpstudios.co.uk", SFG_HUD_MARGIN, SFG_GAME_RESOLUTION_Y - SFG_HUD_MARGIN - SFG_FONT_SIZE_SMALL * SFG_FONT_CHARACTER_SIZE,
                SFG_FONT_SIZE_SMALL, 4, 0, 0);
 
   // #if SFG_OS_IS_MALWARE
@@ -4971,7 +4976,7 @@ void SFG_draw()
 
     if (SFG_game.cheatState & 0x80)
     {
-      color = 170;
+      color = 5;
       color2 = 0;
     }
 
@@ -4987,26 +4992,64 @@ void SFG_draw()
 #define TEXT_Y (SFG_GAME_RESOLUTION_Y - SFG_HUD_MARGIN - \
                 SFG_FONT_CHARACTER_SIZE * SFG_FONT_SIZE_MEDIUM)
 
+    SFG_drawText("Time", SFG_HUD_MARGIN, TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
+    SFG_drawText("Health", SFG_HUD_MARGIN, TEXT_Y -20, SFG_FONT_SIZE_SMALL,6, 6, SFG_GAME_RESOLUTION_X);
+    SFG_drawText("Ammo", SFG_HUD_MARGIN, TEXT_Y , SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
+
+    SFG_drawText("Killed", SFG_GAME_RESOLUTION_X - 150, TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
+    SFG_drawText("Left", SFG_GAME_RESOLUTION_X - 150, TEXT_Y - 20, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
+    
+    if (SFG_game.state == SFG_GAME_STATE_PLAYING)
+    {
+        SFG_level_time++;
+    }
+    SFG_drawNumber( // time
+        SFG_level_time / 60,
+        SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * 35),
+        TEXT_Y - 40,
+        SFG_FONT_SIZE_SMALL,
+        6);
+
     SFG_drawNumber( // health
         SFG_player.health,
-        SFG_HUD_MARGIN,
-        TEXT_Y,
-        SFG_FONT_SIZE_MEDIUM,
+        SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * 35),
+        TEXT_Y - 20,
+        SFG_FONT_SIZE_SMALL,
         SFG_player.health > SFG_PLAYER_HEALTH_WARNING_LEVEL ? 6 : 175);
 
     SFG_drawNumber( // ammo
         SFG_player.weapon != SFG_WEAPON_KNIFE ? SFG_player.ammo[SFG_weaponAmmo(SFG_player.weapon)] : 0,
-        SFG_GAME_RESOLUTION_X - SFG_HUD_MARGIN -
-            (SFG_FONT_CHARACTER_SIZE + 1) * SFG_FONT_SIZE_MEDIUM * 3,
+        SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * 35),
         TEXT_Y,
-        SFG_FONT_SIZE_MEDIUM,
+        SFG_FONT_SIZE_SMALL,
         6);
+
+    
+    SFG_drawNumber( 
+        SFG_enemy_killed_count,
+        SFG_GAME_RESOLUTION_X - 30,
+        TEXT_Y - 40,
+        SFG_FONT_SIZE_SMALL,
+        6);
+
+    SFG_drawNumber(
+        SFG_currentLevel.monsterRecordCount - SFG_enemy_killed_count,
+        SFG_GAME_RESOLUTION_X - 30,
+        TEXT_Y - 20,
+        SFG_FONT_SIZE_SMALL,
+        6);
+
+
+    
+
+    SFG_blitImage(SFG_logoImage, SFG_GAME_RESOLUTION_X / 2 - (SFG_TEXTURE_SIZE / 2) * SFG_FONT_SIZE_SMALL, TEXT_Y - 55, SFG_FONT_SIZE_SMALL);
+
 
     for (uint8_t i = 0; i < 3; ++i) // access cards
       if (
           ((SFG_player.cards >> i) | ((SFG_player.cards >> (i + 3)) & SFG_game.blink)) & 0x01)
         SFG_fillRectangle(
-            SFG_HUD_MARGIN + (SFG_FONT_CHARACTER_SIZE + 1) *
+            SFG_HUD_MARGIN + 50 + (SFG_FONT_CHARACTER_SIZE + 1) *
                                  SFG_FONT_SIZE_MEDIUM * (5 + i),
             TEXT_Y,
             SFG_FONT_SIZE_MEDIUM * SFG_FONT_CHARACTER_SIZE,

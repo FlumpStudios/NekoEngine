@@ -2,6 +2,8 @@
 #define _SFG_CONSTANTS_H
 #define SFG_SKIP_INTRO 0
 
+#define DRAW_ENEMY_ON_STORY FALSE
+
 /**
   Default enemy behavior between 0 and 255
 */
@@ -424,7 +426,7 @@
 #define SFG_BLINK_PERIOD_FRAMES (SFG_BLINK_PERIOD / SFG_MS_PER_FRAME)
 
 #define SFG_HUD_BAR_HEIGHT \
-  (SFG_FONT_CHARACTER_SIZE * SFG_FONT_SIZE_MEDIUM + SFG_HUD_MARGIN * 2 + 1)
+  (SFG_FONT_CHARACTER_SIZE * SFG_FONT_SIZE_MEDIUM + SFG_HUD_MARGIN * 4 + 2)
 
 // -----------------------------------------------------------------------------
 // monsters
