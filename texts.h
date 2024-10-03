@@ -19,7 +19,7 @@ static const char *SFG_menuItemTexts[] =
 #define SFG_TEXT_KILLS "kills"
 #define SFG_TEXT_SAVE_PROMPT "save? L no yes R"
 #define SFG_TEXT_SAVED "saved"
-#define SFG_TEXT_LEVEL_COMPLETE "level done"
+#define SFG_TEXT_LEVEL_COMPLETE "level clear!"
 
 #define SFG_VERSION_STRING "1.0"
 /**<

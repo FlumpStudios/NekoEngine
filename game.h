@@ -435,8 +435,10 @@ struct
   int8_t previousWeaponDirection; ///< Direction (+/0/-) of previous weapon.
 } SFG_player;
 
-uint16_t SFG_level_time = 0;
+uint16_t SFG_level_time_minutes = 0;
+uint16_t SFG_level_time_seconds = 0;
 uint8_t SFG_enemy_killed_count = 0;
+uint8_t SFG_showLevelEndLockedWarning = FALSE;
 
 /**
   Stores the current level and helper precomputed values for better performance.
@@ -1571,7 +1573,9 @@ void SFG_setAndInitLevel(uint8_t levelNumber)
 
   if (SFG_game.saved != SFG_CANT_SAVE)
     SFG_game.saved = 0;
-  SFG_level_time = 0;
+  SFG_level_time_seconds = 0;
+  SFG_level_time_minutes = 0;
+
   SFG_enemy_killed_count = 0;
   SFG_currentLevel.levelNumber = levelNumber;
   SFG_currentLevel.monstersDead = 0;
@@ -3176,11 +3180,17 @@ void SFG_updatePlayerHeight()
 
 void SFG_winLevel()
 {
-  SFG_levelEnds();
-  SFG_setGameState(SFG_GAME_STATE_WIN);
-  SFG_playGameSound(2, 255);
-  SFG_processEvent(SFG_EVENT_VIBRATE, 0);
-  SFG_processEvent(SFG_EVENT_LEVEL_WON, SFG_currentLevel.levelNumber + 1);
+    if ((SFG_currentLevel.monsterRecordCount - SFG_enemy_killed_count) <= 0) {    
+      SFG_levelEnds();
+      SFG_setGameState(SFG_GAME_STATE_WIN);
+      SFG_playGameSound(2, 255);
+      SFG_processEvent(SFG_EVENT_VIBRATE, 0);
+      SFG_processEvent(SFG_EVENT_LEVEL_WON, SFG_currentLevel.levelNumber + 1);
+    }
+    else
+    {
+        SFG_showLevelEndLockedWarning = TRUE;
+    }
 }
 
 /**
@@ -4680,9 +4690,6 @@ void SFG_drawWinOverlay()
 
   uint32_t timeTotal = SFG_SAVE_TOTAL_TIME;
 
-  // don't show totals in level 1:
-  uint8_t blink = (SFG_game.blink) && (SFG_currentLevel.levelNumber != 0) && (timeTotal != 0);
-
   if (t >= (SFG_WIN_ANIMATION_DURATION / 2))
   {
     y += (SFG_FONT_SIZE_BIG + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
@@ -4690,30 +4697,27 @@ void SFG_drawWinOverlay()
 
 #define CHAR_SIZE (SFG_FONT_SIZE_SMALL * SFG_FONT_CHARACTER_SIZE)
 
-    uint32_t time = blink ? timeTotal : SFG_currentLevel.completionTime10sOfS;
+    uint8_t time_offset_x_position = 0;
+    if (SFG_level_time_minutes > 9)
+    {
+        time_offset_x_position = 5;
+    }
 
-    x += SFG_drawNumber(time / 10, x, y, SFG_FONT_SIZE_SMALL, 7) *
+    x += SFG_drawNumber(SFG_level_time_minutes, x, y, SFG_FONT_SIZE_SMALL, 7) *
+        CHAR_SIZE +
+        SFG_FONT_SIZE_SMALL;
+     
+    SFG_drawText(".", (x-4) + time_offset_x_position, y - 7, SFG_FONT_SIZE_SMALL, 7, 4, 0);
+    SFG_drawText(".", (x-4) + time_offset_x_position, y, SFG_FONT_SIZE_SMALL, 7, 4, 0);
+    
+    x += SFG_drawNumber(SFG_level_time_seconds / 60, (x-4) + 10 + time_offset_x_position, y, SFG_FONT_SIZE_SMALL, 7) *
              CHAR_SIZE +
-         SFG_FONT_SIZE_SMALL;
-
-    char timeRest[5] = ".X s";
-
-    timeRest[1] = '0' + (time % 10);
-
-    SFG_drawText(timeRest, x, y, SFG_FONT_SIZE_SMALL, 7, 4, 0);
+         SFG_FONT_SIZE_SMALL;    
 
     x = SFG_HUD_MARGIN;
     y += (SFG_FONT_SIZE_BIG + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
 
-    if (blink)
-    {
-      x += (SFG_drawNumber(SFG_game.save[10] + SFG_game.save[11] * 256, x, y,
-                           SFG_FONT_SIZE_SMALL, 7) +
-            1) *
-           CHAR_SIZE;
-    }
-    else
-    {
+    
       x += SFG_drawNumber(SFG_currentLevel.monstersDead, x, y,
                           SFG_FONT_SIZE_SMALL, 7) *
            CHAR_SIZE;
@@ -4725,8 +4729,7 @@ void SFG_drawWinOverlay()
       x += (SFG_drawNumber(SFG_currentLevel.monsterRecordCount, x, y,
                            SFG_FONT_SIZE_SMALL, 7) +
             1) *
-           CHAR_SIZE;
-    }
+           CHAR_SIZE;    
 
     SFG_drawText(SFG_TEXT_KILLS, x, y, SFG_FONT_SIZE_SMALL, 7, 255, 0);
 
@@ -4996,16 +4999,69 @@ void SFG_draw()
     SFG_drawText("Health", SFG_HUD_MARGIN, TEXT_Y -20, SFG_FONT_SIZE_SMALL,6, 6, SFG_GAME_RESOLUTION_X);
     SFG_drawText("Ammo", SFG_HUD_MARGIN, TEXT_Y , SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
 
-    SFG_drawText("Killed", SFG_GAME_RESOLUTION_X - 150, TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
-    SFG_drawText("Left", SFG_GAME_RESOLUTION_X - 150, TEXT_Y - 20, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
+    SFG_drawText("Killed", SFG_GAME_RESOLUTION_X - 200, TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
+    SFG_drawText("Left", SFG_GAME_RESOLUTION_X - 200, TEXT_Y - 20, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
+
+    if (SFG_currentLevel.monsterRecordCount - SFG_enemy_killed_count == 0)
+    {
+        SFG_drawText("Exit Unlocked", SFG_GAME_RESOLUTION_X - 200, TEXT_Y, SFG_FONT_SIZE_SMALL,170 , 13, SFG_GAME_RESOLUTION_X);
+    }
+    
+    static levelLockedWarningTicker = 0;
+
+    if (SFG_showLevelEndLockedWarning)
+    {       
+        levelLockedWarningTicker++;
+                   
+        if (levelLockedWarningTicker % 60 < 30)
+        {           
+            SFG_drawText("Clear level to unlock", (SFG_GAME_RESOLUTION_X / 2) - (55 * SFG_FONT_SIZE_SMALL), SFG_GAME_RESOLUTION_X / 4, SFG_FONT_SIZE_SMALL, 6, 21, SFG_GAME_RESOLUTION_X);
+        }
+    }
+
+    if (levelLockedWarningTicker > 120)
+    {
+        SFG_showLevelEndLockedWarning = FALSE;
+        levelLockedWarningTicker = 0;
+    }
     
     if (SFG_game.state == SFG_GAME_STATE_PLAYING)
     {
-        SFG_level_time++;
+        // TODO: This could be in a better place TBH
+        
+        if (SFG_level_time_minutes < 100)
+        {
+            SFG_level_time_seconds ++;
+        }
+
+        if (SFG_level_time_seconds / 60 > 60)
+        {
+            SFG_level_time_seconds = 0;
+            SFG_level_time_minutes ++;
+        }
     }
+
     SFG_drawNumber( // time
-        SFG_level_time / 60,
+        SFG_level_time_minutes,
         SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * 35),
+        TEXT_Y - 40,
+        SFG_FONT_SIZE_SMALL,
+        6);
+
+    
+    Uint8 timePositonOffset = 0;
+
+    if (SFG_level_time_minutes > 9)
+    {
+        timePositonOffset = 5;
+    }
+
+    SFG_drawText(".", SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * (38 + timePositonOffset)), TEXT_Y - 47, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
+    SFG_drawText(".", SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * (38 + timePositonOffset)), TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
+
+    SFG_drawNumber( // time
+        SFG_level_time_seconds / 59,
+        SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * (41 + timePositonOffset)),
         TEXT_Y - 40,
         SFG_FONT_SIZE_SMALL,
         6);
@@ -5023,23 +5079,20 @@ void SFG_draw()
         TEXT_Y,
         SFG_FONT_SIZE_SMALL,
         6);
-
     
     SFG_drawNumber( 
         SFG_enemy_killed_count,
-        SFG_GAME_RESOLUTION_X - 30,
+        SFG_GAME_RESOLUTION_X - 60,
         TEXT_Y - 40,
         SFG_FONT_SIZE_SMALL,
         6);
 
     SFG_drawNumber(
         SFG_currentLevel.monsterRecordCount - SFG_enemy_killed_count,
-        SFG_GAME_RESOLUTION_X - 30,
+        SFG_GAME_RESOLUTION_X - 60,
         TEXT_Y - 20,
         SFG_FONT_SIZE_SMALL,
         6);
-
-
     
 
     SFG_blitImage(SFG_logoImage, SFG_GAME_RESOLUTION_X / 2 - (SFG_TEXTURE_SIZE / 2) * SFG_FONT_SIZE_SMALL, TEXT_Y - 55, SFG_FONT_SIZE_SMALL);
