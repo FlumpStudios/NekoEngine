@@ -159,11 +159,38 @@ static uint8_t countLevelFiles() {
         return -1;
     }
 
-    do {
+    while (FindNextFile(h_find, &find_file_data) != 0) {
         if (!(find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-            file_count++;
+            WCHAR* fileName = find_file_data.cFileName;
+            char levelPrefixBuffer[6];
+            memset(levelPrefixBuffer, '\0', sizeof(char) * 6);
+            
+            for (size_t i = 0; i < 5; i++)
+            {
+                levelPrefixBuffer[i] = toupper(fileName[i]);                
+            }
+            levelPrefixBuffer[5] = '\0';
+
+            if (strcmp(levelPrefixBuffer, "LEVEL") == 0)
+            {
+                char levelNumberBuffer[3];
+                memset(levelNumberBuffer, '\0', sizeof(char) * 3);
+
+                for (size_t i = 5; i < 7; i++)
+                {
+                    levelNumberBuffer[i - 5] = fileName[i];
+                }
+
+                char* endptr = NULL;
+                long level = strtol(&levelNumberBuffer[0], &endptr, 10);
+                if (strcmp(endptr, "") == 0 && level < 99)
+                {
+                    file_count++;
+                }
+            }
         }
-    } while (FindNextFile(h_find, &find_file_data) != 0);
+    }
+     
 
     FindClose(h_find);
     return file_count;

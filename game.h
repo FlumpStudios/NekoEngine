@@ -1214,6 +1214,7 @@ void SFG_drawScaledSprite(
 
   uint8_t zDistance = SFG_RCLUnitToZBuffer(distance);
 
+  // TODO: Rewrite to check every pixel
   for (int16_t x = x0, u = u0; x <= x1; ++x, ++u)
   {
     if (SFG_game.zBuffer[x] >= zDistance)
