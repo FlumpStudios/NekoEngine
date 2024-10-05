@@ -146,7 +146,7 @@ typedef struct
 } SFG_Level;
 
 static uint8_t countLevelFiles() {
-    const char* search_path = "C:\\Projects\\NekoEngine\\levels\\*";
+    const char* search_path = "levels\\*";
 
 #ifdef _WIN32
     WIN32_FIND_DATA find_file_data;

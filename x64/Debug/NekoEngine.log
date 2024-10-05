@@ -3,11 +3,6 @@
 C:\Projects\NekoEngine\images.h(40,18): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Projects\NekoEngine\levels.h(156,57): warning C4133: 'function': incompatible types - from 'WIN32_FIND_DATA *' to 'LPWIN32_FIND_DATAA'
 C:\Projects\NekoEngine\levels.h(181,56): warning C4244: '=': conversion from 'WCHAR' to 'char', possible loss of data
-C:\Projects\NekoEngine\levels.h(185,67): warning C4047: 'function': 'char **' differs in levels of indirection from 'char *'
-C:\Projects\NekoEngine\levels.h(185,60): warning C4024: 'strtol': different types for formal and actual parameter 2
-C:\Projects\NekoEngine\levels.h(186,34): warning C4047: 'function': 'const char *' differs in levels of indirection from 'char'
-C:\Projects\NekoEngine\levels.h(186,28): warning C4024: 'strcmp': different types for formal and actual parameter 1
-C:\Projects\NekoEngine\levels.h(184,1): warning C4047: 'initializing': 'char' differs in levels of indirection from 'char [1]'
 C:\Projects\NekoEngine\levels.h(257,18): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Projects\NekoEngine\texts.h(46,12): warning C4098: 'loadText': 'void' function returning a value
 C:\Projects\NekoEngine\texts.h(53,11): warning C4098: 'loadText': 'void' function returning a value
