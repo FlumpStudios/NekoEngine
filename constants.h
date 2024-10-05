@@ -362,6 +362,7 @@
 #endif
 
 #define SFG_Z_BUFFER_SIZE SFG_GAME_RESOLUTION_X
+#define SFG_Z_BUFFER_SIZE_Y SFG_GAME_RESOLUTION_Y
 
 /**
   Step in which walls get higher, in raycastlib units.

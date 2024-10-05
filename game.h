@@ -358,7 +358,7 @@ struct
   uint8_t keyStates[SFG_KEY_COUNT];            /**< Pressed states of keys, each value
                                                stores the number of frames for which the
                                                key has been held. */
-  uint8_t zBuffer[SFG_Z_BUFFER_SIZE];
+  uint8_t zBuffer[SFG_Z_BUFFER_SIZE][SFG_GAME_RESOLUTION_Y];
   uint8_t textureAverageColors[SFG_WALL_TEXTURE_COUNT]; /**< Contains average
                                     color for each wall texture. */
   int8_t backgroundScaleMap[SFG_GAME_RESOLUTION_Y];
@@ -1213,34 +1213,33 @@ void SFG_drawScaledSprite(
 #undef PRECOMP_SCALE
 
   uint8_t zDistance = SFG_RCLUnitToZBuffer(distance);
-
-  // TODO: Rewrite to check every pixel
   for (int16_t x = x0, u = u0; x <= x1; ++x, ++u)
   {
-    if (SFG_game.zBuffer[x] >= zDistance)
-    {
-      int8_t columnTransparent = 1;
-
       for (int16_t y = y0, v = v0; y <= y1; ++y, ++v)
       {
-        uint8_t color =
-            SFG_getTexel(image, SFG_game.spriteSamplingPoints[u],
-                         SFG_game.spriteSamplingPoints[v]);
+          int foo = SFG_game.zBuffer[x][y];
+          if (SFG_game.zBuffer[x][y] >= zDistance)
+          {
+              int8_t columnTransparent = 1;
 
-        if (color != SFG_TRANSPARENT_COLOR)
-        {
+              uint8_t color =
+                  SFG_getTexel(image, SFG_game.spriteSamplingPoints[u],
+                      SFG_game.spriteSamplingPoints[v]);
+
+              if (color != SFG_TRANSPARENT_COLOR)
+              {
 #if SFG_DIMINISH_SPRITES
-          color = palette_minusValue(color, minusValue);
+                  color = palette_minusValue(color, minusValue);
 #endif
-          columnTransparent = 0;
+                  columnTransparent = 0;
 
-          SFG_setGamePixel(x, y, color);
-        }
+                  SFG_setGamePixel(x, y, color);
+              }
+
+              if (!columnTransparent)
+                  SFG_game.zBuffer[x][y] = zDistance;
+          }
       }
-
-      if (!columnTransparent)
-        SFG_game.zBuffer[x] = zDistance;
-    }
   }
 }
 
@@ -4780,8 +4779,8 @@ void SFG_draw()
   }
   else
   {
-    for (int_fast16_t i = 0; i < SFG_Z_BUFFER_SIZE; ++i)
-      SFG_game.zBuffer[i] = 255;
+    
+    memset(SFG_game.zBuffer, 255, SFG_Z_BUFFER_SIZE * SFG_Z_BUFFER_SIZE_Y);    
 
     int16_t weaponBobOffset = 0;
 
