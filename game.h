@@ -1215,9 +1215,15 @@ void SFG_drawScaledSprite(
   uint8_t zDistance = SFG_RCLUnitToZBuffer(distance);
   for (int16_t x = x0, u = u0; x <= x1; ++x, ++u)
   {
+      uint8_t wallBuffer = SFG_RCLUnitToZBuffer(RCL_wallZBuffer[x]);
+
       for (int16_t y = y0, v = v0; y <= y1; ++y, ++v)
-      {
-          int foo = SFG_game.zBuffer[x][y];
+      {   
+          if (wallBuffer < SFG_game.zBuffer[x][y]) 
+          {
+              SFG_game.zBuffer[x][y] = wallBuffer;
+          };
+
           if (SFG_game.zBuffer[x][y] >= zDistance)
           {
               int8_t columnTransparent = 1;
@@ -4900,8 +4906,8 @@ void SFG_draw()
           RCL_PixelInfo p =
               RCL_mapToScreen(worldPosition, worldHeight, SFG_player.camera);
 
-          if (p.depth > 0 &&
-              SFG_spriteIsVisible(worldPosition, worldHeight))
+        //  if (p.depth > 0 &&
+        //    SFG_spriteIsVisible(worldPosition, worldHeight))
             SFG_drawScaledSprite(sprite, p.position.x * SFG_RAYCASTING_SUBSAMPLE,
                                  p.position.y,
                                  RCL_perspectiveScaleVertical(SFG_SPRITE_SIZE_PIXELS(spriteSize),
@@ -4947,8 +4953,8 @@ void SFG_draw()
                      RCL_UNITS_PER_SQUARE;
       }
 
-      if (p.depth > 0 &&
-          SFG_spriteIsVisible(worldPosition, proj->position[2]))
+      // if (p.depth > 0 &&
+        //  SFG_spriteIsVisible(worldPosition, proj->position[2]))
         SFG_drawScaledSprite(s,
                              p.position.x * SFG_RAYCASTING_SUBSAMPLE, p.position.y,
                              RCL_perspectiveScaleVertical(spriteSize, p.depth),

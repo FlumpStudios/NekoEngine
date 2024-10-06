@@ -413,6 +413,8 @@ RCL_Unit
 RCL_Unit RCL_perspectiveScaleHorizontalInverse(RCL_Unit originalSize,
   RCL_Unit scaledSize);
 
+RCL_Unit RCL_wallZBuffer[700];
+
 /**
   Casts rays for given camera view and for each hit calls a user provided
   function.
@@ -1244,6 +1246,7 @@ static inline void _RCL_makeInfiniteHit(RCL_HitResult *hit, RCL_Ray *ray)
 void _RCL_columnFunctionComplex(RCL_HitResult *hits, uint16_t hitCount, uint16_t x,
   RCL_Ray ray)
 {
+   
   // last written Y position, can never go backwards
   RCL_Unit fPosY = _RCL_camera.resolution.y;
   RCL_Unit cPosY = -1;
@@ -1276,7 +1279,6 @@ void _RCL_columnFunctionComplex(RCL_HitResult *hits, uint16_t hitCount, uint16_t
     {
       hit = hits[j];
       distance = RCL_nonZero(hit.distance); 
-      p.hit = hit;
 
       fWallHeight = _RCL_floorFunction(hit.square.x,hit.square.y);
       fZ2World = fWallHeight - _RCL_camera.height;
@@ -1321,7 +1323,7 @@ void _RCL_columnFunctionComplex(RCL_HitResult *hits, uint16_t hitCount, uint16_t
 #else
     p.depth = 0;
 #endif
-
+    
     limit = _RCL_drawHorizontalColumn(fPosY,fZ1Screen,cPosY + 1,
      _RCL_camera.resolution.y,fZ1World,-1,RCL_COMPUTE_FLOOR_DEPTH,
      // ^ purposfully allow outside screen bounds
@@ -1352,12 +1354,18 @@ void _RCL_columnFunctionComplex(RCL_HitResult *hits, uint16_t hitCount, uint16_t
 
     if (!drawingHorizon) // don't draw walls for horizon plane
     {
+      p.hit = hit;
       p.isWall = 1;
       p.depth = distance;
       p.isFloor = 1;
       p.texCoords.x = hit.textureCoord;
       p.height = fZ1World + _RCL_camera.height;
       p.wallHeight = fWallHeight;
+
+      if (j == 1)
+      {   
+           RCL_wallZBuffer[x] = distance;
+      }
 
       // draw floor wall
 
