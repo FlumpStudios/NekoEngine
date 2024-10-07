@@ -1243,9 +1243,34 @@ static inline void _RCL_makeInfiniteHit(RCL_HitResult *hit, RCL_Ray *ray)
   hit->type = 0;
 }
 
+int skip = 0;
+
 void _RCL_columnFunctionComplex(RCL_HitResult *hits, uint16_t hitCount, uint16_t x,
   RCL_Ray ray)
 {
+
+    if (hits[0].type == 0xc0)
+    {    
+        // IS DOOR
+    }
+
+
+    if (hits[0].arrayValue == 2560)
+    {
+        RCL_wallZBuffer[x] = hits[1].distance;
+    }
+    else
+    {    
+        if (hits[0].arrayValue == 1024)
+        {
+            RCL_wallZBuffer[x] = hits[2].distance;
+        }
+        else
+        {    
+            RCL_wallZBuffer[x] = hits[0].distance;
+        }
+    }
+    
    
   // last written Y position, can never go backwards
   RCL_Unit fPosY = _RCL_camera.resolution.y;
@@ -1362,10 +1387,7 @@ void _RCL_columnFunctionComplex(RCL_HitResult *hits, uint16_t hitCount, uint16_t
       p.height = fZ1World + _RCL_camera.height;
       p.wallHeight = fWallHeight;
 
-      if (j == 1)
-      {   
-           RCL_wallZBuffer[x] = distance;
-      }
+
 
       // draw floor wall
 

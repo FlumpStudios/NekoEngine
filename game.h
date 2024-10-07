@@ -1212,6 +1212,11 @@ void SFG_drawScaledSprite(
 
 #undef PRECOMP_SCALE
 
+  
+  
+      // printf("%i \n", SFG_currentLevel.doorRecords->state & 31);
+  
+
   uint8_t zDistance = SFG_RCLUnitToZBuffer(distance);
   for (int16_t x = x0, u = u0; x <= x1; ++x, ++u)
   {
@@ -2123,6 +2128,11 @@ void SFG_removeItem(uint8_t index)
 */
 static inline uint8_t SFG_spriteIsVisible(RCL_Vector2D pos, RCL_Unit height)
 {
+    if (REMOVE_INITAL_SPRITE_VISIBILITY_CHECK)
+    {    
+        return 1;
+    }
+
   return RCL_castRay3D(
              SFG_player.camera.position,
              SFG_player.camera.height,
@@ -4906,8 +4916,8 @@ void SFG_draw()
           RCL_PixelInfo p =
               RCL_mapToScreen(worldPosition, worldHeight, SFG_player.camera);
 
-        //  if (p.depth > 0 &&
-        //    SFG_spriteIsVisible(worldPosition, worldHeight))
+          if (p.depth > 0
+              && SFG_spriteIsVisible(worldPosition, worldHeight))
             SFG_drawScaledSprite(sprite, p.position.x * SFG_RAYCASTING_SUBSAMPLE,
                                  p.position.y,
                                  RCL_perspectiveScaleVertical(SFG_SPRITE_SIZE_PIXELS(spriteSize),
@@ -4953,8 +4963,8 @@ void SFG_draw()
                      RCL_UNITS_PER_SQUARE;
       }
 
-      // if (p.depth > 0 &&
-        //  SFG_spriteIsVisible(worldPosition, proj->position[2]))
+       if (p.depth > 0
+        && SFG_spriteIsVisible(worldPosition, proj->position[2]))
         SFG_drawScaledSprite(s,
                              p.position.x * SFG_RAYCASTING_SUBSAMPLE, p.position.y,
                              RCL_perspectiveScaleVertical(spriteSize, p.depth),

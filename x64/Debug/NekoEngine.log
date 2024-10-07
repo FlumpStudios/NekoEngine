@@ -1,4 +1,4 @@
-﻿cl : command line warning D9002: ignoring unknown option '/std:c99'
+﻿cl : command line  warning D9002: ignoring unknown option '/std:c99'
   main_sdl.c
 C:\Projects\NekoEngine\images.h(40,18): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Projects\NekoEngine\levels.h(156,57): warning C4133: 'function': incompatible types - from 'WIN32_FIND_DATA *' to 'LPWIN32_FIND_DATAA'
@@ -8,33 +8,33 @@ C:\Projects\NekoEngine\texts.h(46,12): warning C4098: 'loadText': 'void' functio
 C:\Projects\NekoEngine\texts.h(53,11): warning C4098: 'loadText': 'void' function returning a value
 C:\Projects\NekoEngine\texts.h(44,15): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Projects\NekoEngine\game.h(691,24): warning C4244: 'initializing': conversion from '__int64' to 'uint32_t', possible loss of data
-C:\Projects\NekoEngine\game.h(1324,37): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(1324,40): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(1510,33): warning C4133: 'function': incompatible types - from 'char *' to 'LPWSTR'
-C:\Projects\NekoEngine\game.h(1510,35): warning C4267: 'function': conversion from 'size_t' to 'DWORD', possible loss of data
-C:\Projects\NekoEngine\game.h(1746,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Projects\NekoEngine\game.h(1749,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Projects\NekoEngine\game.h(1752,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Projects\NekoEngine\game.h(1755,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Projects\NekoEngine\game.h(1758,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Projects\NekoEngine\game.h(1761,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Projects\NekoEngine\game.h(1764,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Projects\NekoEngine\game.h(2061,23): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(2088,21): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(2307,27): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(2653,30): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(2654,30): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(2799,64): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(2814,35): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(3486,58): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(3570,26): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(4306,64): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(4306,67): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(4359,30): warning C4090: '=': different 'const' qualifiers
-C:\Projects\NekoEngine\game.h(4400,75): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(4352,1): warning C4090: 'initializing': different 'const' qualifiers
-C:\Projects\NekoEngine\game.h(4605,34): warning C4244: 'initializing': conversion from 'uint16_t' to 'uint8_t', possible loss of data
-C:\Projects\NekoEngine\game.h(4697,24): warning C4244: 'initializing': conversion from '__int64' to 'uint32_t', possible loss of data
+C:\Projects\NekoEngine\game.h(1329,37): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(1329,40): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(1515,33): warning C4133: 'function': incompatible types - from 'char *' to 'LPWSTR'
+C:\Projects\NekoEngine\game.h(1515,35): warning C4267: 'function': conversion from 'size_t' to 'DWORD', possible loss of data
+C:\Projects\NekoEngine\game.h(1751,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\game.h(1754,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\game.h(1757,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\game.h(1760,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\game.h(1763,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\game.h(1766,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\game.h(1769,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\game.h(2066,23): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(2093,21): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(2317,27): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(2663,30): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(2664,30): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(2809,64): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(2824,35): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(3496,58): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(3580,26): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(4316,64): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(4316,67): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(4369,30): warning C4090: '=': different 'const' qualifiers
+C:\Projects\NekoEngine\game.h(4410,75): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(4362,1): warning C4090: 'initializing': different 'const' qualifiers
+C:\Projects\NekoEngine\game.h(4615,23): warning C4244: 'initializing': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(4707,24): warning C4244: 'initializing': conversion from '__int64' to 'uint32_t', possible loss of data
 C:\Projects\NekoEngine\sounds.h(100,67): warning C4146: unary minus operator applied to unsigned type, result still unsigned
 C:\Projects\NekoEngine\sounds.h(100,80): warning C4293: '>>': shift count negative or too big, undefined behavior
 C:\Projects\NekoEngine\sounds.h(131,18): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
