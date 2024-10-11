@@ -67,7 +67,7 @@
 /**
   How quickly doors open and close, in RCL_Unit per second.
 */
-#define SFG_DOOR_OPEN_SPEED 2048
+#define SFG_DOOR_OPEN_SPEED 12288
 
 /**
   Helper special state value.

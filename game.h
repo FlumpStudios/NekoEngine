@@ -344,6 +344,10 @@ typedef struct
   Groups global variables related to the game as such in a single struct. There
   are still other global structs for player, level etc.
 */
+
+RCL_Unit RCL_wallZBuffer[SFG_GAME_RESOLUTION_X];
+
+
 struct
 {
   uint8_t state;         ///< Current game state.
@@ -1279,6 +1283,18 @@ RCL_Unit SFG_movingWallHeight(
   return low + halfHeight + (RCL_sin(sinArg) * halfHeight) / RCL_UNITS_PER_SQUARE;
 }
 
+void RCL_updateWallZbuffer(int32_t value, int32_t index, int32_t x, int32_t y, int32_t type)
+{
+    RCL_Unit heightAtPlayer = SFG_floorHeightAt(SFG_player.squarePosition[0], SFG_player.squarePosition[1]);    
+    RCL_Unit heightAtwall = SFG_floorHeightAt(x, y);    
+    RCL_Unit diff = heightAtwall - heightAtPlayer;   
+        
+    if (index < SFG_GAME_RESOLUTION_X)
+    {
+        RCL_wallZBuffer[index] = value;
+    }
+};
+
 RCL_Unit SFG_floorHeightAt(int16_t x, int16_t y)
 {
   uint8_t properties;
@@ -1744,6 +1760,9 @@ void SFG_createDefaultSaveData(uint8_t *memory)
 void SFG_init()
 {
   SFG_LOG("initializing game");
+
+  setUpdateZBufferFunction(RCL_updateWallZbuffer);
+
   char executablePath[256];
   SFG_GetExecutablePath(executablePath, sizeof(executablePath));
 
@@ -5185,7 +5204,6 @@ uint8_t SFG_mainLoopBody()
 
       if ((steps > 1) && (SFG_game.antiSpam == 0) && (!wasFirstFrame))
       {
-        SFG_LOG("failed to reach target FPS! consider setting a lower value")
         SFG_game.antiSpam = 30;
       }
 

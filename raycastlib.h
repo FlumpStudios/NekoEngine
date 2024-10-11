@@ -300,6 +300,7 @@ typedef struct
   very often.
 */ 
 typedef RCL_Unit (*RCL_ArrayFunction)(int16_t x, int16_t y);
+
 /*
   TODO: maybe array functions should be replaced by defines of funtion names
   like with pixelFunc? Could be more efficient than function pointers.
@@ -317,6 +318,15 @@ typedef void (*RCL_PixelFunction)(RCL_PixelInfo *info);
 typedef void
   (*RCL_ColumnFunction)(RCL_HitResult *hits, uint16_t hitCount, uint16_t x,
    RCL_Ray ray);
+
+typedef void (*RCL_UpdateZBufferFunction)(int32_t value, int32_t index, int32_t x, int32_t y, int32_t type);
+
+RCL_UpdateZBufferFunction updateZBufferFunction;
+
+void setUpdateZBufferFunction(RCL_UpdateZBufferFunction ptr)
+{
+    updateZBufferFunction = ptr;
+}
 
 /**
   Simple-interface function to cast a single ray.
@@ -412,8 +422,6 @@ RCL_Unit
 
 RCL_Unit RCL_perspectiveScaleHorizontalInverse(RCL_Unit originalSize,
   RCL_Unit scaledSize);
-
-RCL_Unit RCL_wallZBuffer[700];
 
 /**
   Casts rays for given camera view and for each hit calls a user provided
@@ -1254,20 +1262,19 @@ void _RCL_columnFunctionComplex(RCL_HitResult *hits, uint16_t hitCount, uint16_t
         // IS DOOR
     }
 
-
     if (hits[0].arrayValue == 2560)
     {
-        RCL_wallZBuffer[x] = hits[1].distance;
+        updateZBufferFunction(hits[1].distance, x, hits[0].square.x, hits[0].square.y, hits[0].type);
     }
     else
     {    
         if (hits[0].arrayValue == 1024)
         {
-            RCL_wallZBuffer[x] = hits[2].distance;
+            updateZBufferFunction(hits[2].distance, x, hits[2].square.x, hits[2].square.y, hits[2].type);
         }
         else
         {    
-            RCL_wallZBuffer[x] = hits[0].distance;
+            updateZBufferFunction(hits[0].distance, x, hits[0].square.x, hits[0].square.y, hits[0].type);
         }
     }
     
