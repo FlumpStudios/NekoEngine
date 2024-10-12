@@ -1227,11 +1227,15 @@ void SFG_drawScaledSprite(
       uint8_t wallBuffer = SFG_RCLUnitToZBuffer(RCL_wallZBuffer[x]);
 
       for (int16_t y = y0, v = v0; y <= y1; ++y, ++v)
-      {   
-          if (wallBuffer < SFG_game.zBuffer[x][y]) 
+      {
+          // TODO: Do a proper preprocessor if, to save compu time
+          if (USE_ZBUFFER_ON_WALLS)
           {
-              SFG_game.zBuffer[x][y] = wallBuffer;
-          };
+              if (wallBuffer < SFG_game.zBuffer[x][y]) 
+              {
+                  SFG_game.zBuffer[x][y] = wallBuffer;
+              };
+          }
 
           if (SFG_game.zBuffer[x][y] >= zDistance)
           {

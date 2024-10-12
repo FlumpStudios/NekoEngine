@@ -1833,7 +1833,7 @@ RCL_Unit RCL_castRay3D(
 
   RCL_Unit heightDiff = height2 - height1;
 
-  RCL_castRayMultiHit(ray,floorHeightFunc,0,hits,&numHits,constraints);
+  //RCL_castRayMultiHit(ray,floorHeightFunc,0,hits,&numHits,constraints);
 
   RCL_Unit result = RCL_UNITS_PER_SQUARE;
 
@@ -1860,7 +1860,8 @@ RCL_Unit RCL_castRay3D(
     } \
   }
 
-  checkHits(>,result)
+ // TURN OFF Check on X axis
+ // checkHits(>,result)
 
   if (ceilingHeightFunc != 0)
   {

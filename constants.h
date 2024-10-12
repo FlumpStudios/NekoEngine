@@ -3,8 +3,8 @@
 #define SFG_SKIP_INTRO 0
 #define DRAW_ENEMY_ON_STORY FALSE
 
-#define REMOVE_INITAL_SPRITE_VISIBILITY_CHECK 1
-
+#define REMOVE_INITAL_SPRITE_VISIBILITY_CHECK 0
+#define USE_ZBUFFER_ON_WALLS 1
 /**
   Default enemy behavior between 0 and 255
 */
