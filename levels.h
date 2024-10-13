@@ -42,7 +42,7 @@ typedef SFG_TileDefinition SFG_TileDictionary[SFG_TILE_DICTIONARY_SIZE];
 #define SFG_TILE_CEILING_TEXTURE(tile) ((tile & 0xe000) >> 13)
 
 #define SFG_OUTSIDE_TILE SFG_TD(63,0,7,7)
-
+    
 /**
   Game map represented as a 2D array. Array item has this format:
 

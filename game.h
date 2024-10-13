@@ -1216,11 +1216,6 @@ void SFG_drawScaledSprite(
 
 #undef PRECOMP_SCALE
 
-  
-  
-      // printf("%i \n", SFG_currentLevel.doorRecords->state & 31);
-  
-
   uint8_t zDistance = SFG_RCLUnitToZBuffer(distance);
   for (int16_t x = x0, u = u0; x <= x1; ++x, ++u)
   {
@@ -1287,16 +1282,44 @@ RCL_Unit SFG_movingWallHeight(
   return low + halfHeight + (RCL_sin(sinArg) * halfHeight) / RCL_UNITS_PER_SQUARE;
 }
 
-void RCL_updateWallZbuffer(int32_t value, int32_t index, int32_t x, int32_t y, int32_t type)
+static SFG_Level* level = NULL;
+
+void RCL_updateWallZbuffer(RCL_HitResult* hits, uint16_t hitCount, int32_t index)
 {
-    RCL_Unit heightAtPlayer = SFG_floorHeightAt(SFG_player.squarePosition[0], SFG_player.squarePosition[1]);    
-    RCL_Unit heightAtwall = SFG_floorHeightAt(x, y);    
-    RCL_Unit diff = heightAtwall - heightAtPlayer;   
-        
-    if (index < SFG_GAME_RESOLUTION_X)
+    if (!level) { return; }
+
+    RCL_Unit playerHeight = SFG_floorHeightAt(SFG_player.squarePosition[0], SFG_player.squarePosition[1]);
+
+    RCL_Unit maxDistance = hits[hitCount].distance;
+            
+    for (size_t i = 0; i < hitCount; i++)
     {
-        RCL_wallZBuffer[index] = value;
+        
+        if (hits[i].arrayValue == 2560 || hits[i].arrayValue == 1024)
+        {
+            continue;
+        }
+
+        RCL_Unit heightAtwall = SFG_floorHeightAt(hits[i].square.x, hits[i].square.y);
+
+        RCL_Unit maxHeight = 2048 + playerHeight;
+
+        if ((level->ceilHeight * 256) < maxHeight)
+        {
+            maxHeight = level->ceilHeight * 256;
+        }
+
+        if (heightAtwall < maxHeight && hits[i].type != 0xc0)
+        {
+            continue;
+        }
+
+        RCL_wallZBuffer[index] = hits[i].distance;
+        return;
     }
+
+    RCL_wallZBuffer[index] = maxDistance;
+   
 };
 
 RCL_Unit SFG_floorHeightAt(int16_t x, int16_t y)
@@ -1557,7 +1580,6 @@ void SFG_GetExecutablePath(char *buffer, size_t size)
 #endif
 }
 
-static SFG_Level *level = NULL;
 
 void SFG_setAndInitLevel(uint8_t levelNumber)
 {
@@ -2151,11 +2173,6 @@ void SFG_removeItem(uint8_t index)
 */
 static inline uint8_t SFG_spriteIsVisible(RCL_Vector2D pos, RCL_Unit height)
 {
-    if (REMOVE_INITAL_SPRITE_VISIBILITY_CHECK)
-    {    
-        return 1;
-    }
-
   return RCL_castRay3D(
              SFG_player.camera.position,
              SFG_player.camera.height,

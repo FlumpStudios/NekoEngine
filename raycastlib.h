@@ -319,7 +319,7 @@ typedef void
   (*RCL_ColumnFunction)(RCL_HitResult *hits, uint16_t hitCount, uint16_t x,
    RCL_Ray ray);
 
-typedef void (*RCL_UpdateZBufferFunction)(int32_t value, int32_t index, int32_t x, int32_t y, int32_t type);
+typedef void (*RCL_UpdateZBufferFunction)(RCL_HitResult* hits, uint16_t hitCount, int32_t index);
 
 RCL_UpdateZBufferFunction updateZBufferFunction;
 
@@ -1255,28 +1255,7 @@ int skip = 0;
 
 void _RCL_columnFunctionComplex(RCL_HitResult *hits, uint16_t hitCount, uint16_t x,
   RCL_Ray ray)
-{
-
-    if (hits[0].type == 0xc0)
-    {    
-        // IS DOOR
-    }
-
-    if (hits[0].arrayValue == 2560)
-    {
-        updateZBufferFunction(hits[1].distance, x, hits[0].square.x, hits[0].square.y, hits[0].type);
-    }
-    else
-    {    
-        if (hits[0].arrayValue == 1024)
-        {
-            updateZBufferFunction(hits[2].distance, x, hits[2].square.x, hits[2].square.y, hits[2].type);
-        }
-        else
-        {    
-            updateZBufferFunction(hits[0].distance, x, hits[0].square.x, hits[0].square.y, hits[0].type);
-        }
-    }
+{   
     
    
   // last written Y position, can never go backwards
@@ -1314,6 +1293,7 @@ void _RCL_columnFunctionComplex(RCL_HitResult *hits, uint16_t hitCount, uint16_t
 
       fWallHeight = _RCL_floorFunction(hit.square.x,hit.square.y);
       fZ2World = fWallHeight - _RCL_camera.height;
+
       fZ1Screen = _RCL_middleRow - RCL_perspectiveScaleVertical(
         (fZ1World * _RCL_camera.resolution.y) /
         RCL_UNITS_PER_SQUARE,distance);
@@ -1340,6 +1320,11 @@ void _RCL_columnFunctionComplex(RCL_HitResult *hits, uint16_t hitCount, uint16_t
       _RCL_makeInfiniteHit(&p.hit,&ray);
     }
 
+    if (updateZBufferFunction)
+    {
+        updateZBufferFunction(hits, hitCount, x);
+    }
+   
     RCL_Unit limit;
 
     p.isWall = 0;
@@ -1815,6 +1800,7 @@ RCL_Unit RCL_castRay3D(
   RCL_ArrayFunction floorHeightFunc, RCL_ArrayFunction ceilingHeightFunc,
   RCL_RayConstraints constraints)
 {
+
   RCL_HitResult hits[SFG_RAYCASTING_MAX_HITS];
   uint16_t numHits;
 
@@ -1833,7 +1819,7 @@ RCL_Unit RCL_castRay3D(
 
   RCL_Unit heightDiff = height2 - height1;
 
-  //RCL_castRayMultiHit(ray,floorHeightFunc,0,hits,&numHits,constraints);
+  RCL_castRayMultiHit(ray,floorHeightFunc,0,hits,&numHits,constraints);
 
   RCL_Unit result = RCL_UNITS_PER_SQUARE;
 
@@ -1859,9 +1845,8 @@ RCL_Unit RCL_castRay3D(
       currentHeight = h; \
     } \
   }
-
- // TURN OFF Check on X axis
- // checkHits(>,result)
+  
+  checkHits(>,result)
 
   if (ceilingHeightFunc != 0)
   {
