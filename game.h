@@ -4764,6 +4764,9 @@ void SFG_drawWinOverlay()
         time_offset_x_position = 5;
     }
 
+    SFG_drawText("Time", x, y, SFG_FONT_SIZE_SMALL, 7, 5, CHAR_SIZE * 7);
+    
+    x += CHAR_SIZE * 7;
     x += SFG_drawNumber(SFG_level_time_minutes, x, y, SFG_FONT_SIZE_SMALL, 7) *
         CHAR_SIZE +
         SFG_FONT_SIZE_SMALL;
@@ -4775,24 +4778,38 @@ void SFG_drawWinOverlay()
              CHAR_SIZE +
          SFG_FONT_SIZE_SMALL;    
 
-    x = SFG_HUD_MARGIN;
-    y += (SFG_FONT_SIZE_BIG + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
 
+
+    x = SFG_HUD_MARGIN;
+    y += (SFG_FONT_SIZE_MEDIUM + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
+
+    SFG_drawText(SFG_TEXT_KILLS, x, y, SFG_FONT_SIZE_SMALL, 7, 7, CHAR_SIZE * 7);
+    x += CHAR_SIZE * 7;
     
-      x += SFG_drawNumber(SFG_currentLevel.monstersDead, x, y,
+    x += SFG_drawNumber(SFG_currentLevel.monstersDead, x, y,
                           SFG_FONT_SIZE_SMALL, 7) *
            CHAR_SIZE;
 
       SFG_drawText("/", x, y, SFG_FONT_SIZE_SMALL, 7, 1, 0);
 
       x += CHAR_SIZE;
+        
+     
 
-      x += (SFG_drawNumber(SFG_currentLevel.monsterRecordCount, x, y,
+      (SFG_drawNumber(SFG_currentLevel.monsterRecordCount, x, y,
                            SFG_FONT_SIZE_SMALL, 7) +
             1) *
            CHAR_SIZE;    
 
-    SFG_drawText(SFG_TEXT_KILLS, x, y, SFG_FONT_SIZE_SMALL, 7, 255, 0);
+      y += (SFG_FONT_SIZE_MEDIUM + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
+      x = SFG_HUD_MARGIN;
+      SFG_drawText("Gems", x, y, SFG_FONT_SIZE_SMALL, 7, 7, CHAR_SIZE * 7);
+      x += CHAR_SIZE * 7;
+
+      x += SFG_drawNumber(SFG_level_gold_collected, x, y, SFG_FONT_SIZE_SMALL, 7) *
+          CHAR_SIZE +
+          SFG_FONT_SIZE_SMALL;
+
 
     if ((t >= (SFG_WIN_ANIMATION_DURATION - 1)) &&
         (SFG_currentLevel.levelNumber != (SFG_number_of_levels - 1)) &&
