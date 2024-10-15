@@ -375,7 +375,7 @@ void handleSignal(int signal)
 int main(int argc, char *argv[])
 {
   uint8_t argHelp = 0;
-  uint8_t argForceWindow = 0;
+  uint8_t argForceWindow = 1;
   uint8_t argForceFullscreen = 0;
   
 #ifndef __EMSCRIPTEN__
