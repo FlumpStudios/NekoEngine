@@ -2936,14 +2936,9 @@ void SFG_updateLevel()
           SFG_MonsterRecord* monster = &(SFG_currentLevel.monsterRecords[i]);
           uint8_t state = SFG_MR_STATE(*monster);
 
-        if (state == SFG_MONSTER_STATE_INACTIVE ||
-            state == SFG_MONSTER_STATE_DEAD)
-        {
-            isEnemyNearDoor = FALSE;
-        }
-        else
-        {
-          
+        if (state != SFG_MONSTER_STATE_INACTIVE &&
+            state != SFG_MONSTER_STATE_DEAD)
+        { 
             if ( // player near door?
                 (door->coords[0] >= (SFG_MONSTER_COORD_TO_SQUARES(SFG_currentLevel.monsterRecords[i].coords[0]) - 1)) &&
                 (door->coords[0] <= (SFG_MONSTER_COORD_TO_SQUARES(SFG_currentLevel.monsterRecords[i].coords[0]) + 1)) &&
