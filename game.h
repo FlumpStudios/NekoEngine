@@ -2930,11 +2930,37 @@ void SFG_updateLevel()
 
       uint8_t lock = SFG_DOOR_LOCK(door->state);
 
+      uint8_t isEnemyNearDoor = FALSE;
+      for (size_t i = 0; i < SFG_currentLevel.monsterRecordCount; i++)
+      {
+          SFG_MonsterRecord* monster = &(SFG_currentLevel.monsterRecords[i]);
+          uint8_t state = SFG_MR_STATE(*monster);
+
+        if (state == SFG_MONSTER_STATE_INACTIVE ||
+            state == SFG_MONSTER_STATE_DEAD)
+        {
+            isEnemyNearDoor = FALSE;
+        }
+        else
+        {
+          
+            if ( // player near door?
+                (door->coords[0] >= (SFG_MONSTER_COORD_TO_SQUARES(SFG_currentLevel.monsterRecords[i].coords[0]) - 1)) &&
+                (door->coords[0] <= (SFG_MONSTER_COORD_TO_SQUARES(SFG_currentLevel.monsterRecords[i].coords[0]) + 1)) &&
+                (door->coords[1] >= (SFG_MONSTER_COORD_TO_SQUARES(SFG_currentLevel.monsterRecords[i].coords[1]) - 1)) &&
+                (door->coords[1] <= (SFG_MONSTER_COORD_TO_SQUARES(SFG_currentLevel.monsterRecords[i].coords[1]) + 1)))
+            {
+                isEnemyNearDoor = TRUE;
+            }
+        }
+      }
+    
+
       if ( // player near door?
-          (door->coords[0] >= (SFG_player.squarePosition[0] - 1)) &&
+          ((door->coords[0] >= (SFG_player.squarePosition[0] - 1)) &&
           (door->coords[0] <= (SFG_player.squarePosition[0] + 1)) &&
           (door->coords[1] >= (SFG_player.squarePosition[1] - 1)) &&
-          (door->coords[1] <= (SFG_player.squarePosition[1] + 1)))
+          (door->coords[1] <= (SFG_player.squarePosition[1] + 1))) || isEnemyNearDoor)
       {
         if (lock == 0)
         {
