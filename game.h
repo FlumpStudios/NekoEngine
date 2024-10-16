@@ -3759,7 +3759,7 @@ void SFG_gameStepPlaying()
       switch (SFG_player.weapon)
       {
       case SFG_WEAPON_KNIFE:
-        sound = 255;
+        sound = 0;
         break;
       case SFG_WEAPON_ROCKET_LAUNCHER:
       case SFG_WEAPON_SHOTGUN:
@@ -3797,7 +3797,7 @@ void SFG_gameStepPlaying()
         break;
 
       case SFG_WEAPON_FIRE_TYPE_MELEE:
-        projectile = SFG_PROJECTILE_NONE;
+        projectile = SFG_PROJECTILE_BULLET;
         break;
 
       default:
@@ -4583,34 +4583,51 @@ void SFG_drawWeapon(int16_t bobOffset)
       animationLength - SFG_player.weaponCooldownFrames;
 
   bobOffset -= SFG_HUD_BAR_HEIGHT;
-
+  
   uint8_t fireType = SFG_GET_WEAPON_FIRE_TYPE(SFG_player.weapon);
 
   if (shotAnimationFrame < animationLength)
   {
-    if (fireType == SFG_WEAPON_FIRE_TYPE_MELEE)
+   /* if (fireType == SFG_WEAPON_FIRE_TYPE_MELEE)
     {
       bobOffset = shotAnimationFrame < animationLength / 2 ? 0 : 2 * SFG_WEAPONBOB_OFFSET_PIXELS;
     }
     else
-    {
+    {*/
       bobOffset +=
           ((animationLength - shotAnimationFrame) * SFG_WEAPON_IMAGE_SCALE * 20) / animationLength;
 
+      uint8_t effectxOffset = 0;
+      uint8_t effectyOffset = 0;
+      if (fireType == SFG_WEAPON_FIRE_TYPE_MELEE)
+      {
+          effectxOffset = 100;
+          effectyOffset = 0;
+      }
+
+  
       if (
-          ((fireType == SFG_WEAPON_FIRE_TYPE_FIREBALL) ||
-           (fireType == SFG_WEAPON_FIRE_TYPE_BULLET)) &&
+          // ((fireType == SFG_WEAPON_FIRE_TYPE_FIREBALL) ||
+          // (fireType == SFG_WEAPON_FIRE_TYPE_BULLET)) && 
           shotAnimationFrame < animationLength / 2)
         SFG_blitImage(SFG_effectSprites,
-                      SFG_WEAPON_IMAGE_POSITION_X,
+                      SFG_WEAPON_IMAGE_POSITION_X + effectxOffset,
                       SFG_WEAPON_IMAGE_POSITION_Y -
                           (SFG_TEXTURE_SIZE / 3) * SFG_WEAPON_IMAGE_SCALE + bobOffset,
                       SFG_WEAPON_IMAGE_SCALE);
-    }
+    //}
   }
 
+ 
+  uint8_t xOffset = 0;
+  if (fireType == SFG_WEAPON_FIRE_TYPE_MELEE)
+  {
+      xOffset = 125;
+  }
+
+
   SFG_blitImage(SFG_weaponImages + SFG_player.weapon * SFG_TEXTURE_STORE_SIZE,
-                SFG_WEAPON_IMAGE_POSITION_X,
+                SFG_WEAPON_IMAGE_POSITION_X + xOffset,
                 SFG_WEAPON_IMAGE_POSITION_Y + bobOffset - 1,
                 SFG_WEAPON_IMAGE_SCALE);
 }
@@ -5107,6 +5124,8 @@ void SFG_draw()
                 SFG_FONT_CHARACTER_SIZE * SFG_FONT_SIZE_MEDIUM)
 
     static levelLockedWarningTicker = 0;
+
+    SFG_drawText("+", SFG_GAME_RESOLUTION_X / 2, 200, SFG_FONT_SIZE_SMALL, 6, 2, SFG_GAME_RESOLUTION_X);
 
     SFG_drawText("Time", SFG_HUD_MARGIN, TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
     SFG_drawText("Health", SFG_HUD_MARGIN, TEXT_Y -20, SFG_FONT_SIZE_SMALL,6, 6, SFG_GAME_RESOLUTION_X);
