@@ -731,7 +731,7 @@ const uint8_t *SFG_getMonsterSprite(
     uint8_t monsterType, uint8_t state, uint8_t frame)
 {
   uint8_t index =
-      state == SFG_MONSTER_STATE_DEAD ? 18 : 17;
+      state == SFG_MONSTER_STATE_DEAD ? 19 : 18;
   // ^ makes the compiled binary smaller compared to returning pointers directly
 
   if ((state != SFG_MONSTER_STATE_DYING) && (state != SFG_MONSTER_STATE_DEAD))
@@ -753,7 +753,16 @@ const uint8_t *SFG_getMonsterSprite(
       break;
 
     case SFG_LEVEL_ELEMENT_MONSTER_WARRIOR:
-      index = state != SFG_MONSTER_STATE_ATTACKING ? 6 : 7;
+    {
+        if (state == SFG_MONSTER_STATE_ATTACKING)
+        {
+            index = 8;
+        }
+        else 
+        {
+            index = SFG_level_time_seconds % 50 <= 25 ? 6 : 7;
+        }
+    }
       break;
 
     case SFG_LEVEL_ELEMENT_MONSTER_DESTROYER:
@@ -772,20 +781,20 @@ const uint8_t *SFG_getMonsterSprite(
       break;
 
     case SFG_LEVEL_ELEMENT_MONSTER_PLASMABOT:
-      index = state != SFG_MONSTER_STATE_ATTACKING ? 8 : 9;
+      index = state != SFG_MONSTER_STATE_ATTACKING ? 9 : 10;
       break;
 
     case SFG_LEVEL_ELEMENT_MONSTER_ENDER:
       switch (state)
       {
       case SFG_MONSTER_STATE_ATTACKING:
-        index = 12;
+        index = 13;
         break;
       case SFG_MONSTER_STATE_IDLE:
-        index = 10;
+        index = 11;
         break;
       default:
-        index = frame ? 10 : 11;
+        index = frame ? 11 : 12;
         break;
       }
       break;
@@ -794,20 +803,20 @@ const uint8_t *SFG_getMonsterSprite(
       switch (state)
       {
       case SFG_MONSTER_STATE_ATTACKING:
-        index = 15;
+        index = 16;
         break;
       case SFG_MONSTER_STATE_IDLE:
-        index = 13;
+        index = 14;
         break;
       default:
-        index = frame ? 13 : 14;
+        index = frame ? 14 : 15;
         break;
       }
       break;
 
     case SFG_LEVEL_ELEMENT_MONSTER_EXPLODER:
     default:
-      index = 16;
+      index = 17;
       break;
     }
 
