@@ -444,7 +444,7 @@ uint8_t SFG_level_gold_collected = 0;
 uint16_t SFG_level_time_minutes = 0;
 uint16_t SFG_level_time_seconds = 0;
 uint8_t SFG_enemy_killed_count = 0;
-uint8_t SFG_showLevelEndLockedWarning = FALSE;
+BOOL SFG_showLevelEndLockedWarning = FALSE;
 
 /**
   Stores the current level and helper precomputed values for better performance.
@@ -2938,7 +2938,7 @@ void SFG_updateLevel()
 
       uint8_t lock = SFG_DOOR_LOCK(door->state);
 
-      uint8_t isEnemyNearDoor = FALSE;
+      BOOL isEnemyNearDoor = FALSE;
         
       if (ENEMIES_CAN_OPEN_DOORS)
       {
@@ -4598,13 +4598,18 @@ void SFG_drawWeapon(int16_t bobOffset)
           ((animationLength - shotAnimationFrame) * SFG_WEAPON_IMAGE_SCALE * 20) / animationLength;
 
       uint8_t effectxOffset = 0;
-      uint8_t effectyOffset = 0;
-      if (fireType == SFG_WEAPON_FIRE_TYPE_MELEE)
-      {
-          effectxOffset = 100;
-          effectyOffset = 0;
-      }
 
+      switch (SFG_player.weapon)
+      {
+        case SFG_WEAPON_KNIFE:
+            effectxOffset = 100;
+            break;
+        case SFG_WEAPON_SHOTGUN:
+            effectxOffset = 25;
+            break;
+      default:
+          break;
+      }
   
       if (
           // ((fireType == SFG_WEAPON_FIRE_TYPE_FIREBALL) ||
@@ -4623,6 +4628,17 @@ void SFG_drawWeapon(int16_t bobOffset)
   if (fireType == SFG_WEAPON_FIRE_TYPE_MELEE)
   {
       xOffset = 125;
+  }
+
+
+  switch (SFG_player.weapon)
+  {
+  case SFG_WEAPON_SHOTGUN:
+      xOffset = 30;
+      break;
+  case SFG_WEAPON_KNIFE:
+      xOffset = 125;
+      break;
   }
 
 
@@ -5135,7 +5151,7 @@ void SFG_draw()
     SFG_drawText("Left", SFG_GAME_RESOLUTION_X - 200, TEXT_Y - 20, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
     SFG_drawText("Gems", SFG_GAME_RESOLUTION_X - 200, TEXT_Y, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
 
-    if (SFG_currentLevel.monsterRecordCount - SFG_enemy_killed_count <= 0)
+    if (SFG_currentLevel.monsterRecordCount - SFG_enemy_killed_count <= 0 && SFG_game.state == SFG_GAME_STATE_PLAYING)
     {
         levelLockedWarningTicker++;
 
