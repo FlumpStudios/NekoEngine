@@ -6,6 +6,8 @@
 #define REMOVE_INITAL_SPRITE_VISIBILITY_CHECK 0
 #define USE_ZBUFFER_ON_WALLS 1
 #define ENEMIES_CAN_OPEN_DOORS 1
+#define MAX_COMBO 5
+#define COMBO_BAR_SIZE 150
 /**
   Default enemy behavior between 0 and 255
 */

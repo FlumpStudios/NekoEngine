@@ -440,6 +440,8 @@ struct
 } SFG_player;
 
 
+uint8_t SFG_multiplier = 1;
+uint8_t SFG_comboBarSize = 0;
 uint8_t SFG_level_gold_collected = 0;
 uint16_t SFG_level_time_minutes = 0;
 uint16_t SFG_level_time_seconds = 0;
@@ -3106,6 +3108,13 @@ void SFG_updateLevel()
       else if (monster->health == 0)
       {
         SFG_enemy_killed_count++;
+        SFG_comboBarSize = COMBO_BAR_SIZE;
+        
+        if (SFG_multiplier < MAX_COMBO)
+        {
+            SFG_multiplier++;
+        }
+
         monster->stateType = (monster->stateType & SFG_MONSTER_MASK_TYPE) |
                              SFG_MONSTER_STATE_DYING;
 
@@ -3627,6 +3636,12 @@ void SFG_gameStepPlaying()
           addAmmo(PLASMA) break;
 
         case SFG_LEVEL_ELEMENT_RUIN:
+
+            if (SFG_multiplier > 1)
+            {
+                SFG_comboBarSize = COMBO_BAR_SIZE;
+            }
+
             SFG_level_gold_collected ++;
             break;
 #undef addAmmo
@@ -5151,13 +5166,41 @@ void SFG_draw()
     SFG_drawText("Left", SFG_GAME_RESOLUTION_X - 200, TEXT_Y - 20, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
     SFG_drawText("Gems", SFG_GAME_RESOLUTION_X - 200, TEXT_Y, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
 
+    if (SFG_comboBarSize > 0)
+    {   
+        SFG_comboBarSize--;
+    }
+    else
+    {
+        SFG_multiplier = 1;
+    }
+
+    if (SFG_multiplier > 1)
+    {
+        SFG_drawText("X", (SFG_GAME_RESOLUTION_X / 2) - (23 * SFG_FONT_SIZE_MEDIUM), 10, SFG_FONT_SIZE_MEDIUM, 6, 6, SFG_GAME_RESOLUTION_X);
+
+        SFG_drawNumber( // time
+            SFG_multiplier,
+            (SFG_GAME_RESOLUTION_X / 2) - (19 * SFG_FONT_SIZE_MEDIUM),
+            10,
+            SFG_FONT_SIZE_MEDIUM,
+            6);
+    }
+
+    SFG_fillRectangle(
+        (SFG_GAME_RESOLUTION_X / 2) - (25 * SFG_FONT_SIZE_SMALL),
+        10,
+        SFG_comboBarSize,
+        SFG_FONT_SIZE_MEDIUM* SFG_FONT_CHARACTER_SIZE,
+        170);
+
     if (SFG_currentLevel.monsterRecordCount - SFG_enemy_killed_count <= 0 && SFG_game.state == SFG_GAME_STATE_PLAYING)
     {
         levelLockedWarningTicker++;
 
         if (levelLockedWarningTicker % 60 < 30)
         {
-            SFG_drawText("Exit Unlocked", (SFG_GAME_RESOLUTION_X / 2) - (25 * SFG_FONT_SIZE_SMALL), 10, SFG_FONT_SIZE_SMALL, 170, 21, SFG_GAME_RESOLUTION_X);
+            SFG_drawText("Exit Unlocked", (SFG_GAME_RESOLUTION_X / 2) - (25 * SFG_FONT_SIZE_SMALL), SFG_GAME_RESOLUTION_Y / 2, SFG_FONT_SIZE_SMALL, 170, 21, SFG_GAME_RESOLUTION_X);
         }
     }
 
@@ -5207,6 +5250,9 @@ void SFG_draw()
     {
         timePositonOffset = 5;
     }
+
+
+    
 
     SFG_drawText(".", SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * (38 + timePositonOffset)), TEXT_Y - 47, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
     SFG_drawText(".", SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * (38 + timePositonOffset)), TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
