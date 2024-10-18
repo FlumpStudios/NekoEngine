@@ -91,7 +91,7 @@ typedef struct
 #define SFG_LEVEL_ELEMENT_TELEPORTER 0x08
 #define SFG_LEVEL_ELEMENT_TERMINAL 0x09
 #define SFG_LEVEL_ELEMENT_COLUMN 0x0a
-#define SFG_LEVEL_ELEMENT_RUIN 0x0b
+#define SFG_LEVEL_ELEMENT_GEM 0x0b
 #define SFG_LEVEL_ELEMENT_LAMP 0x0c
 #define SFG_LEVEL_ELEMENT_CARD0 0x0d ///< Access card, unlocks doors with lock.
 #define SFG_LEVEL_ELEMENT_CARD1 0x0e

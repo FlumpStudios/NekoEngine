@@ -446,6 +446,7 @@ uint8_t SFG_level_gold_collected = 0;
 uint16_t SFG_level_time_minutes = 0;
 uint16_t SFG_level_time_seconds = 0;
 uint8_t SFG_enemy_killed_count = 0;
+uint32_t SFG_score = 0;
 BOOL SFG_showLevelEndLockedWarning = FALSE;
 
 /**
@@ -1518,7 +1519,7 @@ void SFG_getItemSprite(
     break;
 
   case SFG_LEVEL_ELEMENT_TERMINAL:
-  case SFG_LEVEL_ELEMENT_RUIN:
+  case SFG_LEVEL_ELEMENT_GEM:
     *spriteSize = 1;
     break;
 
@@ -3109,6 +3110,7 @@ void SFG_updateLevel()
       {
         SFG_enemy_killed_count++;
         SFG_comboBarSize = COMBO_BAR_SIZE;
+        SFG_score += SCORE_ENEMY_WORTH * SFG_multiplier;
         
         if (SFG_multiplier < MAX_COMBO)
         {
@@ -3635,11 +3637,11 @@ void SFG_gameStepPlaying()
         case SFG_LEVEL_ELEMENT_PLASMA:
           addAmmo(PLASMA) break;
 
-        case SFG_LEVEL_ELEMENT_RUIN:
-
+        case SFG_LEVEL_ELEMENT_GEM:
             if (SFG_multiplier > 1)
             {
                 SFG_comboBarSize = COMBO_BAR_SIZE;
+                SFG_score += SCORE_GEM_WORTH * SFG_multiplier;
             }
 
             SFG_level_gold_collected ++;
@@ -5162,8 +5164,8 @@ void SFG_draw()
     SFG_drawText("Health", SFG_HUD_MARGIN, TEXT_Y -20, SFG_FONT_SIZE_SMALL,6, 6, SFG_GAME_RESOLUTION_X);
     SFG_drawText("Ammo", SFG_HUD_MARGIN, TEXT_Y , SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
 
-    SFG_drawText("Killed", SFG_GAME_RESOLUTION_X - 200, TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
-    SFG_drawText("Left", SFG_GAME_RESOLUTION_X - 200, TEXT_Y - 20, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
+    SFG_drawText("Score", SFG_GAME_RESOLUTION_X - 200, TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
+    SFG_drawText("Enemies", SFG_GAME_RESOLUTION_X - 200, TEXT_Y - 20, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
     SFG_drawText("Gems", SFG_GAME_RESOLUTION_X - 200, TEXT_Y, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
 
     if (SFG_comboBarSize > 0)
@@ -5200,7 +5202,7 @@ void SFG_draw()
 
         if (levelLockedWarningTicker % 60 < 30)
         {
-            SFG_drawText("Exit Unlocked", (SFG_GAME_RESOLUTION_X / 2) - (25 * SFG_FONT_SIZE_SMALL), SFG_GAME_RESOLUTION_Y / 2, SFG_FONT_SIZE_SMALL, 170, 21, SFG_GAME_RESOLUTION_X);
+            SFG_drawText("Exit Unlocked", (SFG_GAME_RESOLUTION_X / 2) - (45 * SFG_FONT_SIZE_SMALL), SFG_GAME_RESOLUTION_X / 4, SFG_FONT_SIZE_SMALL, 6, 21, SFG_GAME_RESOLUTION_X);
         }
     }
 
@@ -5279,7 +5281,7 @@ void SFG_draw()
         6);
     
     SFG_drawNumber( 
-        SFG_enemy_killed_count,
+        SFG_score,
         SFG_GAME_RESOLUTION_X - 60,
         TEXT_Y - 40,
         SFG_FONT_SIZE_SMALL,

@@ -8,6 +8,9 @@
 #define ENEMIES_CAN_OPEN_DOORS 1
 #define MAX_COMBO 5
 #define COMBO_BAR_SIZE 150
+
+#define SCORE_ENEMY_WORTH 10
+#define SCORE_GEM_WORTH 5
 /**
   Default enemy behavior between 0 and 255
 */
