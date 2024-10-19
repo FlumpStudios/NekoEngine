@@ -35,6 +35,9 @@ C:\Projects\NekoEngine\game.h(4470,30): warning C4090: '=': different 'const' qu
 C:\Projects\NekoEngine\game.h(4511,75): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
 C:\Projects\NekoEngine\game.h(4463,1): warning C4090: 'initializing': different 'const' qualifiers
 C:\Projects\NekoEngine\game.h(4749,34): warning C4244: 'initializing': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(4877,19): warning C4552: '+': result of expression not used
+C:\Projects\NekoEngine\game.h(4897,21): warning C4552: '+': result of expression not used
+C:\Projects\NekoEngine\game.h(4918,21): warning C4552: '+': result of expression not used
 C:\Projects\NekoEngine\game.h(4841,24): warning C4244: 'initializing': conversion from '__int64' to 'uint32_t', possible loss of data
 C:\Projects\NekoEngine\sounds.h(100,67): warning C4146: unary minus operator applied to unsigned type, result still unsigned
 C:\Projects\NekoEngine\sounds.h(100,80): warning C4293: '>>': shift count negative or too big, undefined behavior
