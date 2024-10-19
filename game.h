@@ -5179,18 +5179,18 @@ void SFG_draw()
 
     if (SFG_multiplier > 1)
     {
-        SFG_drawText("X", (SFG_GAME_RESOLUTION_X / 2) - (23 * SFG_FONT_SIZE_MEDIUM), 10, SFG_FONT_SIZE_MEDIUM, 6, 6, SFG_GAME_RESOLUTION_X);
+        SFG_drawText("X", (SFG_GAME_RESOLUTION_X / 2) - (25 * SFG_FONT_SIZE_MEDIUM), 10, SFG_FONT_SIZE_MEDIUM, 6, 6, SFG_GAME_RESOLUTION_X);
 
         SFG_drawNumber( // time
             SFG_multiplier,
-            (SFG_GAME_RESOLUTION_X / 2) - (19 * SFG_FONT_SIZE_MEDIUM),
+            (SFG_GAME_RESOLUTION_X / 2) - (21 * SFG_FONT_SIZE_MEDIUM),
             10,
             SFG_FONT_SIZE_MEDIUM,
             6);
     }
 
     SFG_fillRectangle(
-        (SFG_GAME_RESOLUTION_X / 2) - (25 * SFG_FONT_SIZE_SMALL),
+        (SFG_GAME_RESOLUTION_X / 2) - (27 * SFG_FONT_SIZE_SMALL),
         10,
         SFG_comboBarSize,
         SFG_FONT_SIZE_MEDIUM* SFG_FONT_CHARACTER_SIZE,
@@ -5202,7 +5202,7 @@ void SFG_draw()
 
         if (levelLockedWarningTicker % 60 < 30)
         {
-            SFG_drawText("Exit Unlocked", (SFG_GAME_RESOLUTION_X / 2) - (45 * SFG_FONT_SIZE_SMALL), SFG_GAME_RESOLUTION_X / 4, SFG_FONT_SIZE_SMALL, 6, 21, SFG_GAME_RESOLUTION_X);
+            SFG_drawText("Exit Unlocked", (SFG_GAME_RESOLUTION_X / 2) - (30 * SFG_FONT_SIZE_SMALL), SFG_GAME_RESOLUTION_X / 4, SFG_FONT_SIZE_SMALL, 6, 21, SFG_GAME_RESOLUTION_X);
         }
     }
 
