@@ -11,6 +11,10 @@
 
 #define SCORE_ENEMY_WORTH 10
 #define SCORE_GEM_WORTH 5
+
+
+#define TIME_BONUS_START 18000
+
 /**
   Default enemy behavior between 0 and 255
 */

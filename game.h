@@ -447,6 +447,8 @@ uint16_t SFG_level_time_minutes = 0;
 uint16_t SFG_level_time_seconds = 0;
 uint8_t SFG_enemy_killed_count = 0;
 uint32_t SFG_score = 0;
+uint16_t SFG_timeBonus = TIME_BONUS_START;
+uint32_t SFG_level_score = 0;
 BOOL SFG_showLevelEndLockedWarning = FALSE;
 
 /**
@@ -1636,11 +1638,14 @@ void SFG_setAndInitLevel(uint8_t levelNumber)
 
   SFG_game.currentRandom = 0;
 
-  if (SFG_game.saved != SFG_CANT_SAVE)
-    SFG_game.saved = 0;
+  if (SFG_game.saved != SFG_CANT_SAVE) {
+     SFG_game.saved = 0;
+  }
+
   SFG_level_time_seconds = 0;
   SFG_level_time_minutes = 0;
-
+  SFG_level_score = 0;
+  SFG_timeBonus = TIME_BONUS_START;
   SFG_level_gold_collected = 0;
   SFG_enemy_killed_count = 0;
   SFG_currentLevel.levelNumber = levelNumber;
@@ -3111,7 +3116,7 @@ void SFG_updateLevel()
         SFG_enemy_killed_count++;
         SFG_comboBarSize = COMBO_BAR_SIZE;
         SFG_score += SCORE_ENEMY_WORTH * SFG_multiplier;
-        
+        SFG_level_score += SCORE_ENEMY_WORTH * SFG_multiplier;
         if (SFG_multiplier < MAX_COMBO)
         {
             SFG_multiplier++;
@@ -3642,6 +3647,7 @@ void SFG_gameStepPlaying()
             {
                 SFG_comboBarSize = COMBO_BAR_SIZE;
                 SFG_score += SCORE_GEM_WORTH * SFG_multiplier;
+                SFG_level_score += SCORE_ENEMY_WORTH * SFG_multiplier;
             }
 
             SFG_level_gold_collected ++;
@@ -4870,19 +4876,7 @@ void SFG_drawWinOverlay()
     x += CHAR_SIZE * 7;
     
     x += SFG_drawNumber(SFG_currentLevel.monstersDead, x, y,
-                          SFG_FONT_SIZE_SMALL, 7) *
-           CHAR_SIZE;
-
-      SFG_drawText("/", x, y, SFG_FONT_SIZE_SMALL, 7, 1, 0);
-
-      x += CHAR_SIZE;
-        
-     
-
-      (SFG_drawNumber(SFG_currentLevel.monsterRecordCount, x, y,
-                           SFG_FONT_SIZE_SMALL, 7) +
-            1) *
-           CHAR_SIZE;    
+                          SFG_FONT_SIZE_SMALL, 7) * CHAR_SIZE; 
 
       y += (SFG_FONT_SIZE_MEDIUM + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
       x = SFG_HUD_MARGIN;
@@ -4923,6 +4917,12 @@ void SFG_draw()
 
   if (SFG_game.state == SFG_GAME_STATE_MENU)
   {
+    if (SFG_score > 0)
+    {
+        SFG_score = 0;
+        SFG_level_score = 0;
+    }
+
     SFG_drawMenu();
     return;
   }
@@ -4939,8 +4939,7 @@ void SFG_draw()
     SFG_drawMap();
   }
   else
-  {
-    
+  { 
     memset(SFG_game.zBuffer, 255, SFG_Z_BUFFER_SIZE * SFG_Z_BUFFER_SIZE_Y);    
 
     int16_t weaponBobOffset = 0;
@@ -5222,10 +5221,15 @@ void SFG_draw()
         levelLockedWarningTicker = 0;
     }
     
+    // TODO: This could be in a better place TBH
     if (SFG_game.state == SFG_GAME_STATE_PLAYING)
     {
-        // TODO: This could be in a better place TBH
         
+        if (SFG_timeBonus > 0)
+        {
+            SFG_timeBonus --;
+        }
+
         if (SFG_level_time_minutes < 100)
         {
             SFG_level_time_seconds ++;
