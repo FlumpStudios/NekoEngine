@@ -3287,12 +3287,14 @@ void SFG_updatePlayerHeight()
 
 void SFG_winLevel()
 {
-    if ((SFG_currentLevel.monsterRecordCount - SFG_enemy_killed_count) <= 0) {    
-      SFG_levelEnds();
-      SFG_setGameState(SFG_GAME_STATE_WIN);
-      SFG_playGameSound(2, 255);
-      SFG_processEvent(SFG_EVENT_VIBRATE, 0);
-      SFG_processEvent(SFG_EVENT_LEVEL_WON, SFG_currentLevel.levelNumber + 1);
+    if ((SFG_currentLevel.monsterRecordCount - SFG_enemy_killed_count) <= 0) {   
+        // Yeah, don't dulicate division
+        SFG_score += SFG_timeBonus / 10;
+        SFG_levelEnds();
+        SFG_setGameState(SFG_GAME_STATE_WIN);
+        SFG_playGameSound(2, 255);
+        SFG_processEvent(SFG_EVENT_VIBRATE, 0);
+        SFG_processEvent(SFG_EVENT_LEVEL_WON, SFG_currentLevel.levelNumber + 1);
     }
     else
     {
@@ -4516,7 +4518,7 @@ void SFG_drawStoryText()
   Draws a number as text on screen, returns the number of characters drawn.
 */
 uint8_t SFG_drawNumber(
-    int16_t number,
+    int32_t number,
     uint16_t x,
     uint16_t y,
     uint8_t size,
@@ -4836,14 +4838,14 @@ void SFG_drawWinOverlay()
                 SFG_textHorizontalSize(textLine, SFG_FONT_SIZE_BIG)) /
                2;
 
-  SFG_drawText(textLine, x, y, SFG_FONT_SIZE_BIG, 7 + SFG_game.blink * 95, 255, 0);
+  SFG_drawText(textLine, x  , y, SFG_FONT_SIZE_BIG, 7 + SFG_game.blink * 95, 255, 0);
 
   uint32_t timeTotal = SFG_SAVE_TOTAL_TIME;
 
   if (t >= (SFG_WIN_ANIMATION_DURATION / 2))
   {
     y += (SFG_FONT_SIZE_BIG + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
-    x = SFG_HUD_MARGIN;
+    x = SFG_HUD_MARGIN + 100;
 
 #define CHAR_SIZE (SFG_FONT_SIZE_SMALL * SFG_FONT_CHARACTER_SIZE)
 
@@ -4853,7 +4855,7 @@ void SFG_drawWinOverlay()
         time_offset_x_position = 5;
     }
 
-    SFG_drawText("Time", x, y, SFG_FONT_SIZE_SMALL, 7, 5, CHAR_SIZE * 7);
+    SFG_drawText("Time", x, y, SFG_FONT_SIZE_SMALL, 7, 5, CHAR_SIZE * 7 + 100);
     
     x += CHAR_SIZE * 7;
     x += SFG_drawNumber(SFG_level_time_minutes, x, y, SFG_FONT_SIZE_SMALL, 7) *
@@ -4867,57 +4869,56 @@ void SFG_drawWinOverlay()
              CHAR_SIZE +
          SFG_FONT_SIZE_SMALL;
 
-    x = 200;
+    x = 350;
 
     SFG_drawText("Level score", x, y, SFG_FONT_SIZE_SMALL, 7, 11, CHAR_SIZE * SFG_FONT_SIZE_SMALL * 60);
    
-    x = 400;
+    x = 540;
 
     SFG_drawNumber(SFG_level_score, x, y, SFG_FONT_SIZE_SMALL, 7)*
         CHAR_SIZE +
         SFG_FONT_SIZE_SMALL;
 
-    x = SFG_HUD_MARGIN;
+    x = SFG_HUD_MARGIN + 100;
     y += (SFG_FONT_SIZE_MEDIUM + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
 
-    SFG_drawText(SFG_TEXT_KILLS, x, y, SFG_FONT_SIZE_SMALL, 7, 7, CHAR_SIZE * 7);
+    SFG_drawText(SFG_TEXT_KILLS, x, y, SFG_FONT_SIZE_SMALL, 7, 7, CHAR_SIZE * 7 + 100);
     x += CHAR_SIZE * 7;
     
     x += SFG_drawNumber(SFG_currentLevel.monstersDead, x, y,
                           SFG_FONT_SIZE_SMALL, 7) * CHAR_SIZE; 
 
 
-      x = 200;
+      x = 350;
 
       SFG_drawText("Time bonus", x, y, SFG_FONT_SIZE_SMALL, 7, 11, CHAR_SIZE * SFG_FONT_SIZE_SMALL * 60);
 
-      x = 400;
+      x = 540;
 
-      SFG_drawNumber(SFG_timeBonus, x, y, SFG_FONT_SIZE_SMALL, 7)*
+      SFG_drawNumber(SFG_timeBonus / 10, x, y, SFG_FONT_SIZE_SMALL, 7)*
           CHAR_SIZE +
           SFG_FONT_SIZE_SMALL;
 
 
       y += (SFG_FONT_SIZE_MEDIUM + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
-      x = SFG_HUD_MARGIN;
-      SFG_drawText("Gems", x, y, SFG_FONT_SIZE_SMALL, 7, 7, CHAR_SIZE * 7);
+      x = SFG_HUD_MARGIN + 100;
+      SFG_drawText("Gems", x, y, SFG_FONT_SIZE_SMALL, 7, 7, CHAR_SIZE * 7 + 100);
       x += CHAR_SIZE * 7;
 
       x += SFG_drawNumber(SFG_level_gold_collected, x, y, SFG_FONT_SIZE_SMALL, 7) *
           CHAR_SIZE +
           SFG_FONT_SIZE_SMALL;
 
-      x = 200;
+      x = 350;
 
-      SFG_drawText("Total score", x, y, SFG_FONT_SIZE_SMALL, 7, 11, CHAR_SIZE * SFG_FONT_SIZE_SMALL * 60);
+      SFG_drawText("Total score", x, y, SFG_FONT_SIZE_SMALL, 7 + SFG_game.blink * 70, 11, CHAR_SIZE * SFG_FONT_SIZE_SMALL * 60);
 
-      x = 400;
+      x = 540;
 
 
       SFG_drawNumber(SFG_score, x, y, SFG_FONT_SIZE_SMALL, 7)*
           CHAR_SIZE +
           SFG_FONT_SIZE_SMALL;
-
 
 
     if ((t >= (SFG_WIN_ANIMATION_DURATION - 1)) &&
@@ -5195,9 +5196,9 @@ void SFG_draw()
     SFG_drawText("Health", SFG_HUD_MARGIN, TEXT_Y -20, SFG_FONT_SIZE_SMALL,6, 6, SFG_GAME_RESOLUTION_X);
     SFG_drawText("Ammo", SFG_HUD_MARGIN, TEXT_Y , SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
 
-    SFG_drawText("Score", SFG_GAME_RESOLUTION_X - 200, TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
-    SFG_drawText("Enemies", SFG_GAME_RESOLUTION_X - 200, TEXT_Y - 20, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
-    SFG_drawText("Gems", SFG_GAME_RESOLUTION_X - 200, TEXT_Y, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
+    SFG_drawText("Score", SFG_GAME_RESOLUTION_X - 210, TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
+    SFG_drawText("Enemies", SFG_GAME_RESOLUTION_X - 210, TEXT_Y - 20, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
+    SFG_drawText("Gems", SFG_GAME_RESOLUTION_X - 210, TEXT_Y, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
 
     if (SFG_comboBarSize > 0)
     {   
@@ -5289,9 +5290,6 @@ void SFG_draw()
         timePositonOffset = 5;
     }
 
-
-    
-
     SFG_drawText(".", SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * (38 + timePositonOffset)), TEXT_Y - 47, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
     SFG_drawText(".", SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * (38 + timePositonOffset)), TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
 
@@ -5318,21 +5316,21 @@ void SFG_draw()
     
     SFG_drawNumber( 
         SFG_score,
-        SFG_GAME_RESOLUTION_X - 60,
+        SFG_GAME_RESOLUTION_X - 90 ,
         TEXT_Y - 40,
         SFG_FONT_SIZE_SMALL,
         6);
 
     SFG_drawNumber(
         SFG_currentLevel.monsterRecordCount - SFG_enemy_killed_count,
-        SFG_GAME_RESOLUTION_X - 60,
+        SFG_GAME_RESOLUTION_X - 90,
         TEXT_Y - 20,
         SFG_FONT_SIZE_SMALL,
         6);
 
     SFG_drawNumber(
         SFG_level_gold_collected,
-        SFG_GAME_RESOLUTION_X - 60,
+        SFG_GAME_RESOLUTION_X - 90,
         TEXT_Y,
         SFG_FONT_SIZE_SMALL,
         6);
