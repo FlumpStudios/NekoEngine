@@ -1,4 +1,4 @@
-﻿cl : command line  warning D9002: ignoring unknown option '/std:c99'
+﻿cl : command line warning D9002: ignoring unknown option '/std:c99'
   main_sdl.c
 C:\Projects\NekoEngine\images.h(40,18): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Projects\NekoEngine\levels.h(156,57): warning C4133: 'function': incompatible types - from 'WIN32_FIND_DATA *' to 'LPWIN32_FIND_DATAA'
@@ -8,7 +8,7 @@ C:\Projects\NekoEngine\texts.h(46,12): warning C4098: 'loadText': 'void' functio
 C:\Projects\NekoEngine\texts.h(53,11): warning C4098: 'loadText': 'void' function returning a value
 C:\Projects\NekoEngine\texts.h(44,15): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Projects\NekoEngine\game.h(702,24): warning C4244: 'initializing': conversion from '__int64' to 'uint32_t', possible loss of data
-C:\Projects\NekoEngine\game.h(1307,29): warning C4013: 'SFG_floorHeightAt' undefined; assuming extern returning int
+C:\Projects\NekoEngine\game.h(1307,46): warning C4013: 'SFG_floorHeightAt' undefined; assuming extern returning int
 C:\Projects\NekoEngine\game.h(1387,37): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
 C:\Projects\NekoEngine\game.h(1387,40): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
 C:\Projects\NekoEngine\game.h(1572,33): warning C4133: 'function': incompatible types - from 'char *' to 'LPWSTR'
@@ -34,7 +34,7 @@ C:\Projects\NekoEngine\game.h(4419,67): warning C4244: 'function': conversion fr
 C:\Projects\NekoEngine\game.h(4472,30): warning C4090: '=': different 'const' qualifiers
 C:\Projects\NekoEngine\game.h(4513,75): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
 C:\Projects\NekoEngine\game.h(4465,1): warning C4090: 'initializing': different 'const' qualifiers
-C:\Projects\NekoEngine\game.h(4751,23): warning C4244: 'initializing': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\game.h(4751,34): warning C4244: 'initializing': conversion from 'uint16_t' to 'uint8_t', possible loss of data
 C:\Projects\NekoEngine\game.h(4879,19): warning C4552: '+': result of expression not used
 C:\Projects\NekoEngine\game.h(4899,21): warning C4552: '+': result of expression not used
 C:\Projects\NekoEngine\game.h(4920,21): warning C4552: '+': result of expression not used

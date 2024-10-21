@@ -49,7 +49,7 @@
 /**
   Initial upwards speed of player's jump, in squares per second. 
 */
-#define SFG_PLAYER_JUMP_SPEED 5
+#define SFG_PLAYER_JUMP_SPEED 10
 
 /**
   Melee and close-up attack range, in RCL_Units.

@@ -2958,7 +2958,7 @@ void SFG_updateLevel()
             if (state != SFG_MONSTER_STATE_INACTIVE &&
                 state != SFG_MONSTER_STATE_DEAD)
             { 
-                if ( // player near door?
+                if ( // Monster near door?
                     (door->coords[0] >= (SFG_MONSTER_COORD_TO_SQUARES(SFG_currentLevel.monsterRecords[i].coords[0]) - 1)) &&
                     (door->coords[0] <= (SFG_MONSTER_COORD_TO_SQUARES(SFG_currentLevel.monsterRecords[i].coords[0]) + 1)) &&
                     (door->coords[1] >= (SFG_MONSTER_COORD_TO_SQUARES(SFG_currentLevel.monsterRecords[i].coords[1]) - 1)) &&
