@@ -480,7 +480,7 @@
   How much faster movement is in the preview mode.
 */
 #ifndef SFG_PREVIEW_MODE_SPEED_MULTIPLIER
-  #define SFG_PREVIEW_MODE_SPEED_MULTIPLIER 2
+  #define SFG_PREVIEW_MODE_SPEED_MULTIPLIER 1
 #endif
 
 /**
