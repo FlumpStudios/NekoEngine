@@ -17,7 +17,7 @@
   #ifndef GAME_LQ
     // higher quality
     #define SFG_FPS 60
-    #define SFG_LOG(str) puts(str);
+    #define SFG_LOG(str);
     #define SFG_SCREEN_RESOLUTION_X 700
     #define SFG_SCREEN_RESOLUTION_Y 512
     #define SFG_DITHERED_SHADOW 1
@@ -109,11 +109,9 @@ void SFG_save(uint8_t data[SFG_SAVE_SIZE])
 {
   FILE *f = fopen(SFG_SAVE_FILE_PATH,"wb");
 
-  puts("SDL: opening and writing save file");
 
   if (f == NULL)
   {
-    puts("SDL: could not open the file!");
     return;
   }
 
@@ -127,11 +125,9 @@ uint8_t SFG_load(uint8_t data[SFG_SAVE_SIZE])
 #ifndef __EMSCRIPTEN__
   FILE *f = fopen(SFG_SAVE_FILE_PATH,"rb");
 
-  puts("SDL: opening and reading save file");
-
   if (f == NULL)
   {
-    puts("SDL: no save file to open");
+  
   }
   else
   {
@@ -377,7 +373,7 @@ int main(int argc, char *argv[])
   uint8_t argHelp = 0;
   uint8_t argForceWindow = 0;
   uint8_t argForceFullscreen = 0;
-  
+   
 #ifndef __EMSCRIPTEN__
   argForceFullscreen = 1;
 #endif
@@ -387,18 +383,31 @@ int main(int argc, char *argv[])
 
   for (uint8_t i = 1; i < argc; ++i)
   {
-    if (argv[i][0] == '-' && argv[i][1] == 'h' && argv[i][2] == 0)
-      argHelp = 1;
-    else if (argv[i][0] == '-' && argv[i][1] == 'w' && argv[i][2] == 0)       
-      argForceWindow = 1;
-    else if (argv[i][0] == '-' && argv[i][1] == 'f' && argv[i][2] == 0)       
-      argForceFullscreen = 1;
-    else if (argv[i][0] == '-' && argv[i][1] == 'd' && argv[i][2] == 0)       
-      SFG_isDebug = 1;
-    else if (argv[i][0] == '-' && argv[i][1] == 'g' && argv[i][2] == 0)       
-      SFG_launchWithGodMode = 1;
-    else
-      puts("SDL: unknown argument"); 
+      if (argv[i][0] == '-' && argv[i][1] == 'h' && argv[i][2] == 0)
+          argHelp = 1;
+      else if (argv[i][0] == '-' && argv[i][1] == 'w' && argv[i][2] == 0)
+          argForceWindow = 1;
+      else if (argv[i][0] == '-' && argv[i][1] == 'f' && argv[i][2] == 0)
+          argForceFullscreen = 1;
+      else if (argv[i][0] == '-' && argv[i][1] == 'd' && argv[i][2] == 0)
+          SFG_isDebug = 1;
+      else if (argv[i][0] == '-' && argv[i][1] == 'g' && argv[i][2] == 0)
+          SFG_launchWithGodMode = 1;
+      else if (argv[i][0] == '-' && argv[i][1] == 'p' && argv[i][2] == 0 && i + 1 < argc)
+      {
+          if (strlen(argv[i + 1]) <= 50) // Ensure length is within 50 chars
+          {
+              strncpy(SFG_levelPack, argv[i + 1], 50);
+              SFG_levelPack[50] = '\0'; // Null-terminate in case of exact 50 chars
+          }
+          else
+          {
+              printf("Error: String argument following '-s' must be 50 characters or fewer.\n");
+              return 1;
+          }
+          i++;
+      }
+      else {}
   }
 
   if (argHelp)
@@ -433,7 +442,7 @@ int main(int argc, char *argv[])
 
   SFG_init();
 
-  puts("SDL: initializing SDL");
+
 
   SDL_Init(SDL_INIT_AUDIO | SDL_INIT_JOYSTICK);
 
@@ -456,7 +465,6 @@ int main(int argc, char *argv[])
 
   if (!argForceWindow && argForceFullscreen)
   {
-    puts("SDL: setting fullscreen");
     SDL_SetWindowFullscreen(window,SDL_WINDOW_FULLSCREEN_DESKTOP);
   }
 
@@ -484,8 +492,7 @@ int main(int argc, char *argv[])
 #endif
 
   if (SDL_OpenAudio(&audioSpec,NULL) < 0)
-    puts("SDL: could not initialize audio");
-
+ 
   for (int16_t i = 0; i < SFG_SFX_SAMPLE_COUNT; ++i)
     audioBuff[i] = 0;
 
@@ -508,16 +515,12 @@ int main(int argc, char *argv[])
     mainLoopIteration();
 #endif
 
-  puts("SDL: freeing SDL");
-
   SDL_GameControllerClose(sdlController);
   SDL_PauseAudio(1);
   SDL_CloseAudio();
   SDL_DestroyTexture(texture);
   SDL_DestroyRenderer(renderer); 
   SDL_DestroyWindow(window); 
-
-  puts("SDL: ending");
 
   return 0;
 }

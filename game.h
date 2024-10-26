@@ -74,6 +74,7 @@
     potentially multiple simulation steps). */
 #endif
 
+char SFG_levelPack[51];
 int8_t SFG_isDebug = 0;
 int8_t SFG_launchWithGodMode = 0;
 
@@ -1566,35 +1567,6 @@ void SFG_setGameState(uint8_t state)
   SFG_game.stateTime = 0;
 }
 
-void SFG_GetExecutablePath(char *buffer, size_t size)
-{
-#ifdef _WIN32
-  GetModuleFileName(NULL, buffer, size);
-  char *lastBackslash = strrchr(buffer, '\\');
-  if (lastBackslash != NULL)
-  {
-    *lastBackslash = '\0';
-  }
-#elif __linux__
-  ssize_t len = readlink("/proc/self/exe", buffer, size - 1);
-  if (len != -1)
-  {
-    buffer[len] = '\0';
-    char *lastSlash = strrchr(buffer, '/');
-    if (lastSlash != NULL)
-    {
-      *lastSlash = '\0';
-    }
-  }
-  else
-  {
-    fprintf(stderr, "Error getting executable path\n");
-    exit(EXIT_FAILURE);
-  }
-#endif
-}
-
-
 void SFG_setAndInitLevel(uint8_t levelNumber)
 {
   SFG_LOG("setting and initializing level");
@@ -1628,9 +1600,8 @@ void SFG_setAndInitLevel(uint8_t levelNumber)
     }
   }
   char executablePath[512]; // Adjust the size as needed
-  SFG_GetExecutablePath(executablePath, sizeof(executablePath));
-
-  if (!SFG_loadLevelFromFile(level, levelNumber, executablePath))
+  
+  if (!SFG_loadLevelFromFile(level, levelNumber, SFG_levelPack))
   {
     SFG_LOG("Failed to load level from file.");
   }
@@ -1807,9 +1778,7 @@ void SFG_init()
 
   setUpdateZBufferFunction(RCL_updateWallZbuffer);
 
-  char executablePath[256];
-  SFG_GetExecutablePath(executablePath, sizeof(executablePath));
-
+ 
   char loc[256];
   sprintf(loc, "WallTextures/data.TAD");
   SFG_loadTexturesFromFile(SFG_wallTextures, loc, SFG_WALL_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
@@ -1834,8 +1803,7 @@ void SFG_init()
 
   
   SFG_setNumberOfLevels();
-  printf("Number of levels found: %u", SFG_number_of_levels);
-
+  
   SFG_game.frame = 0;
   SFG_game.frameTime = 0;
   SFG_game.currentRandom = 0;

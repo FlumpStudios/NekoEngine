@@ -155,7 +155,7 @@ static uint8_t countLevelFiles() {
         
     h_find = FindFirstFileA(search_path, &find_file_data);
     if (h_find == INVALID_HANDLE_VALUE) {
-        printf("FindFirstFile failed (%d)\n", GetLastError());
+        SFG_LOG("FindFirstFile failed (%d)\n", GetLastError());
         return -1;
     }
 
@@ -244,15 +244,22 @@ void SFG_setNumberOfLevels()
     SFG_number_of_levels = countLevelFiles();
 }
 
-uint8_t SFG_loadLevelFromFile(SFG_Level* buffer, uint8_t level, const char* executableLocation)
+uint8_t SFG_loadLevelFromFile(SFG_Level* buffer, uint8_t level, const char* levelPack)
 {
-    if (buffer == NULL || executableLocation == NULL) {
-        // Handle the case where pointers are NULL
+    if (buffer == NULL) {
         return 0;
     }
 
     char levelString[512];
-    snprintf(levelString, sizeof(levelString), "levels/level%02u.HAD", level);
+    if (levelPack == NULL || levelPack == "")
+    {
+        snprintf(levelString, sizeof(levelString), "levels/level%02u.HAD",level);
+    }
+    else
+    {
+        snprintf(levelString, sizeof(levelString), "levels/%s/level%02u.HAD", levelPack, level);
+    }
+
 
     FILE* file = fopen(levelString, "rb");
     if (file == NULL) {
