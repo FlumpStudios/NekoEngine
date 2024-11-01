@@ -380,7 +380,7 @@ int main(int argc, char *argv[])
 
   for (uint8_t i = 0; i < SFG_KEY_COUNT; ++i)
     webKeyboardState[i] = 0;
-
+  strncpy(SFG_levelPack, "Original", 50);
   for (uint8_t i = 1; i < argc; ++i)
   {
       if (argv[i][0] == '-' && argv[i][1] == 'h' && argv[i][2] == 0)
@@ -397,6 +397,7 @@ int main(int argc, char *argv[])
       {
           if (strlen(argv[i + 1]) <= 50) // Ensure length is within 50 chars
           {
+
               strncpy(SFG_levelPack, argv[i + 1], 50);
               SFG_levelPack[50] = '\0'; // Null-terminate in case of exact 50 chars
           }

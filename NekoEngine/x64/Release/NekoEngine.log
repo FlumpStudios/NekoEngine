@@ -114,5 +114,6 @@ C:\Projects\NekoEngine\sounds.h(100,67): warning C4146: unary minus operator app
 C:\Projects\NekoEngine\sounds.h(100,70): warning C4293: '>>': shift count negative or too big, undefined behavior
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\main_sdl.c(400,15): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\main_sdl.c(383,3): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\main_sdl.c(401,15): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   NekoEngine.vcxproj -> C:\Projects\NekoEngine\Ruyn.exe
