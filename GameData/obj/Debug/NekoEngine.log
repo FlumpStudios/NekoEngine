@@ -1,0 +1,5 @@
+﻿cl : command line  warning D9002: ignoring unknown option '/std:c99'
+  main_sdl.c
+C:\Projects\NekoEngine\GameData\networking.h(5,10): error C1083: Cannot open include file: 'curl/curl.h': No such file or directory
+  (compiling source file 'main_sdl.c')
+  

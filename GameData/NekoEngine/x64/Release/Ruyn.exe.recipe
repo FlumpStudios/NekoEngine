@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Projects\NekoEngine\Ruyn.exe</FullPath>
+      <FullPath>C:\Projects\NekoEngine\GameData\Ruyn.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

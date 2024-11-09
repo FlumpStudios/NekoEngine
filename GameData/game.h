@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "networking.h"
+
 #ifdef _WIN32
 #include <windows.h>
 #elif __linux__
