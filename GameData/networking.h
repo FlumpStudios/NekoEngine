@@ -4,9 +4,10 @@
 #include <stdio.h>
 #include <curl/curl.h>
 
+
 CURL* curl;
 CURLcode res;
-
+#define HTTP_RESPONSE_BUFFER_SIZE 5000
 #define MAX_URL_SIZE 250
 #define LEADERBOARD_URL "https://localhost:7229/api/v1/leaderboard"
 
@@ -20,35 +21,54 @@ void NTW_close()
 {
     curl_global_cleanup();
 }
+#define MAX_SCORE_SIZE 10
 
-size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userdata) {
-    // Print received data to stdout
-    fwrite(ptr, size, nmemb, stdout);
-    return size * nmemb;
-}
+static size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userdata) {
+    size_t total_size = size * nmemb;  
 
-void NTW_GetPlayerScore(char* clientId, char* levelPack, uint8_t levelNumber)
-{
-    if (curl)
-    {
-        char url[MAX_URL_SIZE];
-        sprintf(url, "url/%s/%s/%s", clientId, levelPack, levelNumber);
-        curl_easy_setopt(curl, CURLOPT_URL, url);
-
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-
-        res = curl_easy_perform(curl);
-
-        if (res != CURLE_OK) {
-            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
-        }
-
-        curl_easy_cleanup(curl);
+    if (userdata && total_size < HTTP_RESPONSE_BUFFER_SIZE) {
+        memcpy_s(userdata, HTTP_RESPONSE_BUFFER_SIZE, (char*)ptr, total_size);
     }
+    else {
+        printf("HTTP response size returned was bigger than the allocated buffer\n");
+        return 0;  
+    }
+
+    return total_size;
 }
 
+static void Get(char* url, char* responseBuffer)
+{   
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+    if(responseBuffer)
+    {
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, responseBuffer);
+    }
 
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+    
+    res = curl_easy_perform(curl);
 
+    if (res != CURLE_OK) {
+        fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+    }    
+
+    curl_easy_cleanup(curl);
+}
+
+void NTW_GetPlayerScore(char* responseBuffer, char* clientId, char* levelPack, uint8_t levelNumber) {        
+    if (curl) {
+        char url[MAX_URL_SIZE];
+        snprintf(url, sizeof(url), "%s/%s/%s/%u", LEADERBOARD_URL, clientId, levelPack, levelNumber);
+        Get(url, responseBuffer);
+    }
+    else {
+        fprintf(stderr, "Failed to initialize CURL.\n");
+    }
+
+    curl_global_cleanup();
+}
 
 
 

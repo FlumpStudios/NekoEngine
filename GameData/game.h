@@ -1804,9 +1804,11 @@ void SFG_init()
   SFG_loadTexturesFromFile(SFG_logoImage, loc, SFG_TEXTURE_STORE_SIZE);
 
   SFG_setNumberOfLevels();
+  
+  char foo[HTTP_RESPONSE_BUFFER_SIZE] = { 0 };
 
-  NTW_GetPlayerScore("Test", "Orignal", 1);
-
+  NTW_init();
+  NTW_GetPlayerScore(foo, "Test", "Orignal", 1);  
   NTW_init();
 
   SFG_game.frame = 0;
