@@ -15,22 +15,25 @@ C:\Projects\NekoEngine\GameData\texts.h(46,3): warning C4098: 'loadText': 'void'
 C:\Projects\NekoEngine\GameData\texts.h(53,2): warning C4098: 'loadText': 'void' function returning a value
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(705,24): warning C4244: 'initializing': conversion from '__int64' to 'uint32_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(708,24): warning C4244: 'initializing': conversion from '__int64' to 'uint32_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(1310,29): warning C4013: 'SFG_floorHeightAt' undefined; assuming extern returning int
+C:\Projects\NekoEngine\GameData\game.h(1313,29): warning C4013: 'SFG_floorHeightAt' undefined; assuming extern returning int
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(1390,37): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(1393,37): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(1390,40): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(1393,40): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(1604,8): warning C4101: 'executablePath': unreferenced local variable
+C:\Projects\NekoEngine\GameData\game.h(1607,8): warning C4101: 'executablePath': unreferenced local variable
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(1785,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\GameData\game.h(1814,55): warning C4047: 'function': 'uint8_t' differs in levels of indirection from 'SFG_Level *'
+  (compiling source file 'main_sdl.c')
+  
+C:\Projects\NekoEngine\GameData\game.h(1814,55): warning C4024: 'NTW_GetPlayerScore': different types for formal and actual parameter 4
   (compiling source file 'main_sdl.c')
   
 C:\Projects\NekoEngine\GameData\game.h(1788,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
@@ -51,61 +54,64 @@ C:\Projects\NekoEngine\GameData\game.h(1800,3): warning C4996: 'sprintf': This f
 C:\Projects\NekoEngine\GameData\game.h(1803,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(2104,23): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(1806,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(2131,21): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(2106,23): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(2350,27): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(2133,21): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(2696,30): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(2352,27): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(2697,30): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(2698,30): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(2842,64): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(2699,30): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(2857,35): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(2844,64): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(3564,58): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(2859,35): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(3658,26): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(3566,58): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4394,64): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(3660,26): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4394,67): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(4396,64): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4447,10): warning C4090: '=': different 'const' qualifiers
+C:\Projects\NekoEngine\GameData\game.h(4396,67): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4488,75): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(4449,10): warning C4090: '=': different 'const' qualifiers
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4440,9): warning C4090: 'initializing': different 'const' qualifiers
+C:\Projects\NekoEngine\GameData\game.h(4490,75): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4726,23): warning C4244: 'initializing': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(4442,9): warning C4090: 'initializing': different 'const' qualifiers
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4854,19): warning C4552: '+': result of expression not used
+C:\Projects\NekoEngine\GameData\game.h(4728,23): warning C4244: 'initializing': conversion from 'uint16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4874,21): warning C4552: '+': result of expression not used
+C:\Projects\NekoEngine\GameData\game.h(4856,19): warning C4552: '+': result of expression not used
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4895,21): warning C4552: '+': result of expression not used
+C:\Projects\NekoEngine\GameData\game.h(4876,21): warning C4552: '+': result of expression not used
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4818,24): warning C4244: 'initializing': conversion from '__int64' to 'uint32_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(4897,21): warning C4552: '+': result of expression not used
+  (compiling source file 'main_sdl.c')
+  
+C:\Projects\NekoEngine\GameData\game.h(4820,24): warning C4244: 'initializing': conversion from '__int64' to 'uint32_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
 C:\Projects\NekoEngine\GameData\sounds.h(100,67): warning C4146: unary minus operator applied to unsigned type, result still unsigned
@@ -115,5 +121,9 @@ C:\Projects\NekoEngine\GameData\sounds.h(100,70): warning C4293: '>>': shift cou
   (compiling source file 'main_sdl.c')
   
 C:\Projects\NekoEngine\GameData\main_sdl.c(383,3): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Projects\NekoEngine\GameData\main_sdl.c(401,15): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\GameData\main_sdl.c(384,3): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\GameData\main_sdl.c(385,3): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\GameData\main_sdl.c(402,15): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\GameData\main_sdl.c(416,15): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\GameData\main_sdl.c(431,15): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   NekoEngine.vcxproj -> C:\Projects\NekoEngine\GameData\Ruyn.exe

@@ -381,6 +381,8 @@ int main(int argc, char *argv[])
   for (uint8_t i = 0; i < SFG_KEY_COUNT; ++i)
     webKeyboardState[i] = 0;
   strncpy(SFG_levelPack, "Original", 50);
+  strncpy(SFG_displayName, "Anonymous", 50);
+  strncpy(SFG_clientId, "\0", 50);
   for (uint8_t i = 1; i < argc; ++i)
   {
       if (argv[i][0] == '-' && argv[i][1] == 'h' && argv[i][2] == 0)
@@ -393,6 +395,34 @@ int main(int argc, char *argv[])
           SFG_isDebug = 1;
       else if (argv[i][0] == '-' && argv[i][1] == 'g' && argv[i][2] == 0)
           SFG_launchWithGodMode = 1;
+      else if (argv[i][0] == '-' && argv[i][1] == 'c' && argv[i][2] == 0 && i + 1 < argc)
+      {
+          if (strlen(argv[i + 1]) <= 50)
+          {
+              strncpy(SFG_clientId, argv[i + 1], 50);
+              SFG_clientId[50] = '\0';
+          }
+          else
+          {
+              printf("Error: String argument following '-c' must be 50 characters or fewer.\n");
+              return 1;
+          }
+          i++;
+      }
+      else if (argv[i][0] == '-' && argv[i][1] == 'u' && argv[i][2] == 0 && i + 1 < argc)
+      {
+          if (strlen(argv[i + 1]) <= 50)
+          {
+              strncpy(SFG_displayName, argv[i + 1], 50);
+              SFG_displayName[50] = '\0';
+          }
+          else
+          {
+              printf("Error: String argument following '-u' must be 50 characters or fewer.\n");
+              return 1;
+          }
+          i++;
+      }
       else if (argv[i][0] == '-' && argv[i][1] == 'p' && argv[i][2] == 0 && i + 1 < argc)
       {
           if (strlen(argv[i + 1]) <= 50) // Ensure length is within 50 chars
@@ -403,7 +433,7 @@ int main(int argc, char *argv[])
           }
           else
           {
-              printf("Error: String argument following '-s' must be 50 characters or fewer.\n");
+              printf("Error: String argument following '-p' must be 50 characters or fewer.\n");
               return 1;
           }
           i++;

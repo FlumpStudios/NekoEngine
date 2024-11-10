@@ -76,6 +76,11 @@
     potentially multiple simulation steps). */
 #endif
 
+char SFG_displayName[51];
+char SFG_clientId[51];
+char SFG_CurrentLeaderboards[HTTP_RESPONSE_BUFFER_SIZE];
+
+
 char SFG_levelPack[51];
 int8_t SFG_isDebug = 0;
 int8_t SFG_launchWithGodMode = 0;
@@ -1807,8 +1812,6 @@ void SFG_init()
   
   char foo[HTTP_RESPONSE_BUFFER_SIZE] = { 0 };
 
-  NTW_init();
-  NTW_GetPlayerScore(foo, "Test", "Orignal", 1);  
   NTW_init();
 
   SFG_game.frame = 0;
@@ -4812,6 +4815,8 @@ void SFG_drawWinOverlay()
   uint16_t x = (SFG_GAME_RESOLUTION_X -
                 SFG_textHorizontalSize(textLine, SFG_FONT_SIZE_BIG)) /
                2;
+
+
 
   SFG_drawText(textLine, x  , y, SFG_FONT_SIZE_BIG, 7 + SFG_game.blink * 95, 255, 0);
 

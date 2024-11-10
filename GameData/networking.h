@@ -57,17 +57,17 @@ static void Get(char* url, char* responseBuffer)
     curl_easy_cleanup(curl);
 }
 
+
+void NTW_GetLeaderboards(char* responseBuffer, char* clientId, char* levelPack, uint8_t levelNumber, int skip, int take) {
+    char url[MAX_URL_SIZE];
+    snprintf(url, sizeof(url), "%s/asstring?levelPack=%s&levelNumber=%i&clientId=%s&skip=%i&take=%i", LEADERBOARD_URL, levelPack , levelNumber, clientId, skip, take);
+    Get(url, responseBuffer);
+}
+
 void NTW_GetPlayerScore(char* responseBuffer, char* clientId, char* levelPack, uint8_t levelNumber) {        
-    if (curl) {
         char url[MAX_URL_SIZE];
         snprintf(url, sizeof(url), "%s/%s/%s/%u", LEADERBOARD_URL, clientId, levelPack, levelNumber);
         Get(url, responseBuffer);
-    }
-    else {
-        fprintf(stderr, "Failed to initialize CURL.\n");
-    }
-
-    curl_global_cleanup();
 }
 
 
