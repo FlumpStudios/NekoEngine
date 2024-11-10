@@ -7,6 +7,7 @@
 CURL* curl;
 CURLcode res;
 
+#define MAX_URL_SIZE 250
 #define LEADERBOARD_URL "https://localhost:7229/api/v1/leaderboard"
 
 void NTW_init()
@@ -20,31 +21,34 @@ void NTW_close()
     curl_global_cleanup();
 }
 
-void NTW_GetPlayerScore(char* clientId, char* levelPack, uint8_t levelNumber)
-{
-    if (curl)
-    {
-        curl_easy_setopt(curl, CURLOPT_URL, LEADERBOARD_URL);
-
-        const char* post_data = "name=example&age=30";
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data);
-
-        res = curl_easy_perform(curl);
-
-        if (res != CURLE_OK)
-            fprintf(stderr, "POST request failed: %s\n", curl_easy_strerror(res));
-
-        curl_easy_cleanup(curl);
-    
-    }
-}
-
-
 size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userdata) {
     // Print received data to stdout
     fwrite(ptr, size, nmemb, stdout);
     return size * nmemb;
 }
+
+void NTW_GetPlayerScore(char* clientId, char* levelPack, uint8_t levelNumber)
+{
+    if (curl)
+    {
+        char url[MAX_URL_SIZE];
+        sprintf(url, "url/%s/%s/%s", clientId, levelPack, levelNumber);
+        curl_easy_setopt(curl, CURLOPT_URL, url);
+
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+
+        res = curl_easy_perform(curl);
+
+        if (res != CURLE_OK) {
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        }
+
+        curl_easy_cleanup(curl);
+    }
+}
+
+
+
 
 
 

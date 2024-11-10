@@ -1803,9 +1803,12 @@ void SFG_init()
   sprintf(loc, "Title/data.TAD");
   SFG_loadTexturesFromFile(SFG_logoImage, loc, SFG_TEXTURE_STORE_SIZE);
 
-  
   SFG_setNumberOfLevels();
-  
+
+  NTW_GetPlayerScore("Test", "Orignal", 1);
+
+  NTW_init();
+
   SFG_game.frame = 0;
   SFG_game.frameTime = 0;
   SFG_game.currentRandom = 0;
