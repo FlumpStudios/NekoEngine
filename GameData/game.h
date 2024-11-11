@@ -1810,8 +1810,6 @@ void SFG_init()
 
   SFG_setNumberOfLevels();
   
-  char foo[HTTP_RESPONSE_BUFFER_SIZE] = { 0 };
-
   NTW_init();
 
   SFG_game.frame = 0;
@@ -4792,11 +4790,18 @@ void SFG_drawMenu()
 
 void SFG_drawWinOverlay()
 {
+    static has_fetched = FALSE;
+    if (!has_fetched)
+    {
+        NTW_GetLeaderboards(SFG_CurrentLeaderboards,"Test","Orignal", 1,0,10);
+        has_fetched = TRUE;
+    }
+
   uint32_t t = RCL_min(SFG_WIN_ANIMATION_DURATION, SFG_game.stateTime);
 
   uint32_t t2 = RCL_min(t, SFG_WIN_ANIMATION_DURATION / 4);
 
-#define STRIP_HEIGHT (SFG_GAME_RESOLUTION_Y / 2)
+#define STRIP_HEIGHT (SFG_GAME_RESOLUTION_Y)
 #define INNER_STRIP_HEIGHT ((STRIP_HEIGHT * 3) / 4)
 #define STRIP_START ((SFG_GAME_RESOLUTION_Y - STRIP_HEIGHT) / 2)
 
@@ -4809,13 +4814,10 @@ void SFG_drawWinOverlay()
 
   char textLine[] = SFG_TEXT_LEVEL_COMPLETE;
 
-  uint16_t y = SFG_GAME_RESOLUTION_Y / 2 -
-               ((STRIP_HEIGHT + INNER_STRIP_HEIGHT) / 2) / 2;
-
+  uint16_t y = 20;
   uint16_t x = (SFG_GAME_RESOLUTION_X -
                 SFG_textHorizontalSize(textLine, SFG_FONT_SIZE_BIG)) /
                2;
-
 
 
   SFG_drawText(textLine, x  , y, SFG_FONT_SIZE_BIG, 7 + SFG_game.blink * 95, 255, 0);
@@ -4860,7 +4862,7 @@ void SFG_drawWinOverlay()
         SFG_FONT_SIZE_SMALL;
 
     x = SFG_HUD_MARGIN + 100;
-    y += (SFG_FONT_SIZE_MEDIUM + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
+    y += (SFG_FONT_SIZE_SMALL + SFG_FONT_SIZE_SMALL) * SFG_FONT_CHARACTER_SIZE;
 
     SFG_drawText(SFG_TEXT_KILLS, x, y, SFG_FONT_SIZE_SMALL, 7, 7, CHAR_SIZE * 7 + 100);
     x += CHAR_SIZE * 7;
@@ -4880,7 +4882,7 @@ void SFG_drawWinOverlay()
           SFG_FONT_SIZE_SMALL;
 
 
-      y += (SFG_FONT_SIZE_MEDIUM + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
+      y += (SFG_FONT_SIZE_SMALL + SFG_FONT_SIZE_SMALL) * SFG_FONT_CHARACTER_SIZE;
       x = SFG_HUD_MARGIN + 100;
       SFG_drawText("Gems", x, y, SFG_FONT_SIZE_SMALL, 7, 7, CHAR_SIZE * 7 + 100);
       x += CHAR_SIZE * 7;
@@ -4900,12 +4902,19 @@ void SFG_drawWinOverlay()
           CHAR_SIZE +
           SFG_FONT_SIZE_SMALL;
 
+      y += (SFG_FONT_SIZE_MEDIUM + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
+      y += (SFG_FONT_SIZE_MEDIUM + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
+
+       SFG_drawText(SFG_CurrentLeaderboards, 118, y, SFG_FONT_SIZE_SMALL, 127, 1000, 588);
+
+       y = SFG_SCREEN_RESOLUTION_Y - 50;
+
 
     if ((t >= (SFG_WIN_ANIMATION_DURATION - 1)) &&
         (SFG_currentLevel.levelNumber != (SFG_number_of_levels - 1)) &&
         SFG_game.blink)
     {
-      y += (SFG_FONT_SIZE_BIG + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
+       
 
       SFG_drawText(SFG_TEXT_SAVE_PROMPT,
                    (SFG_GAME_RESOLUTION_X - SFG_textHorizontalSize(SFG_TEXT_SAVE_PROMPT,
@@ -4913,6 +4922,8 @@ void SFG_drawWinOverlay()
                        2,
                    y, SFG_FONT_SIZE_MEDIUM, 7, 255, 0);
     }
+
+   
 
 #undef CHAR_SIZE
   }

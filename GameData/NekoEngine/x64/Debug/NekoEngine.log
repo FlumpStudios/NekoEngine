@@ -51,61 +51,61 @@ C:\Projects\NekoEngine\GameData\game.h(1805,3): warning C4996: 'sprintf': This f
 C:\Projects\NekoEngine\GameData\game.h(1808,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(2109,23): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(2105,23): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(2136,21): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(2132,21): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(2355,27): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(2351,27): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(2701,30): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(2697,30): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(2702,30): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(2698,30): warning C4244: '=': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(2847,64): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(2843,64): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(2862,35): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(2858,35): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(3569,58): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(3565,58): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(3663,26): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(3659,26): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4399,64): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(4395,64): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4399,67): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(4395,67): warning C4244: 'function': conversion from 'int16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4452,10): warning C4090: '=': different 'const' qualifiers
+C:\Projects\NekoEngine\GameData\game.h(4448,10): warning C4090: '=': different 'const' qualifiers
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4493,75): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(4489,75): warning C4244: 'function': conversion from 'uint16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4445,9): warning C4090: 'initializing': different 'const' qualifiers
+C:\Projects\NekoEngine\GameData\game.h(4441,9): warning C4090: 'initializing': different 'const' qualifiers
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4731,23): warning C4244: 'initializing': conversion from 'uint16_t' to 'uint8_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(4727,23): warning C4244: 'initializing': conversion from 'uint16_t' to 'uint8_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4875,19): warning C4552: '+': result of expression not used
+C:\Projects\NekoEngine\GameData\game.h(4861,19): warning C4552: '+': result of expression not used
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4895,21): warning C4552: '+': result of expression not used
+C:\Projects\NekoEngine\GameData\game.h(4881,21): warning C4552: '+': result of expression not used
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4916,21): warning C4552: '+': result of expression not used
+C:\Projects\NekoEngine\GameData\game.h(4902,21): warning C4552: '+': result of expression not used
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\game.h(4839,24): warning C4244: 'initializing': conversion from '__int64' to 'uint32_t', possible loss of data
+C:\Projects\NekoEngine\GameData\game.h(4825,24): warning C4244: 'initializing': conversion from '__int64' to 'uint32_t', possible loss of data
   (compiling source file 'main_sdl.c')
   
 C:\Projects\NekoEngine\GameData\sounds.h(100,67): warning C4146: unary minus operator applied to unsigned type, result still unsigned
