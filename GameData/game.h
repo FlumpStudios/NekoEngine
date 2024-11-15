@@ -76,12 +76,13 @@
     potentially multiple simulation steps). */
 #endif
 
-char SFG_displayName[51];
-char SFG_clientId[51];
+char SFG_displayName[51] = {0};
+char SFG_clientId[51] = {0};
 char SFG_CurrentLeaderboards[HTTP_RESPONSE_BUFFER_SIZE];
+BOOL has_fetched = FALSE;
 
 
-char SFG_levelPack[51];
+char SFG_levelPack[51] = {0};
 int8_t SFG_isDebug = 0;
 int8_t SFG_launchWithGodMode = 0;
 
@@ -1576,6 +1577,8 @@ void SFG_setGameState(uint8_t state)
 
 void SFG_setAndInitLevel(uint8_t levelNumber)
 {
+  has_fetched = FALSE;
+  memset(SFG_CurrentLeaderboards, 0, HTTP_RESPONSE_BUFFER_SIZE);
   SFG_LOG("setting and initializing level");
 
 #if SFG_AVR
@@ -4790,11 +4793,15 @@ void SFG_drawMenu()
 
 void SFG_drawWinOverlay()
 {
-    static has_fetched = FALSE;
-    if (!has_fetched)
-    {
-        NTW_GetLeaderboards(SFG_CurrentLeaderboards,"Test","Orignal", 1,0,10);
-        has_fetched = TRUE;
+    
+    if (strlen(SFG_displayName) != 0 && strlen(SFG_clientId) != 0, strlen(SFG_levelPack) != 0)
+    {    
+        if (!has_fetched)
+        {
+            postScore(SFG_displayName, SFG_clientId, SFG_levelPack, SFG_score, SFG_currentLevel.levelNumber);
+            NTW_GetLeaderboards(SFG_CurrentLeaderboards, SFG_clientId, SFG_levelPack, SFG_currentLevel.levelNumber,0,10);
+            has_fetched = TRUE;
+        }
     }
 
   uint32_t t = RCL_min(SFG_WIN_ANIMATION_DURATION, SFG_game.stateTime);

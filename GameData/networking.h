@@ -9,6 +9,8 @@ CURL* curl;
 CURLcode res;
 #define HTTP_RESPONSE_BUFFER_SIZE 5000
 #define MAX_URL_SIZE 250
+#define MAX_PAYLOAD_SIZE 500
+
 #define LEADERBOARD_URL "https://localhost:7229/api/v1/leaderboard"
 
 void NTW_init()
@@ -37,8 +39,63 @@ static size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userdat
     return total_size;
 }
 
+static void post(char* url, char* data)
+{
+    curl = curl_easy_init();
+    if (!curl) {
+        fprintf(stderr, "curl_easy_init() failed\n");
+        return;
+    }
+
+    CURLcode res;
+
+    // Set URL
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+
+    // Set JSON data
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
+
+    // Set POSTFIELDSIZE explicitly (optional)
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, strlen(data));
+
+    // TODO: Do properly
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L); // Skip peer verification
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L); // Skip hostname verification
+
+    // Set HTTP headers
+    struct curl_slist* headers = NULL;
+    headers = curl_slist_append(headers, "Content-Type: application/json");
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+    // Perform the request
+    res = curl_easy_perform(curl);
+    if (res != CURLE_OK) {
+        fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+    }
+
+    // Clean up
+    curl_slist_free_all(headers);
+    curl_easy_cleanup(curl);
+}
+
+void postScore(char* userName, char* clientId, char* levelPackName, int score, int levelNumber)
+{
+    char payload[MAX_PAYLOAD_SIZE];
+    sprintf(&payload,"{ \"userName\": \"%s\", \"clientId\" : \"%s\", \"score\" : %i, \"levelPackName\" : \"%s\", \"levelNumber\" : %i }", userName, clientId, score, levelPackName, levelNumber);
+    
+    char url[MAX_URL_SIZE];
+    sprintf(url, "%s", LEADERBOARD_URL);
+    post(url, payload);
+}
+
 static void Get(char* url, char* responseBuffer)
 {   
+    curl = curl_easy_init();
+    if (!curl) {
+        fprintf(stderr, "curl_easy_init() failed\n");
+        return;
+    }
+
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
     curl_easy_setopt(curl, CURLOPT_URL, url);
     if(responseBuffer)
