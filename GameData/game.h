@@ -77,7 +77,7 @@
 #endif
 
 char SFG_displayName[51] = {0};
-char SFG_clientId[51] = {0};
+char SFG_clientId[129] = {0};
 char SFG_CurrentLeaderboards[HTTP_RESPONSE_BUFFER_SIZE];
 BOOL has_fetched = FALSE;
 

@@ -11,7 +11,7 @@ CURLcode res;
 #define MAX_URL_SIZE 250
 #define MAX_PAYLOAD_SIZE 500
 
-#define LEADERBOARD_URL "https://localhost:7229/api/v1/leaderboard"
+#define LEADERBOARD_URL "https://levelserver.ruyn.co.uk/api/v1/leaderboard"
 
 void NTW_init()
 {
@@ -65,6 +65,7 @@ static void post(char* url, char* data)
     // Set HTTP headers
     struct curl_slist* headers = NULL;
     headers = curl_slist_append(headers, "Content-Type: application/json");
+    headers = curl_slist_append(headers, "X-Api-Key: ovOV4mY2jVMMXsjEBkU8VzY7gscieQk9eViDg9G4B3VYwR5+JFihw3LdD74bCYs9");
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
     // Perform the request
@@ -103,6 +104,10 @@ static void Get(char* url, char* responseBuffer)
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, responseBuffer);
     }
 
+    struct curl_slist* headers = NULL;
+    headers = curl_slist_append(headers, "Content-Type: application/json");
+    headers = curl_slist_append(headers, "X-Api-Key: ovOV4mY2jVMMXsjEBkU8VzY7gscieQk9eViDg9G4B3VYwR5+JFihw3LdD74bCYs9");
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
     
     res = curl_easy_perform(curl);

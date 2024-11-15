@@ -397,14 +397,14 @@ int main(int argc, char *argv[])
           SFG_launchWithGodMode = 1;
       else if (argv[i][0] == '-' && argv[i][1] == 'c' && argv[i][2] == 0 && i + 1 < argc)
       {
-          if (strlen(argv[i + 1]) <= 50)
+          if (strlen(argv[i + 1]) <= 128)
           {
-              strncpy(SFG_clientId, argv[i + 1], 50);
-              SFG_clientId[50] = '\0';
+              strncpy(SFG_clientId, argv[i + 1], 128);
+              SFG_clientId[128] = '\0';
           }
           else
           {
-              printf("Error: String argument following '-c' must be 50 characters or fewer.\n");
+              printf("Error: String argument following '-c' must be 64 characters or fewer.\n");
               return 1;
           }
           i++;
