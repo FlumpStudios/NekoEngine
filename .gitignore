@@ -1,0 +1,8 @@
+# Ignore Visual Studio folder
+.vs/
+
+# Ignore VS Code folder
+.vscode/
+
+# Ignore specific file
+launcher_Settings.dat
