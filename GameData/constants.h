@@ -18,7 +18,6 @@
 /**
   Default enemy behavior between 0 and 255
 */
-
 #define SPIDER_HEALTH 15
 #define DESTROYER_HEALTH 25
 #define WARRIOR_HEALTH 25
@@ -35,6 +34,8 @@
 #define TURRENT_BOT_AGGRESION 32
 #define EXPLODER_BOT_AGGRESION 255
 
+#define BOSS_TYPE SFG_LEVEL_ELEMENT_MONSTER_ENDER
+#define BEAT_BOSS_REQUIRED FALSE
 
 /**
   How quickly player moves, in squares per second.t

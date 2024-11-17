@@ -744,10 +744,8 @@ static inline uint8_t SFG_RCLUnitToZBuffer(RCL_Unit x)
 const uint8_t *SFG_getMonsterSprite(
     uint8_t monsterType, uint8_t state, uint8_t frame)
 {
-  uint8_t index =
-      state == SFG_MONSTER_STATE_DEAD ? 19 : 18;
-  // ^ makes the compiled binary smaller compared to returning pointers directly
-
+  uint8_t index = state == SFG_MONSTER_STATE_DEAD ? (SFG_ENEMY_TEXTURE_COUNT - 1) : (SFG_ENEMY_TEXTURE_COUNT - 2);
+  
   if ((state != SFG_MONSTER_STATE_DYING) && (state != SFG_MONSTER_STATE_DEAD))
     switch (monsterType)
     {
@@ -770,14 +768,14 @@ const uint8_t *SFG_getMonsterSprite(
     {
         if (state == SFG_MONSTER_STATE_ATTACKING)
         {
-            index = 8;
+            index = 7;
         }
         else 
         {
-            index = SFG_level_time_seconds % 50 <= 25 ? 6 : 7;
+            index = SFG_level_time_seconds % 50 <= 25 ? 6 : 8;
         }
     }
-      break;
+    break;
 
     case SFG_LEVEL_ELEMENT_MONSTER_DESTROYER:
       switch (state)
@@ -795,20 +793,29 @@ const uint8_t *SFG_getMonsterSprite(
       break;
 
     case SFG_LEVEL_ELEMENT_MONSTER_PLASMABOT:
-      index = state != SFG_MONSTER_STATE_ATTACKING ? 9 : 10;
-      break;
+    {
+        if (state == SFG_MONSTER_STATE_ATTACKING)
+        {
+            index = 10;
+        }
+        else
+        {
+            index = SFG_level_time_seconds % 50 <= 25 ? 9 : 11;
+        }
+    }
+    break;
 
     case SFG_LEVEL_ELEMENT_MONSTER_ENDER:
       switch (state)
       {
       case SFG_MONSTER_STATE_ATTACKING:
-        index = 13;
+        index = 14;
         break;
       case SFG_MONSTER_STATE_IDLE:
-        index = 11;
+        index = 12;
         break;
       default:
-        index = frame ? 11 : 12;
+        index = frame ? 12 : 13;
         break;
       }
       break;
@@ -817,20 +824,31 @@ const uint8_t *SFG_getMonsterSprite(
       switch (state)
       {
       case SFG_MONSTER_STATE_ATTACKING:
-        index = 16;
+        index = 17;
         break;
       case SFG_MONSTER_STATE_IDLE:
-        index = 14;
+        index = 15;
         break;
       default:
-        index = frame ? 14 : 15;
+        index = frame ? 15 : 16;
         break;
       }
       break;
 
     case SFG_LEVEL_ELEMENT_MONSTER_EXPLODER:
+    {    
+        if (state == SFG_MONSTER_STATE_ATTACKING)
+        {
+            index = 19;
+        }
+        else
+        {
+            index = SFG_level_time_seconds % 50 <= 25 ? 18 : 20;
+        }
+        break;
+    }
     default:
-      index = 17;
+      index = 21;
       break;
     }
 
@@ -1719,9 +1737,11 @@ void SFG_setAndInitLevel(uint8_t levelNumber)
         monster->coords[1] = e->coords[1] * 4 + 2;
 
         SFG_currentLevel.monsterRecordCount++;
-
-        if (e->type == SFG_LEVEL_ELEMENT_MONSTER_ENDER)
-          SFG_currentLevel.bossCount++;
+                
+        if (BEAT_BOSS_REQUIRED && e->type == BOSS_TYPE) {
+            SFG_currentLevel.bossCount++;
+        }
+        
       }
       else if ((e->type < SFG_LEVEL_ELEMENT_LOCK0) ||
                (e->type > SFG_LEVEL_ELEMENT_LOCK2))

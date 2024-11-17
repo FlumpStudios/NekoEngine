@@ -30,9 +30,7 @@ static inline uint8_t SFG_getTexel(const uint8_t *texture, uint8_t x, uint8_t y)
 #define SFG_BACKGROUND_TEXTURE_COUNT 3
 #define SFG_WEAPON_TEXTURE_COUNT 6
 #define SFG_EFFECT_TEXTURE_COUNT 4
-#define SFG_ENEMY_TEXTURE_COUNT 20
-
-
+#define SFG_ENEMY_TEXTURE_COUNT 23
 
 
 uint8_t SFG_loadTexturesFromFile(uint8_t* buffer, const char* location, size_t size)
