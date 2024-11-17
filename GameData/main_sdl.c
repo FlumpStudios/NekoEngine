@@ -395,7 +395,7 @@ int main(int argc, char *argv[])
           SFG_isDebug = 1;
       else if (argv[i][0] == '-' && argv[i][1] == 'g' && argv[i][2] == 0)
           SFG_launchWithGodMode = 1;
-      else if (argv[i][0] == '-' && argv[i][1] == 'p' && argv[i][2] == 0)
+      else if (argv[i][0] == '-' && argv[i][1] == 't' && argv[i][2] == 0)
           SFG_PREVIEW_MODE = 1;
       else if (argv[i][0] == '-' && argv[i][1] == 'c' && argv[i][2] == 0 && i + 1 < argc)
       {
