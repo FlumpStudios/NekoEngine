@@ -211,14 +211,14 @@ int8_t SFG_keyPressed(uint8_t key)
   {
     case SFG_KEY_UP: return k(UP) || k(W) || k(KP_8) || b(DPAD_UP); break;
     case SFG_KEY_RIGHT: 
-      return k(RIGHT) || k(E) || k(KP_6) || b(DPAD_RIGHT); break;
+      return k(RIGHT) || k(KP_6) || b(DPAD_RIGHT); break;
     case SFG_KEY_DOWN: 
       return k(DOWN) || k(S) || k(KP_5) || k(KP_2) || b(DPAD_DOWN); break;
-    case SFG_KEY_LEFT: return k(LEFT) || k(Q) || k(KP_4) || b(DPAD_LEFT); break;
+    case SFG_KEY_LEFT: return k(LEFT) || k(KP_4) || b(DPAD_LEFT); break;
     case SFG_KEY_A: return k(J) || k(RETURN) || k(LCTRL) || k(RCTRL) || b(X) ||
       b(RIGHTSTICK) || (sdlMouseButtonState & SDL_BUTTON_LMASK); break;
-    case SFG_KEY_B: return k(K) || k(LSHIFT) || b(B); break;
-    case SFG_KEY_C: return k(L) || b(Y); break;
+    case SFG_KEY_B: return k(E) || k(LSHIFT) || b(B); break;
+    case SFG_KEY_C: return k(Q) || b(Y); break;
     case SFG_KEY_JUMP: return k(SPACE) || b(A); break;
     case SFG_KEY_STRAFE_LEFT: return k(A) || k(KP_7); break;
     case SFG_KEY_STRAFE_RIGHT: return k(D) || k(KP_9); break;
@@ -395,6 +395,8 @@ int main(int argc, char *argv[])
           SFG_isDebug = 1;
       else if (argv[i][0] == '-' && argv[i][1] == 'g' && argv[i][2] == 0)
           SFG_launchWithGodMode = 1;
+      else if (argv[i][0] == '-' && argv[i][1] == 'p' && argv[i][2] == 0)
+          SFG_PREVIEW_MODE = 1;
       else if (argv[i][0] == '-' && argv[i][1] == 'c' && argv[i][2] == 0 && i + 1 < argc)
       {
           if (strlen(argv[i + 1]) <= 128)

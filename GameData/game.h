@@ -76,6 +76,7 @@
     potentially multiple simulation steps). */
 #endif
 
+BOOL SFG_PREVIEW_MODE = FALSE;
 char SFG_displayName[51] = {0};
 char SFG_clientId[129] = {0};
 char SFG_CurrentLeaderboards[HTTP_RESPONSE_BUFFER_SIZE];
@@ -3150,9 +3151,9 @@ void SFG_updateLevel()
       }
       else
       {
-#if SFG_PREVIEW_MODE == 0
-        SFG_monsterPerformAI(monster);
-#endif
+        if (!SFG_PREVIEW_MODE){
+                SFG_monsterPerformAI(monster);
+        }
       }
     }
   }
@@ -3479,15 +3480,17 @@ void SFG_gameStepPlaying()
     }
   }
 
-#if SFG_PREVIEW_MODE
+  RCL_Unit verticalOffset = 0;
+if (SFG_PREVIEW_MODE) {
   if (SFG_keyIsDown(SFG_KEY_B))
     SFG_player.verticalSpeed = SFG_PLAYER_MOVE_UNITS_PER_FRAME;
   else if (SFG_keyIsDown(SFG_KEY_C))
     SFG_player.verticalSpeed = -1 * SFG_PLAYER_MOVE_UNITS_PER_FRAME;
   else
     SFG_player.verticalSpeed = 0;
-#else
-  RCL_Unit verticalOffset =
+}
+else{
+  verticalOffset =
       ((
            SFG_keyIsDown(SFG_KEY_JUMP) ||
            (SFG_keyIsDown(SFG_KEY_UP) && SFG_keyIsDown(SFG_KEY_C))) &&
@@ -3496,7 +3499,7 @@ void SFG_gameStepPlaying()
           ? SFG_PLAYER_JUMP_OFFSET_PER_FRAME
           : // jump
           (SFG_player.verticalSpeed - SFG_GRAVITY_SPEED_INCREASE_PER_FRAME);
-#endif
+}
 
   if (!shearing && SFG_player.camera.shear != 0 && !(SFG_game.settings & 0x08))
   {
@@ -3506,37 +3509,40 @@ void SFG_gameStepPlaying()
         (SFG_player.camera.shear > 0) ? RCL_max(0, SFG_player.camera.shear - SFG_CAMERA_SHEAR_STEP_PER_FRAME) : RCL_min(0, SFG_player.camera.shear + SFG_CAMERA_SHEAR_STEP_PER_FRAME);
   }
 
-#if SFG_HEADBOB_ENABLED && !SFG_PREVIEW_MODE
-  if (bobbing)
+#if SFG_HEADBOB_ENABLED
+  if (!SFG_PREVIEW_MODE)
   {
-    SFG_player.headBobFrame += SFG_HEADBOB_FRAME_INCREASE_PER_FRAME;
-  }
-  else if (SFG_player.headBobFrame != 0)
-  {
-    // smoothly stop bobbing
+      if (bobbing)
+      {
+          SFG_player.headBobFrame += SFG_HEADBOB_FRAME_INCREASE_PER_FRAME;
+      }
+      else if (SFG_player.headBobFrame != 0)
+      {
+          // smoothly stop bobbing
 
-    uint8_t quadrant = (SFG_player.headBobFrame % RCL_UNITS_PER_SQUARE) /
-                       (RCL_UNITS_PER_SQUARE / 4);
+          uint8_t quadrant = (SFG_player.headBobFrame % RCL_UNITS_PER_SQUARE) /
+              (RCL_UNITS_PER_SQUARE / 4);
 
-    /* When in quadrant in which sin is going away from zero, switch to the
-       same value of the next quadrant, so that bobbing starts to go towards
-       zero immediately. */
+          /* When in quadrant in which sin is going away from zero, switch to the
+             same value of the next quadrant, so that bobbing starts to go towards
+             zero immediately. */
 
-    if (quadrant % 2 == 0)
-      SFG_player.headBobFrame =
-          ((quadrant + 1) * RCL_UNITS_PER_SQUARE / 4) +
-          (RCL_UNITS_PER_SQUARE / 4 - SFG_player.headBobFrame %
-                                          (RCL_UNITS_PER_SQUARE / 4));
+          if (quadrant % 2 == 0)
+              SFG_player.headBobFrame =
+              ((quadrant + 1) * RCL_UNITS_PER_SQUARE / 4) +
+              (RCL_UNITS_PER_SQUARE / 4 - SFG_player.headBobFrame %
+                  (RCL_UNITS_PER_SQUARE / 4));
 
-    RCL_Unit currentFrame = SFG_player.headBobFrame;
-    RCL_Unit nextFrame = SFG_player.headBobFrame + 16;
+          RCL_Unit currentFrame = SFG_player.headBobFrame;
+          RCL_Unit nextFrame = SFG_player.headBobFrame + 16;
 
-    // only stop bobbing when we pass a frame at which sin crosses zero
-    SFG_player.headBobFrame =
-        (currentFrame / (RCL_UNITS_PER_SQUARE / 2) ==
-         nextFrame / (RCL_UNITS_PER_SQUARE / 2))
-            ? nextFrame
-            : 0;
+          // only stop bobbing when we pass a frame at which sin crosses zero
+          SFG_player.headBobFrame =
+              (currentFrame / (RCL_UNITS_PER_SQUARE / 2) ==
+                  nextFrame / (RCL_UNITS_PER_SQUARE / 2))
+              ? nextFrame
+              : 0;
+      }
   }
 #endif
 
@@ -3678,13 +3684,13 @@ void SFG_gameStepPlaying()
 
         if (eliminate) // take the item
         {
-#if !SFG_PREVIEW_MODE
+        if (!SFG_PREVIEW_MODE) {
           SFG_removeItem(i);
           SFG_player.lastItemTakenFrame = SFG_game.frame;
           i--;
           SFG_playGameSound(3, 255);
           SFG_processEvent(SFG_EVENT_PLAYER_TAKES_ITEM, e->type);
-#endif
+            }
         }
         else if (
             e->type == SFG_LEVEL_ELEMENT_TELEPORTER &&
@@ -3738,7 +3744,7 @@ void SFG_gameStepPlaying()
   if (!collidesWithTeleporter)
     SFG_player.justTeleported = 0;
 
-#if SFG_PREVIEW_MODE
+if (SFG_PREVIEW_MODE){
   SFG_player.camera.position.x +=
       SFG_PREVIEW_MODE_SPEED_MULTIPLIER * moveOffset.x;
 
@@ -3747,7 +3753,9 @@ void SFG_gameStepPlaying()
 
   SFG_player.camera.height +=
       SFG_PREVIEW_MODE_SPEED_MULTIPLIER * SFG_player.verticalSpeed;
-#else
+}
+else
+{
   RCL_moveCameraWithCollision(&(SFG_player.camera), moveOffset,
                               verticalOffset, SFG_floorCollisionHeightAt, SFG_ceilingHeightAt, 1, 1);
 
@@ -3759,168 +3767,169 @@ void SFG_gameStepPlaying()
       RCL_min(limit, SFG_player.camera.height - previousHeight);
   /* ^ By "limit" we assure height increase caused by climbing a step doesn't
      add vertical velocity. */
-#endif
+}
 
-#if SFG_PREVIEW_MODE == 0
-  if (
-      SFG_keyIsDown(SFG_KEY_A) &&
-      !SFG_keyIsDown(SFG_KEY_C) &&
-      (SFG_player.weaponCooldownFrames == 0) &&
-      (SFG_game.stateTime > 400) // don't immediately shoot if returning from menu
-  )
-  {
-    /* Player attack/shoot/fire, this has to be done AFTER the player is moved,
-       otherwise he could shoot himself while running forward. */
-
-    uint8_t ammo, projectileCount, canShoot;
-
-    SFG_getPlayerWeaponInfo(&ammo, &projectileCount, &canShoot);
-
-    if (canShoot)
+if (!SFG_PREVIEW_MODE)
+{
+    if (
+        SFG_keyIsDown(SFG_KEY_A) &&
+        !SFG_keyIsDown(SFG_KEY_C) &&
+        (SFG_player.weaponCooldownFrames == 0) &&
+        (SFG_game.stateTime > 400) // don't immediately shoot if returning from menu
+        )
     {
-      uint8_t sound;
+        /* Player attack/shoot/fire, this has to be done AFTER the player is moved,
+           otherwise he could shoot himself while running forward. */
 
-      switch (SFG_player.weapon)
-      {
-      case SFG_WEAPON_KNIFE:
-        sound = 0;
-        break;
-      case SFG_WEAPON_ROCKET_LAUNCHER:
-      case SFG_WEAPON_SHOTGUN:
-        sound = 2;
-        break;
-      case SFG_WEAPON_PLASMAGUN:
-      case SFG_WEAPON_SOLUTION:
-        sound = 4;
-        break;
-      default:
-        sound = 0;
-        break;
-      }
+        uint8_t ammo, projectileCount, canShoot;
 
-      if (sound != 255)
-        SFG_playGameSound(sound, 255);
+        SFG_getPlayerWeaponInfo(&ammo, &projectileCount, &canShoot);
 
-      if (ammo != SFG_AMMO_NONE)
-        SFG_player.ammo[ammo] -= projectileCount;
-
-      uint8_t projectile;
-
-      switch (SFG_GET_WEAPON_FIRE_TYPE(SFG_player.weapon))
-      {
-      case SFG_WEAPON_FIRE_TYPE_PLASMA:
-        projectile = SFG_PROJECTILE_PLASMA;
-        break;
-
-      case SFG_WEAPON_FIRE_TYPE_FIREBALL:
-        projectile = SFG_PROJECTILE_FIREBALL;
-        break;
-
-      case SFG_WEAPON_FIRE_TYPE_BULLET:
-        projectile = SFG_PROJECTILE_BULLET;
-        break;
-
-      case SFG_WEAPON_FIRE_TYPE_MELEE:
-        projectile = SFG_PROJECTILE_BULLET;
-        break;
-
-      default:
-        projectile = 255;
-        break;
-      }
-
-      if (projectile != SFG_PROJECTILE_NONE)
-      {
-        uint16_t angleAdd = SFG_PROJECTILE_SPREAD_ANGLE / (projectileCount + 1);
-
-        RCL_Unit direction =
-            (SFG_player.camera.direction - SFG_PROJECTILE_SPREAD_ANGLE / 2) + angleAdd;
-
-        RCL_Unit projectileSpeed = SFG_GET_PROJECTILE_SPEED_UPS(projectile);
-
-        /* Vertical speed will be either determined by autoaim (if shearing is
-           off) or the camera shear value. */
-        RCL_Unit verticalSpeed = (SFG_game.settings & 0x04) ? (SFG_player.camera.shear * projectileSpeed * 2) / // only approximate
-                                                                  SFG_CAMERA_MAX_SHEAR_PIXELS
-                                                            : (projectileSpeed * SFG_autoaimVertically()) / RCL_UNITS_PER_SQUARE;
-
-        for (uint8_t i = 0; i < projectileCount; ++i)
+        if (canShoot)
         {
-          SFG_launchProjectile(
-              projectile,
-              SFG_player.camera.position,
-              SFG_player.camera.height,
-              RCL_angleToDirection(direction),
-              verticalSpeed,
-              SFG_PROJECTILE_SPAWN_OFFSET);
+            uint8_t sound;
 
-          direction += angleAdd;
-        }
-      }
-      else
-      {
-        // player's melee attack
+            switch (SFG_player.weapon)
+            {
+            case SFG_WEAPON_KNIFE:
+                sound = 0;
+                break;
+            case SFG_WEAPON_ROCKET_LAUNCHER:
+            case SFG_WEAPON_SHOTGUN:
+                sound = 2;
+                break;
+            case SFG_WEAPON_PLASMAGUN:
+            case SFG_WEAPON_SOLUTION:
+                sound = 4;
+                break;
+            default:
+                sound = 0;
+                break;
+            }
 
-        for (uint16_t i = 0; i < SFG_currentLevel.monsterRecordCount; ++i)
-        {
-          SFG_MonsterRecord *m = &(SFG_currentLevel.monsterRecords[i]);
+            if (sound != 255)
+                SFG_playGameSound(sound, 255);
 
-          uint8_t state = SFG_MR_STATE(*m);
+            if (ammo != SFG_AMMO_NONE)
+                SFG_player.ammo[ammo] -= projectileCount;
 
-          if ((state == SFG_MONSTER_STATE_INACTIVE) ||
-              (state == SFG_MONSTER_STATE_DEAD))
-            continue;
+            uint8_t projectile;
 
-          RCL_Unit pX, pY, pZ;
-          SFG_getMonsterWorldPosition(m, &pX, &pY, &pZ);
+            switch (SFG_GET_WEAPON_FIRE_TYPE(SFG_player.weapon))
+            {
+            case SFG_WEAPON_FIRE_TYPE_PLASMA:
+                projectile = SFG_PROJECTILE_PLASMA;
+                break;
 
-          if (SFG_taxicabDistance(pX, pY, pZ,
-                                  SFG_player.camera.position.x,
-                                  SFG_player.camera.position.y,
-                                  SFG_player.camera.height) > SFG_MELEE_RANGE)
-            continue;
+            case SFG_WEAPON_FIRE_TYPE_FIREBALL:
+                projectile = SFG_PROJECTILE_FIREBALL;
+                break;
 
-          RCL_Vector2D toMonster;
+            case SFG_WEAPON_FIRE_TYPE_BULLET:
+                projectile = SFG_PROJECTILE_BULLET;
+                break;
 
-          toMonster.x = pX - SFG_player.camera.position.x;
-          toMonster.y = pY - SFG_player.camera.position.y;
+            case SFG_WEAPON_FIRE_TYPE_MELEE:
+                projectile = SFG_PROJECTILE_BULLET;
+                break;
 
-          if (RCL_vectorsAngleCos(SFG_player.direction, toMonster) >=
-              (RCL_UNITS_PER_SQUARE - SFG_PLAYER_MELEE_ANGLE))
-          {
-            SFG_monsterChangeHealth(m,
-                                    -1 * SFG_getDamageValue(SFG_WEAPON_FIRE_TYPE_MELEE));
+            default:
+                projectile = 255;
+                break;
+            }
 
-            SFG_createDust(pX, pY, pZ);
+            if (projectile != SFG_PROJECTILE_NONE)
+            {
+                uint16_t angleAdd = SFG_PROJECTILE_SPREAD_ANGLE / (projectileCount + 1);
 
-            break;
-          }
-        }
-      }
+                RCL_Unit direction =
+                    (SFG_player.camera.direction - SFG_PROJECTILE_SPREAD_ANGLE / 2) + angleAdd;
 
-      SFG_player.weaponCooldownFrames =
-          RCL_max(
-              SFG_GET_WEAPON_FIRE_COOLDOWN_FRAMES(SFG_player.weapon),
-              SFG_MIN_WEAPON_COOLDOWN_FRAMES);
+                RCL_Unit projectileSpeed = SFG_GET_PROJECTILE_SPEED_UPS(projectile);
 
-      SFG_getPlayerWeaponInfo(&ammo, &projectileCount, &canShoot);
+                /* Vertical speed will be either determined by autoaim (if shearing is
+                   off) or the camera shear value. */
+                RCL_Unit verticalSpeed = (SFG_game.settings & 0x04) ? (SFG_player.camera.shear * projectileSpeed * 2) / // only approximate
+                    SFG_CAMERA_MAX_SHEAR_PIXELS
+                    : (projectileSpeed * SFG_autoaimVertically()) / RCL_UNITS_PER_SQUARE;
 
-      if (!canShoot)
-      {
-        // No more ammo, switch to the second strongest weapon.
+                for (uint8_t i = 0; i < projectileCount; ++i)
+                {
+                    SFG_launchProjectile(
+                        projectile,
+                        SFG_player.camera.position,
+                        SFG_player.camera.height,
+                        RCL_angleToDirection(direction),
+                        verticalSpeed,
+                        SFG_PROJECTILE_SPAWN_OFFSET);
 
-        SFG_playerRotateWeapon(1);
+                    direction += angleAdd;
+                }
+            }
+            else
+            {
+                // player's melee attack
 
-        uint8_t previousWeapon = SFG_player.weapon;
+                for (uint16_t i = 0; i < SFG_currentLevel.monsterRecordCount; ++i)
+                {
+                    SFG_MonsterRecord* m = &(SFG_currentLevel.monsterRecords[i]);
 
-        SFG_playerRotateWeapon(0);
+                    uint8_t state = SFG_MR_STATE(*m);
 
-        if (previousWeapon > SFG_player.weapon)
-          SFG_playerRotateWeapon(1);
-      }
-    }  // endif: has enough ammo?
-  }    // attack
-#endif // SFG_PREVIEW_MODE == 0
+                    if ((state == SFG_MONSTER_STATE_INACTIVE) ||
+                        (state == SFG_MONSTER_STATE_DEAD))
+                        continue;
+
+                    RCL_Unit pX, pY, pZ;
+                    SFG_getMonsterWorldPosition(m, &pX, &pY, &pZ);
+
+                    if (SFG_taxicabDistance(pX, pY, pZ,
+                        SFG_player.camera.position.x,
+                        SFG_player.camera.position.y,
+                        SFG_player.camera.height) > SFG_MELEE_RANGE)
+                        continue;
+
+                    RCL_Vector2D toMonster;
+
+                    toMonster.x = pX - SFG_player.camera.position.x;
+                    toMonster.y = pY - SFG_player.camera.position.y;
+
+                    if (RCL_vectorsAngleCos(SFG_player.direction, toMonster) >=
+                        (RCL_UNITS_PER_SQUARE - SFG_PLAYER_MELEE_ANGLE))
+                    {
+                        SFG_monsterChangeHealth(m,
+                            -1 * SFG_getDamageValue(SFG_WEAPON_FIRE_TYPE_MELEE));
+
+                        SFG_createDust(pX, pY, pZ);
+
+                        break;
+                    }
+                }
+            }
+
+            SFG_player.weaponCooldownFrames =
+                RCL_max(
+                    SFG_GET_WEAPON_FIRE_COOLDOWN_FRAMES(SFG_player.weapon),
+                    SFG_MIN_WEAPON_COOLDOWN_FRAMES);
+
+            SFG_getPlayerWeaponInfo(&ammo, &projectileCount, &canShoot);
+
+            if (!canShoot)
+            {
+                // No more ammo, switch to the second strongest weapon.
+
+                SFG_playerRotateWeapon(1);
+
+                uint8_t previousWeapon = SFG_player.weapon;
+
+                SFG_playerRotateWeapon(0);
+
+                if (previousWeapon > SFG_player.weapon)
+                    SFG_playerRotateWeapon(1);
+            }
+        }  // endif: has enough ammo?
+    }    // attack
+}
 
   SFG_player.squarePosition[0] =
       SFG_player.camera.position.x / RCL_UNITS_PER_SQUARE;
@@ -4812,8 +4821,7 @@ void SFG_drawMenu()
 }
 
 void SFG_drawWinOverlay()
-{
-    
+{   
     if (strlen(SFG_displayName) != 0 && strlen(SFG_clientId) != 0, strlen(SFG_levelPack) != 0)
     {    
         if (!has_fetched)
@@ -5177,9 +5185,9 @@ void SFG_draw()
 
 #endif // head bob enabled?
 
-#if SFG_PREVIEW_MODE == 0
-    SFG_drawWeapon(weaponBobOffset);
-#endif
+    if (!SFG_PREVIEW_MODE) {
+        SFG_drawWeapon(weaponBobOffset);    
+    }
 
     // draw HUD:
 
@@ -5208,35 +5216,124 @@ void SFG_draw()
 
     static levelLockedWarningTicker = 0;
 
-    SFG_drawText("+", SFG_GAME_RESOLUTION_X / 2, 200, SFG_FONT_SIZE_SMALL, 6, 2, SFG_GAME_RESOLUTION_X);
+    if (!SFG_PREVIEW_MODE) {
+        SFG_drawText("+", SFG_GAME_RESOLUTION_X / 2, 200, SFG_FONT_SIZE_SMALL, 6, 2, SFG_GAME_RESOLUTION_X);
 
-    SFG_drawText("Time", SFG_HUD_MARGIN, TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
-    SFG_drawText("Health", SFG_HUD_MARGIN, TEXT_Y -20, SFG_FONT_SIZE_SMALL,6, 6, SFG_GAME_RESOLUTION_X);
-    SFG_drawText("Ammo", SFG_HUD_MARGIN, TEXT_Y , SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
+        SFG_drawText("Time", SFG_HUD_MARGIN, TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
+        SFG_drawText("Health", SFG_HUD_MARGIN, TEXT_Y - 20, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
+        SFG_drawText("Ammo", SFG_HUD_MARGIN, TEXT_Y, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
 
-    SFG_drawText("Score", SFG_GAME_RESOLUTION_X - 210, TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
-    SFG_drawText("Enemies", SFG_GAME_RESOLUTION_X - 210, TEXT_Y - 20, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
-    SFG_drawText("Gems", SFG_GAME_RESOLUTION_X - 210, TEXT_Y, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
+        SFG_drawText("Score", SFG_GAME_RESOLUTION_X - 210, TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
+        SFG_drawText("Enemies", SFG_GAME_RESOLUTION_X - 210, TEXT_Y - 20, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
+        SFG_drawText("Gems", SFG_GAME_RESOLUTION_X - 210, TEXT_Y, SFG_FONT_SIZE_SMALL, 6, 9, SFG_GAME_RESOLUTION_X);
 
-    if (SFG_comboBarSize > 0)
-    {   
-        SFG_comboBarSize--;
-    }
-    else
-    {
-        SFG_multiplier = 1;
-    }
+        if (SFG_comboBarSize > 0)
+        {
+            SFG_comboBarSize--;
+        }
+        else
+        {
+            SFG_multiplier = 1;
+        }
 
-    if (SFG_multiplier > 1)
-    {
-        SFG_drawText("X", (SFG_GAME_RESOLUTION_X / 2) - (25 * SFG_FONT_SIZE_MEDIUM), 10, SFG_FONT_SIZE_MEDIUM, 6, 6, SFG_GAME_RESOLUTION_X);
+        if (SFG_multiplier > 1)
+        {
+            SFG_drawText("X", (SFG_GAME_RESOLUTION_X / 2) - (25 * SFG_FONT_SIZE_MEDIUM), 10, SFG_FONT_SIZE_MEDIUM, 6, 6, SFG_GAME_RESOLUTION_X);
+
+            SFG_drawNumber( // time
+                SFG_multiplier,
+                (SFG_GAME_RESOLUTION_X / 2) - (21 * SFG_FONT_SIZE_MEDIUM),
+                10,
+                SFG_FONT_SIZE_MEDIUM,
+                6);
+        }
+        if (levelLockedWarningTicker > 120)
+        {
+            SFG_showLevelEndLockedWarning = FALSE;
+            levelLockedWarningTicker = 0;
+        }
+
+        // TODO: This could be in a better place TBH
+        if (SFG_game.state == SFG_GAME_STATE_PLAYING)
+        {
+
+            if (SFG_timeBonus > 0)
+            {
+                SFG_timeBonus--;
+            }
+
+            if (SFG_level_time_minutes < 100)
+            {
+                SFG_level_time_seconds++;
+            }
+
+            if (SFG_level_time_seconds / 60 >= 59)
+            {
+                SFG_level_time_seconds = 0;
+                SFG_level_time_minutes++;
+            }
+        }
 
         SFG_drawNumber( // time
-            SFG_multiplier,
-            (SFG_GAME_RESOLUTION_X / 2) - (21 * SFG_FONT_SIZE_MEDIUM),
-            10,
-            SFG_FONT_SIZE_MEDIUM,
+            SFG_level_time_minutes,
+            SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * 35),
+            TEXT_Y - 40,
+            SFG_FONT_SIZE_SMALL,
             6);
+
+
+        Uint8 timePositonOffset = 0;
+
+        if (SFG_level_time_minutes > 9)
+        {
+            timePositonOffset = 5;
+        }
+
+        SFG_drawText(".", SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * (38 + timePositonOffset)), TEXT_Y - 47, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
+        SFG_drawText(".", SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * (38 + timePositonOffset)), TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
+
+        SFG_drawNumber( // time
+            SFG_level_time_seconds / 59,
+            SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * (41 + timePositonOffset)),
+            TEXT_Y - 40,
+            SFG_FONT_SIZE_SMALL,
+            6);
+
+        SFG_drawNumber( // health
+            SFG_player.health,
+            SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * 35),
+            TEXT_Y - 20,
+            SFG_FONT_SIZE_SMALL,
+            SFG_player.health > SFG_PLAYER_HEALTH_WARNING_LEVEL ? 6 : 175);
+
+        SFG_drawNumber( // ammo
+            SFG_player.weapon != SFG_WEAPON_KNIFE ? SFG_player.ammo[SFG_weaponAmmo(SFG_player.weapon)] : 0,
+            SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * 35),
+            TEXT_Y,
+            SFG_FONT_SIZE_SMALL,
+            6);
+
+        SFG_drawNumber(
+            SFG_score,
+            SFG_GAME_RESOLUTION_X - 90,
+            TEXT_Y - 40,
+            SFG_FONT_SIZE_SMALL,
+            6);
+
+        SFG_drawNumber(
+            SFG_currentLevel.monsterRecordCount - SFG_enemy_killed_count,
+            SFG_GAME_RESOLUTION_X - 90,
+            TEXT_Y - 20,
+            SFG_FONT_SIZE_SMALL,
+            6);
+
+        SFG_drawNumber(
+            SFG_level_gold_collected,
+            SFG_GAME_RESOLUTION_X - 90,
+            TEXT_Y,
+            SFG_FONT_SIZE_SMALL,
+            6);
+
     }
 
     SFG_fillRectangle(
@@ -5265,94 +5362,6 @@ void SFG_draw()
             SFG_drawText("Clear level to unlock", (SFG_GAME_RESOLUTION_X / 2) - (55 * SFG_FONT_SIZE_SMALL), SFG_GAME_RESOLUTION_X / 4, SFG_FONT_SIZE_SMALL, 6, 21, SFG_GAME_RESOLUTION_X);
         }
     }
-
-    if (levelLockedWarningTicker > 120)
-    {
-        SFG_showLevelEndLockedWarning = FALSE;
-        levelLockedWarningTicker = 0;
-    }
-    
-    // TODO: This could be in a better place TBH
-    if (SFG_game.state == SFG_GAME_STATE_PLAYING)
-    {
-        
-        if (SFG_timeBonus > 0)
-        {
-            SFG_timeBonus --;
-        }
-
-        if (SFG_level_time_minutes < 100)
-        {
-            SFG_level_time_seconds ++;
-        }
-
-        if (SFG_level_time_seconds / 60 >= 59)
-        {
-            SFG_level_time_seconds = 0;
-            SFG_level_time_minutes ++;
-        }
-    }
-
-    SFG_drawNumber( // time
-        SFG_level_time_minutes,
-        SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * 35),
-        TEXT_Y - 40,
-        SFG_FONT_SIZE_SMALL,
-        6);
-
-    
-    Uint8 timePositonOffset = 0;
-
-    if (SFG_level_time_minutes > 9)
-    {
-        timePositonOffset = 5;
-    }
-
-    SFG_drawText(".", SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * (38 + timePositonOffset)), TEXT_Y - 47, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
-    SFG_drawText(".", SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * (38 + timePositonOffset)), TEXT_Y - 40, SFG_FONT_SIZE_SMALL, 6, 6, SFG_GAME_RESOLUTION_X);
-
-    SFG_drawNumber( // time
-        SFG_level_time_seconds / 59,
-        SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * (41 + timePositonOffset)),
-        TEXT_Y - 40,
-        SFG_FONT_SIZE_SMALL,
-        6);
-
-    SFG_drawNumber( // health
-        SFG_player.health,
-        SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * 35),
-        TEXT_Y - 20,
-        SFG_FONT_SIZE_SMALL,
-        SFG_player.health > SFG_PLAYER_HEALTH_WARNING_LEVEL ? 6 : 175);
-
-    SFG_drawNumber( // ammo
-        SFG_player.weapon != SFG_WEAPON_KNIFE ? SFG_player.ammo[SFG_weaponAmmo(SFG_player.weapon)] : 0,
-        SFG_HUD_MARGIN + (SFG_FONT_SIZE_SMALL * 35),
-        TEXT_Y,
-        SFG_FONT_SIZE_SMALL,
-        6);
-    
-    SFG_drawNumber( 
-        SFG_score,
-        SFG_GAME_RESOLUTION_X - 90 ,
-        TEXT_Y - 40,
-        SFG_FONT_SIZE_SMALL,
-        6);
-
-    SFG_drawNumber(
-        SFG_currentLevel.monsterRecordCount - SFG_enemy_killed_count,
-        SFG_GAME_RESOLUTION_X - 90,
-        TEXT_Y - 20,
-        SFG_FONT_SIZE_SMALL,
-        6);
-
-    SFG_drawNumber(
-        SFG_level_gold_collected,
-        SFG_GAME_RESOLUTION_X - 90,
-        TEXT_Y,
-        SFG_FONT_SIZE_SMALL,
-        6);
-    
 
     SFG_blitImage(SFG_logoImage, SFG_GAME_RESOLUTION_X / 2 - (SFG_TEXTURE_SIZE / 2) * SFG_FONT_SIZE_SMALL, TEXT_Y - 55, SFG_FONT_SIZE_SMALL);
 

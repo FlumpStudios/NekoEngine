@@ -3,32 +3,24 @@
   "WorkspaceRootPath": "C:\\Projects\\NekoEngine\\GameData\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Projects\\NekoEngine\\GameData\\game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|C:\\Projects\\NekoEngine\\GameData\\main_sdl.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|solutionrelative:main_sdl.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|C:\\PROJECTS\\NEKOENGINE\\GAMEDATA\\IMAGES.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|solutionrelative:IMAGES.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|C:\\Projects\\NekoEngine\\GameData\\networking.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|solutionrelative:networking.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|C:\\PROJECTS\\NEKOENGINE\\GAMEDATA\\LEVELS.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|solutionrelative:LEVELS.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Projects\\NekoEngine\\GameData\\constants.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:constants.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|C:\\PROJECTS\\NEKOENGINE\\GAMEDATA\\GAME.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|solutionrelative:GAME.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Projects\\NekoEngine\\GameData\\settings.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:settings.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|C:\\Projects\\NekoEngine\\GameData\\main_sdl.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|solutionrelative:main_sdl.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Projects\\NekoEngine\\GameData\\constants.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:constants.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|C:\\Projects\\NekoEngine\\GameData\\networking.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|solutionrelative:networking.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\ucrt\\stdio.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
@@ -40,6 +32,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Projects\\NekoEngine\\GameData\\LibCurl\\include\\curl\\websockets.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:LibCurl\\include\\curl\\websockets.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Projects\\NekoEngine\\GameData\\images.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:images.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Projects\\NekoEngine\\GameData\\levels.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:levels.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -49,7 +49,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 13,
           "Children": [
             {
               "$type": "Bookmark",
@@ -69,7 +69,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 7,
               "Title": "websockets.h",
               "DocumentMoniker": "C:\\Projects\\NekoEngine\\GameData\\LibCurl\\include\\curl\\websockets.h",
               "RelativeDocumentMoniker": "LibCurl\\include\\curl\\websockets.h",
@@ -81,19 +81,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "settings.h",
               "DocumentMoniker": "C:\\Projects\\NekoEngine\\GameData\\settings.h",
               "RelativeDocumentMoniker": "settings.h",
               "ToolTip": "C:\\Projects\\NekoEngine\\GameData\\settings.h",
               "RelativeToolTip": "settings.h",
-              "ViewState": "AgIAACIAAAAAAAAAAAAwwGsAAAAGAAAAAAAAAA==",
+              "ViewState": "AgIAAMMBAAAAAAAAAAAmwNEBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-11-16T16:54:28.053Z"
+              "WhenOpened": "2024-11-16T16:54:28.053Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 5,
               "Title": "stdio.h",
               "DocumentMoniker": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\ucrt\\stdio.h",
               "RelativeDocumentMoniker": "..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\ucrt\\stdio.h",
@@ -105,7 +106,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "networking.h",
               "DocumentMoniker": "C:\\Projects\\NekoEngine\\GameData\\networking.h",
               "RelativeDocumentMoniker": "networking.h",
@@ -113,25 +114,24 @@
               "RelativeToolTip": "networking.h",
               "ViewState": "AgIAAGMAAAAAAAAAAAAAAHAAAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-11-09T16:21:05.003Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-11-09T16:21:05.003Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "game.h",
               "DocumentMoniker": "C:\\Projects\\NekoEngine\\GameData\\game.h",
               "RelativeDocumentMoniker": "game.h",
               "ToolTip": "C:\\Projects\\NekoEngine\\GameData\\game.h",
               "RelativeToolTip": "game.h",
-              "ViewState": "AgIAAF8GAAAAAAAAAAAwwHAGAAALAAAAAAAAAA==",
+              "ViewState": "AgIAANMQAAAAAAAAAAAmwOgQAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-10-26T16:30:11.846Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 6,
               "Title": "raycastlib.h",
               "DocumentMoniker": "C:\\Projects\\NekoEngine\\GameData\\raycastlib.h",
               "RelativeDocumentMoniker": "raycastlib.h",
@@ -143,20 +143,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "constants.h",
               "DocumentMoniker": "C:\\Projects\\NekoEngine\\GameData\\constants.h",
               "RelativeDocumentMoniker": "constants.h",
               "ToolTip": "C:\\Projects\\NekoEngine\\GameData\\constants.h",
               "RelativeToolTip": "constants.h",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAACQAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-10-19T15:34:12.225Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 8,
               "Title": "images.h",
               "DocumentMoniker": "C:\\Projects\\NekoEngine\\GameData\\images.h",
               "RelativeDocumentMoniker": "images.h",
@@ -164,12 +164,11 @@
               "RelativeToolTip": "images.h",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAACAAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-10-17T20:21:03.655Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-17T20:21:03.655Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 9,
               "Title": "levels.h",
               "DocumentMoniker": "C:\\Projects\\NekoEngine\\GameData\\levels.h",
               "RelativeDocumentMoniker": "levels.h",
@@ -177,20 +176,20 @@
               "RelativeToolTip": "levels.h",
               "ViewState": "AgIAAF0AAAAAAAAAAAAwwG4AAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-10-16T19:48:47.776Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-16T19:48:47.776Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 0,
               "Title": "main_sdl.c",
               "DocumentMoniker": "C:\\Projects\\NekoEngine\\GameData\\main_sdl.c",
               "RelativeDocumentMoniker": "main_sdl.c",
               "ToolTip": "C:\\Projects\\NekoEngine\\GameData\\main_sdl.c",
               "RelativeToolTip": "main_sdl.c",
-              "ViewState": "AgIAAGsBAAAAAAAAAAAAAHIBAAAgAAAAAAAAAA==",
+              "ViewState": "AgIAAMIAAAAAAAAAAAAUwNUAAAA5AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2024-02-03T12:29:46.265Z"
+              "WhenOpened": "2024-02-03T12:29:46.265Z",
+              "EditorCaption": ""
             }
           ]
         }
