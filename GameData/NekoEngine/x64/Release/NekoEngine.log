@@ -18,10 +18,10 @@ C:\Projects\NekoEngine\GameData\levels.h(158,9): warning C4002: too many argumen
 C:\Projects\NekoEngine\GameData\levels.h(181,56): warning C4244: '=': conversion from 'WCHAR' to 'char', possible loss of data
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\texts.h(46,3): warning C4098: 'loadText': 'void' function returning a value
+C:\Projects\NekoEngine\GameData\texts.h(44,3): warning C4098: 'loadText': 'void' function returning a value
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\texts.h(53,2): warning C4098: 'loadText': 'void' function returning a value
+C:\Projects\NekoEngine\GameData\texts.h(51,2): warning C4098: 'loadText': 'void' function returning a value
   (compiling source file 'main_sdl.c')
   
 C:\Projects\NekoEngine\GameData\game.h(712,24): warning C4244: 'initializing': conversion from '__int64' to 'uint32_t', possible loss of data

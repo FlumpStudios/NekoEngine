@@ -8,16 +8,14 @@
 static const char *SFG_menuItemTexts[] =
 {
   "continue",
-  "map",
   "play",
-  "load",
   "sound",
   "look",
   "exit"
 };
 
 #define SFG_TEXT_KILLS "kills"
-#define SFG_TEXT_SAVE_PROMPT "save? L no yes R"
+#define SFG_TEXT_SAVE_PROMPT "Continue..."
 #define SFG_TEXT_SAVED "saved"
 #define SFG_TEXT_LEVEL_COMPLETE "level clear!"
 

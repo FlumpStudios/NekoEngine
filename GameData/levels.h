@@ -145,8 +145,11 @@ typedef struct
     uint8_t stepSize;
 } SFG_Level;
 
-static uint8_t countLevelFiles() {
-    const char* search_path = "levels\\*";
+static uint8_t countLevelFiles(char* levelpack) {
+    char search_path[255] = {0};
+    sprintf(search_path, "levels\\%s\\*", levelpack);
+
+
 
 #ifdef _WIN32
     WIN32_FIND_DATA find_file_data;
@@ -239,9 +242,9 @@ static inline SFG_TileDefinition SFG_getMapTile
     return SFG_OUTSIDE_TILE;
 }
 
-void SFG_setNumberOfLevels()
+void SFG_setNumberOfLevels(char* levelpack)
 {
-    SFG_number_of_levels = countLevelFiles();
+    SFG_number_of_levels = countLevelFiles(levelpack);
 }
 
 uint8_t SFG_loadLevelFromFile(SFG_Level* buffer, uint8_t level, const char* levelPack)

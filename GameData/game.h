@@ -336,12 +336,12 @@ typedef struct
 #define SFG_GAME_STATE_MENU 8
 
 #define SFG_MENU_ITEM_CONTINUE 0
-#define SFG_MENU_ITEM_MAP 1
-#define SFG_MENU_ITEM_PLAY 2
-#define SFG_MENU_ITEM_LOAD 3
-#define SFG_MENU_ITEM_SOUND 4
-#define SFG_MENU_ITEM_SHEAR 5
-#define SFG_MENU_ITEM_EXIT 6
+// #define SFG_MENU_ITEM_MAP 1
+#define SFG_MENU_ITEM_PLAY 1
+// #define SFG_MENU_ITEM_LOAD 3
+#define SFG_MENU_ITEM_SOUND 2
+#define SFG_MENU_ITEM_SHEAR 3
+#define SFG_MENU_ITEM_EXIT 4
 
 #define SFG_MENU_ITEM_NONE 255
 
@@ -1832,10 +1832,12 @@ void SFG_init()
   sprintf(loc, "Title/data.TAD");
   SFG_loadTexturesFromFile(SFG_logoImage, loc, SFG_TEXTURE_STORE_SIZE);
 
-  SFG_setNumberOfLevels();
+  SFG_setNumberOfLevels(SFG_levelPack);
   
+  // Init the network module
   NTW_init();
 
+  
   SFG_game.frame = 0;
   SFG_game.frameTime = 0;
   SFG_game.currentRandom = 0;
@@ -3994,7 +3996,7 @@ uint8_t SFG_getMenuItem(uint8_t index)
   while (1) // find first legitimate item
   {
     if ( // skip non-legitimate items
-        ((current <= SFG_MENU_ITEM_MAP) && (SFG_currentLevel.levelPointer == 0)) || ((current == SFG_MENU_ITEM_LOAD) && ((SFG_game.save[0] >> 4) == 0)))
+        ((current < 1) && (SFG_currentLevel.levelPointer == 0))) 
     {
       current++;
       continue;
@@ -4121,36 +4123,36 @@ void SFG_gameStepMenu()
 
       break;
 
-    case SFG_MENU_ITEM_LOAD:
-    {
-      SFG_gameLoad();
+    //case SFG_MENU_ITEM_LOAD:
+    //{
+    //  SFG_gameLoad();
 
-      uint8_t saveBackup[SFG_SAVE_SIZE];
+    //  uint8_t saveBackup[SFG_SAVE_SIZE];
 
-      for (uint8_t i = 0; i < SFG_SAVE_SIZE; ++i)
-        saveBackup[i] = SFG_game.save[i];
+    //  for (uint8_t i = 0; i < SFG_SAVE_SIZE; ++i)
+    //    saveBackup[i] = SFG_game.save[i];
 
-      SFG_setAndInitLevel(SFG_game.save[0] >> 4);
+    //  SFG_setAndInitLevel(SFG_game.save[0] >> 4);
 
-      for (uint8_t i = 0; i < SFG_SAVE_SIZE; ++i)
-        SFG_game.save[i] = saveBackup[i];
+    //  for (uint8_t i = 0; i < SFG_SAVE_SIZE; ++i)
+    //    SFG_game.save[i] = saveBackup[i];
 
-      SFG_player.health = SFG_game.save[2];
-      SFG_player.ammo[0] = SFG_game.save[3];
-      SFG_player.ammo[1] = SFG_game.save[4];
-      SFG_player.ammo[2] = SFG_game.save[5];
+    //  SFG_player.health = SFG_game.save[2];
+    //  SFG_player.ammo[0] = SFG_game.save[3];
+    //  SFG_player.ammo[1] = SFG_game.save[4];
+    //  SFG_player.ammo[2] = SFG_game.save[5];
 
-      SFG_playerRotateWeapon(1); // this chooses weapon with ammo available
-      break;
-    }
+    //  SFG_playerRotateWeapon(1); // this chooses weapon with ammo available
+    //  break;
+    //}
 
     case SFG_MENU_ITEM_CONTINUE:
       SFG_setGameState(SFG_GAME_STATE_PLAYING);
       break;
 
-    case SFG_MENU_ITEM_MAP:
-      SFG_setGameState(SFG_GAME_STATE_MAP);
-      break;
+    //case SFG_MENU_ITEM_MAP:
+    //  SFG_setGameState(SFG_GAME_STATE_MAP);
+    //  break;
 
     case SFG_MENU_ITEM_SOUND:
       SFG_LOG("sound changed");
@@ -4198,8 +4200,8 @@ void SFG_gameStepMenu()
   else if (item == SFG_MENU_ITEM_PLAY)
   {
     if (SFG_keyRegisters(SFG_KEY_RIGHT) &&
-        (SFG_game.selectedLevel < (SFG_game.save[0] & 0x0f)))
-    {
+        (SFG_game.selectedLevel < SFG_number_of_levels - 1))
+    {   
       SFG_game.selectedLevel++;
       SFG_playGameSound(3, SFG_MENU_CLICK_VOLUME);
     }
@@ -4296,10 +4298,7 @@ void SFG_gameStep()
           SFG_setMusic(SFG_MUSIC_TURN_OFF);
         }
       }
-      else if (SFG_keyIsDown(SFG_KEY_RIGHT) ||
-               SFG_keyIsDown(SFG_KEY_LEFT) ||
-               SFG_keyIsDown(SFG_KEY_STRAFE_LEFT) ||
-               SFG_keyIsDown(SFG_KEY_STRAFE_RIGHT))
+      else if (SFG_keyIsDown(SFG_KEY_A))
       {
         SFG_setAndInitLevel(SFG_currentLevel.levelNumber + 1);
 
@@ -4310,15 +4309,15 @@ void SFG_gameStep()
 
         SFG_playerRotateWeapon(1);
 
-        if (SFG_keyIsDown(SFG_KEY_RIGHT) || SFG_keyIsDown(SFG_KEY_STRAFE_RIGHT))
-        {
-          // save the current position
-          SFG_game.save[0] =
-              (SFG_game.save[0] & 0x0f) | (SFG_currentLevel.levelNumber << 4);
+        //if (SFG_keyIsDown(SFG_KEY_RIGHT) || SFG_keyIsDown(SFG_KEY_STRAFE_RIGHT))
+        //{
+        //  // save the current position
+        //  SFG_game.save[0] =
+        //      (SFG_game.save[0] & 0x0f) | (SFG_currentLevel.levelNumber << 4);
 
-          SFG_gameSave();
-          SFG_game.saved = 1;
-        }
+        //  SFG_gameSave();
+        //  SFG_game.saved = 1;
+        //}
       }
     }
 
@@ -4822,16 +4821,7 @@ void SFG_drawMenu()
 
 void SFG_drawWinOverlay()
 {   
-    if (strlen(SFG_displayName) != 0 && strlen(SFG_clientId) != 0, strlen(SFG_levelPack) != 0)
-    {    
-        if (!has_fetched)
-        {
-            postScore(SFG_displayName, SFG_clientId, SFG_levelPack, SFG_score, SFG_currentLevel.levelNumber);
-            NTW_GetLeaderboards(SFG_CurrentLeaderboards, SFG_clientId, SFG_levelPack, SFG_currentLevel.levelNumber,0,10);
-            has_fetched = TRUE;
-        }
-    }
-
+    
   uint32_t t = RCL_min(SFG_WIN_ANIMATION_DURATION, SFG_game.stateTime);
 
   uint32_t t2 = RCL_min(t, SFG_WIN_ANIMATION_DURATION / 4);
@@ -4940,9 +4930,17 @@ void SFG_drawWinOverlay()
       y += (SFG_FONT_SIZE_MEDIUM + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
       y += (SFG_FONT_SIZE_MEDIUM + SFG_FONT_SIZE_MEDIUM) * SFG_FONT_CHARACTER_SIZE;
 
-       SFG_drawText(SFG_CurrentLeaderboards, 118, y, SFG_FONT_SIZE_SMALL, 127, 1000, 588);
+      if (has_fetched)
+      {
+            SFG_drawText(SFG_CurrentLeaderboards, 118, y, SFG_FONT_SIZE_SMALL, 127, 1000, 588);
+      }
+      else
+      {
+          SFG_drawText("Loading leaderboards...", 118, y, SFG_FONT_SIZE_SMALL, 127, 1000, 588);
+      }
 
-       y = SFG_SCREEN_RESOLUTION_Y - 50;
+
+      y = SFG_SCREEN_RESOLUTION_Y - 50;
 
 
     if ((t >= (SFG_WIN_ANIMATION_DURATION - 1)) &&
@@ -4961,6 +4959,16 @@ void SFG_drawWinOverlay()
    
 
 #undef CHAR_SIZE
+  }
+
+  if (strlen(SFG_displayName) != 0 && strlen(SFG_clientId) != 0, strlen(SFG_levelPack) != 0)
+  {
+      if (!has_fetched)
+      {
+          postScore(SFG_displayName, SFG_clientId, SFG_levelPack, SFG_score, SFG_currentLevel.levelNumber);
+          NTW_GetLeaderboards(SFG_CurrentLeaderboards, SFG_clientId, SFG_levelPack, SFG_currentLevel.levelNumber, 0, 10);
+          has_fetched = TRUE;
+      }
   }
 
 #undef STRIP_HEIGHT
