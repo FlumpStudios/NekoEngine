@@ -10,7 +10,7 @@ CURLcode res;
 #define MAX_URL_SIZE 250
 #define MAX_PAYLOAD_SIZE 500
 
-#define LEADERBOARD_URL "https://localhost:7229/api/v1/leaderboard"
+#define LEADERBOARD_URL "https://levelserver.ruyn.co.uk/api/v1/leaderboard"
 #define GET_LEADERBOARD_URL "%s/asstring?levelPack=%s&levelNumber=%i&clientId=%s&skip=%i&take=%i"
 #define POST_LEADERBOARD_URL "{ \"userName\": \"%s\", \"clientId\" : \"%s\", \"score\" : %i, \"levelPackName\" : \"%s\", \"levelNumber\" : %i }"
 void NTW_init()
@@ -114,7 +114,7 @@ void NTW_postScore(char* responseBuffer, char* userName, char* clientId, char* l
     char url[MAX_URL_SIZE];
 
 
-    post(LEADERBOARD_URL, payload, responseBuffer);
+    post(responseBuffer, LEADERBOARD_URL, payload);
 }
 
 #endif
