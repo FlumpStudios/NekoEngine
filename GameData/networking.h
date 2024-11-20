@@ -10,7 +10,7 @@ CURLcode res;
 #define MAX_URL_SIZE 250
 #define MAX_PAYLOAD_SIZE 500
 
-#define LEADERBOARD_URL "https://levelserver.ruyn.co.uk/api/v1/leaderboard"
+#define LEADERBOARD_URL "https://localhost:7229/api/v1/leaderboard"
 #define GET_LEADERBOARD_URL "%s/asstring?levelPack=%s&levelNumber=%i&clientId=%s&skip=%i&take=%i"
 #define POST_LEADERBOARD_URL "{ \"userName\": \"%s\", \"clientId\" : \"%s\", \"score\" : %i, \"levelPackName\" : \"%s\", \"levelNumber\" : %i }"
 void NTW_init()
@@ -39,7 +39,7 @@ static size_t write_callback(void* ptr, size_t size, size_t nmemb, void* userdat
     return total_size;
 }
 
-static void post(char* url, char* data)
+static void post(char* responseBuffer, char* url, char* data)
 {
     curl = curl_easy_init();
     if (!curl) {
@@ -60,7 +60,11 @@ static void post(char* url, char* data)
     struct curl_slist* headers = NULL;
     headers = curl_slist_append(headers, "Content-Type: application/json");
     headers = curl_slist_append(headers, "X-Api-Key: ovOV4mY2jVMMXsjEBkU8VzY7gscieQk9eViDg9G4B3VYwR5+JFihw3LdD74bCYs9");
+
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, responseBuffer);
 
     res = curl_easy_perform(curl);
     if (res != CURLE_OK) {
@@ -71,15 +75,8 @@ static void post(char* url, char* data)
     curl_easy_cleanup(curl);
 }
 
-void postScore(char* userName, char* clientId, char* levelPackName, int score, int levelNumber)
-{
-    char payload[MAX_PAYLOAD_SIZE] = {0};
-    sprintf(&payload, POST_LEADERBOARD_URL, userName, clientId, score, levelPackName, levelNumber);
-    
-    post(LEADERBOARD_URL, payload);
-}
 
-static void Get(char* url, char* responseBuffer)
+static void Get(char* responseBuffer, char* url)
 {   
     curl = curl_easy_init();
     if (!curl) {
@@ -109,16 +106,15 @@ static void Get(char* url, char* responseBuffer)
     curl_easy_cleanup(curl);
 }
 
+void NTW_postScore(char* responseBuffer, char* userName, char* clientId, char* levelPackName, int score, int levelNumber)
+{
+    char payload[MAX_PAYLOAD_SIZE] = { 0 };
+    sprintf(&payload, POST_LEADERBOARD_URL, userName, clientId, score, levelPackName, levelNumber);
 
-void NTW_GetLeaderboards(char* responseBuffer, char* clientId, char* levelPack, uint8_t levelNumber, int skip, int take) {
     char url[MAX_URL_SIZE];
-    snprintf(url, sizeof(url), GET_LEADERBOARD_URL, LEADERBOARD_URL, levelPack , levelNumber, clientId, skip, take);
-    Get(url, responseBuffer);
+
+
+    post(LEADERBOARD_URL, payload, responseBuffer);
 }
 
-void NTW_GetPlayerScore(char* responseBuffer, char* clientId, char* levelPack, uint8_t levelNumber) {        
-        char url[MAX_URL_SIZE];
-        snprintf(url, sizeof(url), "%s/%s/%s/%u", LEADERBOARD_URL, clientId, levelPack, levelNumber);
-        Get(url, responseBuffer);
-}
 #endif

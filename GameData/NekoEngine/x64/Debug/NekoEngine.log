@@ -1,12 +1,15 @@
 ﻿cl : command line  warning D9002: ignoring unknown option '/std:c99'
   main_sdl.c
-C:\Projects\NekoEngine\GameData\networking.h(77,13): warning C4047: 'function': 'char *const ' differs in levels of indirection from 'char (*)[500]'
+C:\Projects\NekoEngine\GameData\networking.h(82,13): warning C4047: 'function': 'char *const ' differs in levels of indirection from 'char (*)[500]'
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\networking.h(77,13): warning C4024: 'sprintf': different types for formal and actual parameter 1
+C:\Projects\NekoEngine\GameData\networking.h(82,13): warning C4024: 'sprintf': different types for formal and actual parameter 1
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\networking.h(77,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\GameData\networking.h(82,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  (compiling source file 'main_sdl.c')
+  
+C:\Projects\NekoEngine\GameData\networking.h(84,10): warning C4101: 'url': unreferenced local variable
   (compiling source file 'main_sdl.c')
   
 C:\Projects\NekoEngine\GameData\levels.h(159,42): warning C4133: 'function': incompatible types - from 'WIN32_FIND_DATA *' to 'LPWIN32_FIND_DATAA'

@@ -4965,8 +4965,7 @@ void SFG_drawWinOverlay()
   {
       if (!has_fetched)
       {
-          postScore(SFG_displayName, SFG_clientId, SFG_levelPack, SFG_score, SFG_currentLevel.levelNumber);
-          NTW_GetLeaderboards(SFG_CurrentLeaderboards, SFG_clientId, SFG_levelPack, SFG_currentLevel.levelNumber, 0, 10);
+          NTW_postScore(SFG_CurrentLeaderboards, SFG_displayName, SFG_clientId, SFG_levelPack, SFG_score, SFG_currentLevel.levelNumber);
           has_fetched = TRUE;
       }
   }
