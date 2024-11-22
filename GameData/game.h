@@ -5355,7 +5355,7 @@ void SFG_draw()
     {
         levelLockedWarningTicker++;
 
-        if (levelLockedWarningTicker % 60 < 30 && SFG_PREVIEW_MODE)
+        if (levelLockedWarningTicker % 60 < 30 && !SFG_PREVIEW_MODE)
         {
             SFG_drawText("Exit Unlocked", (SFG_GAME_RESOLUTION_X / 2) - (30 * SFG_FONT_SIZE_SMALL), SFG_GAME_RESOLUTION_X / 4, SFG_FONT_SIZE_SMALL, 6, 21, SFG_GAME_RESOLUTION_X);
         }
