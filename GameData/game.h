@@ -1346,7 +1346,7 @@ void RCL_updateWallZbuffer(RCL_HitResult* hits, uint16_t hitCount, int32_t index
 
         RCL_Unit heightAtwall = SFG_floorHeightAt(hits[i].square.x, hits[i].square.y);
 
-        RCL_Unit maxHeight = 2048 + playerHeight;
+        RCL_Unit maxHeight = 4096 + playerHeight;
 
         if ((level->ceilHeight * 256) < maxHeight)
         {
@@ -3979,6 +3979,7 @@ if (!SFG_PREVIEW_MODE)
   if (SFG_player.health == 0)
   {
     SFG_LOG("player dies");
+    SFG_score = 0;
     SFG_levelEnds();
     SFG_processEvent(SFG_EVENT_VIBRATE, 0);
     SFG_processEvent(SFG_EVENT_PLAYER_DIES, 0);
