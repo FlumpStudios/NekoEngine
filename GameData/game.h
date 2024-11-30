@@ -1346,7 +1346,7 @@ void RCL_updateWallZbuffer(RCL_HitResult* hits, uint16_t hitCount, int32_t index
 
         RCL_Unit heightAtwall = SFG_floorHeightAt(hits[i].square.x, hits[i].square.y);
 
-        RCL_Unit maxHeight = 4096 + playerHeight;
+        RCL_Unit maxHeight = 0x7FFFFFFF;
 
         if ((level->ceilHeight * 256) < maxHeight)
         {

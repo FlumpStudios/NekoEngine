@@ -139,7 +139,7 @@
               "RelativeDocumentMoniker": "game.h",
               "ToolTip": "C:\\Projects\\NekoEngine\\GameData\\game.h",
               "RelativeToolTip": "game.h",
-              "ViewState": "AgIAADkFAAAAAAAAAAAAAEQFAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAADkFAAAAAAAAAAAAAD0FAABOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-10-26T16:30:11.846Z",
               "EditorCaption": ""
@@ -154,8 +154,7 @@
               "RelativeToolTip": "raycastlib.h",
               "ViewState": "AgIAACwBAAAAAAAAAAAAAEMBAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-10-16T19:48:47.774Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-16T19:48:47.774Z"
             },
             {
               "$type": "Document",
@@ -167,8 +166,7 @@
               "RelativeToolTip": "constants.h",
               "ViewState": "AgIAAHkAAAAAAAAAAAAwwIwAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-10-19T15:34:12.225Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-19T15:34:12.225Z"
             },
             {
               "$type": "Document",
