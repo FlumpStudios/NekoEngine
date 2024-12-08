@@ -140,6 +140,10 @@
 */
 #define SFG_PLAYER_MAX_HEALTH 150
 
+#define STICK_LOOK_DEADZONE 10000
+
+#define AXIS_TO_DIGITAL  15000
+
 /**
   Start health of player.
 */

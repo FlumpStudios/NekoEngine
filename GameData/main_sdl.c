@@ -180,16 +180,20 @@ void SFG_getMouseOffset(int16_t *x, int16_t *y)
   }
 
   if (sdlController != NULL)
-  {
-    *x +=
-      (SDL_GameControllerGetAxis(sdlController,SDL_CONTROLLER_AXIS_RIGHTX) + 
-      SDL_GameControllerGetAxis(sdlController,SDL_CONTROLLER_AXIS_LEFTX)) /
-      SDL_ANALOG_DIVIDER;
+  { 
+      if (SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_RIGHTX) > STICK_LOOK_DEADZONE || SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_RIGHTX) < -STICK_LOOK_DEADZONE)
+      {      
+        *x +=
+          SDL_GameControllerGetAxis(sdlController,SDL_CONTROLLER_AXIS_RIGHTX) /
+          SDL_ANALOG_DIVIDER;
+      }
 
-    *y +=
-      (SDL_GameControllerGetAxis(sdlController,SDL_CONTROLLER_AXIS_RIGHTY) + 
-      SDL_GameControllerGetAxis(sdlController,SDL_CONTROLLER_AXIS_LEFTY)) /
-      SDL_ANALOG_DIVIDER;
+      if (SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_RIGHTY) > STICK_LOOK_DEADZONE || SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_RIGHTY) < -STICK_LOOK_DEADZONE)
+      {
+          *y +=
+              SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_RIGHTY) /
+              SDL_ANALOG_DIVIDER;
+      }
   }
 #endif
 }
@@ -209,22 +213,22 @@ int8_t SFG_keyPressed(uint8_t key)
 
   switch (key)
   {
-    case SFG_KEY_UP: return k(UP) || k(W) || k(KP_8) || b(DPAD_UP); break;
+    case SFG_KEY_UP: return k(UP) || k(W) || k(KP_8) || b(DPAD_UP) || (SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_LEFTY) < -AXIS_TO_DIGITAL); break;
     case SFG_KEY_RIGHT: 
       return k(RIGHT) || k(KP_6) || b(DPAD_RIGHT); break;
     case SFG_KEY_DOWN: 
-      return k(DOWN) || k(S) || k(KP_5) || k(KP_2) || b(DPAD_DOWN); break;
+      return k(DOWN) || k(S) || k(KP_5) || k(KP_2) || b(DPAD_DOWN) || (SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_LEFTY) > AXIS_TO_DIGITAL); break;
     case SFG_KEY_LEFT: return k(LEFT) || k(KP_4) || b(DPAD_LEFT); break;
-    case SFG_KEY_A: return k(J) || k(RETURN) || k(LCTRL) || k(RCTRL) || b(X) ||
-      b(RIGHTSTICK) || (sdlMouseButtonState & SDL_BUTTON_LMASK); break;
+    case SFG_KEY_A: return k(J) || k(RETURN) || k(LCTRL) || k(RCTRL) || b(A) ||
+      b(RIGHTSTICK) || (sdlMouseButtonState & SDL_BUTTON_LMASK) || (SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > AXIS_TO_DIGITAL); break;
     case SFG_KEY_B: return k(E) || k(LSHIFT) || b(B); break;
     case SFG_KEY_C: return k(Q) || b(Y); break;
-    case SFG_KEY_JUMP: return k(SPACE) || b(A); break;
-    case SFG_KEY_STRAFE_LEFT: return k(A) || k(KP_7); break;
-    case SFG_KEY_STRAFE_RIGHT: return k(D) || k(KP_9); break;
+    case SFG_KEY_JUMP: return k(SPACE) || b(X); break;
+    case SFG_KEY_STRAFE_LEFT: return k(A) || k(KP_7) || (SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_LEFTX) < -AXIS_TO_DIGITAL); break;
+    case SFG_KEY_STRAFE_RIGHT: return k(D) || k(KP_9) || (SDL_GameControllerGetAxis(sdlController, SDL_CONTROLLER_AXIS_LEFTX) > AXIS_TO_DIGITAL); break;
     case SFG_KEY_MAP: return k(TAB) || b(BACK); break;
     case SFG_KEY_CYCLE_WEAPON: return k(F) ||
-      (sdlMouseButtonState & SDL_BUTTON_MMASK); break;
+      (sdlMouseButtonState & SDL_BUTTON_MMASK); break;  
     case SFG_KEY_TOGGLE_FREELOOK: return b(LEFTSTICK) ||
       (sdlMouseButtonState & SDL_BUTTON_RMASK); break;
     case SFG_KEY_MENU: return k(ESCAPE) || b(START); break;

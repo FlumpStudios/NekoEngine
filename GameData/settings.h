@@ -160,7 +160,7 @@
   number is faster but can cause visual artifacts.
 */
 #ifndef SFG_RAYCASTING_MAX_STEPS
-  #define SFG_RAYCASTING_MAX_STEPS 30
+  #define SFG_RAYCASTING_MAX_STEPS 60
 #endif
 
 /**
@@ -168,7 +168,7 @@
   but can cause visual artifacts.
 */
 #ifndef SFG_RAYCASTING_MAX_HITS
-  #define SFG_RAYCASTING_MAX_HITS 10
+  #define SFG_RAYCASTING_MAX_HITS 20
 #endif
 
 /**
