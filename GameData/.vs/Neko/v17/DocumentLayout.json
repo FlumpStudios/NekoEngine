@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Projects\\NekoEngine\\GameData\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Projects\\NekoEngine\\GameData\\settings.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:settings.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Projects\\NekoEngine\\GameData\\constants.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:constants.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Projects\\NekoEngine\\GameData\\settings.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:settings.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{88C1F72E-7479-397C-DD80-12D8C957D46C}|NekoEngine.vcxproj|C:\\Projects\\NekoEngine\\GameData\\main_sdl.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -53,7 +53,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Bookmark",
@@ -97,13 +97,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "settings.h",
               "DocumentMoniker": "C:\\Projects\\NekoEngine\\GameData\\settings.h",
               "RelativeDocumentMoniker": "settings.h",
               "ToolTip": "C:\\Projects\\NekoEngine\\GameData\\settings.h",
               "RelativeToolTip": "settings.h",
-              "ViewState": "AgIAAJAAAAAAAAAAAAAwwLMAAAAyAAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAAAAAAAAApwC0AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-11-16T16:54:28.053Z",
               "EditorCaption": ""
@@ -158,13 +158,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "constants.h",
               "DocumentMoniker": "C:\\Projects\\NekoEngine\\GameData\\constants.h",
               "RelativeDocumentMoniker": "constants.h",
               "ToolTip": "C:\\Projects\\NekoEngine\\GameData\\constants.h",
               "RelativeToolTip": "constants.h",
-              "ViewState": "AgIAAG4BAAAAAAAAAAAwwH8BAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAAEMCAAAAAAAAAAApwE8CAABHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-10-19T15:34:12.225Z",
               "EditorCaption": ""
@@ -203,8 +203,7 @@
               "RelativeToolTip": "main_sdl.c",
               "ViewState": "AgIAANMAAAAAAAAAAAAAAOYAAAA4AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2024-02-03T12:29:46.265Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-02-03T12:29:46.265Z"
             }
           ]
         }
