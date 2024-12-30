@@ -1,15 +1,15 @@
 ﻿cl : command line  warning D9002: ignoring unknown option '/std:c99'
   main_sdl.c
-C:\Projects\NekoEngine\GameData\networking.h(112,13): warning C4047: 'function': 'char *const ' differs in levels of indirection from 'char (*)[500]'
+C:\Projects\NekoEngine\GameData\networking.h(114,13): warning C4047: 'function': 'char *const ' differs in levels of indirection from 'char (*)[500]'
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\networking.h(112,13): warning C4024: 'sprintf': different types for formal and actual parameter 1
+C:\Projects\NekoEngine\GameData\networking.h(114,13): warning C4024: 'sprintf': different types for formal and actual parameter 1
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\networking.h(112,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\GameData\networking.h(114,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\networking.h(114,10): warning C4101: 'url': unreferenced local variable
+C:\Projects\NekoEngine\GameData\networking.h(116,10): warning C4101: 'url': unreferenced local variable
   (compiling source file 'main_sdl.c')
   
 C:\Projects\NekoEngine\GameData\levels.h(159,42): warning C4133: 'function': incompatible types - from 'WIN32_FIND_DATA *' to 'LPWIN32_FIND_DATAA'
@@ -129,10 +129,10 @@ C:\Projects\NekoEngine\GameData\sounds.h(100,67): warning C4146: unary minus ope
 C:\Projects\NekoEngine\GameData\sounds.h(100,70): warning C4293: '>>': shift count negative or too big, undefined behavior
   (compiling source file 'main_sdl.c')
   
-C:\Projects\NekoEngine\GameData\main_sdl.c(383,3): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Projects\NekoEngine\GameData\main_sdl.c(384,3): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Projects\NekoEngine\GameData\main_sdl.c(385,3): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Projects\NekoEngine\GameData\main_sdl.c(404,15): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Projects\NekoEngine\GameData\main_sdl.c(418,15): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Projects\NekoEngine\GameData\main_sdl.c(433,15): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\GameData\main_sdl.c(387,3): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\GameData\main_sdl.c(388,3): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\GameData\main_sdl.c(389,3): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\GameData\main_sdl.c(408,15): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\GameData\main_sdl.c(422,15): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Projects\NekoEngine\GameData\main_sdl.c(437,15): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   NekoEngine.vcxproj -> C:\Projects\NekoEngine\GameData\NekoCorex64\Debug\NekoEngine.exe

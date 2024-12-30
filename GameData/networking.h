@@ -13,6 +13,8 @@ CURLcode res;
 #define LEADERBOARD_URL "https://levelserver.ruyn.co.uk/api/v1/leaderboard"
 #define GET_LEADERBOARD_URL "%s/asstring?levelPack=%s&levelNumber=%i&clientId=%s&skip=%i&take=%i"
 #define POST_LEADERBOARD_URL "{ \"userName\": \"%s\", \"clientId\" : \"%s\", \"score\" : %i, \"levelPackName\" : \"%s\", \"levelNumber\" : %i }"
+#define X_K "X-Api-Key: ovOV4mY2jVMMXsjEBkU8VzY7gscieQk9eViDg9G4B3VYwR5+JFihw3LdD74bCYs9"
+
 void NTW_init()
 {
     curl_global_init(CURL_GLOBAL_DEFAULT);
@@ -59,7 +61,7 @@ static void post(char* responseBuffer, char* url, char* data)
 
     struct curl_slist* headers = NULL;
     headers = curl_slist_append(headers, "Content-Type: application/json");
-    headers = curl_slist_append(headers, "X-Api-Key: ovOV4mY2jVMMXsjEBkU8VzY7gscieQk9eViDg9G4B3VYwR5+JFihw3LdD74bCYs9");
+    headers = curl_slist_append(headers, X_K);
 
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
@@ -93,7 +95,7 @@ static void Get(char* responseBuffer, char* url)
 
     struct curl_slist* headers = NULL;
     headers = curl_slist_append(headers, "Content-Type: application/json");
-    headers = curl_slist_append(headers, "X-Api-Key: ovOV4mY2jVMMXsjEBkU8VzY7gscieQk9eViDg9G4B3VYwR5+JFihw3LdD74bCYs9");
+    headers = curl_slist_append(headers, X_K);
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
     
