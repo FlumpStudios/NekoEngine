@@ -13,6 +13,8 @@
 // #define SFG_CPU_LOAD(percent) printf("CPU load: %d%\n",percent);
 // #define GAME_LQ
 
+#define DEFAULT_LEVEL_PACK "original"
+
 #ifndef __EMSCRIPTEN__
   #ifndef GAME_LQ
     // higher quality
@@ -428,7 +430,7 @@ int main(int argc, char *argv[])
               return 1;
           }
           i++;
-      }
+      }            
       else if (argv[i][0] == '-' && argv[i][1] == 'p' && argv[i][2] == 0 && i + 1 < argc)
       {
           if (strlen(argv[i + 1]) <= 50) // Ensure length is within 50 chars
@@ -445,6 +447,11 @@ int main(int argc, char *argv[])
           i++;
       }
       else {}
+
+      if (SFG_levelPack[0] == '\0')
+      {
+          strcpy(SFG_levelPack, DEFAULT_LEVEL_PACK);
+      }
   }
 
   if (argHelp)

@@ -13,7 +13,7 @@ CURLcode res;
 #define LEADERBOARD_URL "https://levelserver.ruyn.co.uk/api/v1/leaderboard"
 #define GET_LEADERBOARD_URL "%s/asstring?levelPack=%s&levelNumber=%i&clientId=%s&skip=%i&take=%i"
 #define POST_LEADERBOARD_URL "{ \"userName\": \"%s\", \"clientId\" : \"%s\", \"score\" : %i, \"levelPackName\" : \"%s\", \"levelNumber\" : %i }"
-#define X_K "X-Api-Key: ovOV4mY2jVMMXsjEBkU8VzY7gscieQk9eViDg9G4B3VYwR5+JFihw3LdD74bCYs9"
+#define X_K "X-Api-Key: MnxczNZgPv/PSrcn9U/IriKzBXRzQEIfptVs5PIMNChNvX6VU4KQvnjpmKaqzZkl"
 
 void NTW_init()
 {

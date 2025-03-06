@@ -605,6 +605,19 @@ void SFG_playGameSound(uint8_t soundIndex, uint8_t volume)
   }
 }
 
+static void ResetLevelValues(void)
+{
+    SFG_multiplier = 1;
+    SFG_comboBarSize = 0;
+    SFG_level_gold_collected = 0;
+    SFG_level_time_minutes = 0;
+    SFG_level_time_seconds = 0;
+    SFG_enemy_killed_count = 0;    
+    SFG_timeBonus = TIME_BONUS_START;
+    SFG_level_score = 0;
+    BOOL SFG_showLevelEndLockedWarning = FALSE;
+}
+
 /**
   Returns a damage value for specific attack type (SFG_WEAPON_FIRE_TYPE_...),
   with added randomness (so the values will differ). For explosion pass
@@ -1643,12 +1656,7 @@ void SFG_setAndInitLevel(uint8_t levelNumber)
      SFG_game.saved = 0;
   }
 
-  SFG_level_time_seconds = 0;
-  SFG_level_time_minutes = 0;
-  SFG_level_score = 0;
-  SFG_timeBonus = TIME_BONUS_START;
-  SFG_level_gold_collected = 0;
-  SFG_enemy_killed_count = 0;
+  ResetLevelValues();
   SFG_currentLevel.levelNumber = levelNumber;
   SFG_currentLevel.monstersDead = 0;
   SFG_currentLevel.backgroundImage = level->backgroundImage;
@@ -4108,6 +4116,9 @@ void SFG_gameStepMenu()
       for (uint8_t i = 6; i < SFG_SAVE_SIZE; ++i) // reset totals in save
         SFG_game.save[i] = 0;
 
+      ResetLevelValues();
+      SFG_score = 0;
+
       if (SFG_game.selectedLevel == 0)
       {
         SFG_currentLevel.levelNumber = 0; // to draw intro, not outro
@@ -4987,7 +4998,6 @@ void SFG_draw()
   {
     if (SFG_score > 0)
     {
-        SFG_score = 0;
         SFG_level_score = 0;
     }
 
