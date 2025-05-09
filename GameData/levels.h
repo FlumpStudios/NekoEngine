@@ -152,7 +152,7 @@ static uint8_t countLevelFiles(char* levelpack) {
 
 
 #ifdef _WIN32
-    WIN32_FIND_DATA find_file_data;
+    WIN32_FIND_DATAA find_file_data;
     HANDLE h_find = INVALID_HANDLE_VALUE;
     int file_count = 0;
         
@@ -162,9 +162,9 @@ static uint8_t countLevelFiles(char* levelpack) {
         return -1;
     }
 
-    while (FindNextFile(h_find, &find_file_data) != 0) {
+    while (FindNextFileA(h_find, &find_file_data) != 0) {
         if (!(find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-            WCHAR* fileName = find_file_data.cFileName;
+            auto fileName = find_file_data.cFileName;
             char levelPrefixBuffer[6];
             memset(levelPrefixBuffer, '\0', sizeof(char) * 6);
             

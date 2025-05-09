@@ -111,7 +111,7 @@ static void Get(char* responseBuffer, char* url)
 void NTW_postScore(char* responseBuffer, char* userName, char* clientId, char* levelPackName, int score, int levelNumber)
 {
     char payload[MAX_PAYLOAD_SIZE] = { 0 };
-    sprintf(&payload, POST_LEADERBOARD_URL, userName, clientId, score, levelPackName, levelNumber);
+    sprintf(payload, POST_LEADERBOARD_URL, userName, clientId, score, levelPackName, levelNumber);
 
     char url[MAX_URL_SIZE];
 

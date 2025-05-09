@@ -34,24 +34,24 @@ static uint8_t outroTextLoaded = FALSE;
 static char introText[MAX_STORY_SIZE] = "";
 static char outroText[MAX_STORY_SIZE] = "";
 
-const char introTextLocation[15] = "texts/intro.txt";
-const char outroTextLocation[15] = "texts/outro.txt";
+const char introTextLocation[16] = "texts/intro.txt";
+const char outroTextLocation[16] = "texts/outro.txt";
 
 static void loadText(const char* location, char* buffer)
 {
 	FILE* file = fopen(location, "r");
 	if (file == NULL) {
-		return "";
+		return;
 	}
 
 	if ((fgets(buffer, MAX_STORY_SIZE, file) != NULL)) {
 		fclose(file);
 	}
 
-	return "";
+	return;
 }
 
-const char* TXT_getIntroText(void)
+char* TXT_getIntroText(void)
 {
 	if (introTextLoaded)
 	{
@@ -63,7 +63,7 @@ const char* TXT_getIntroText(void)
 	return introText;
 }
 
-const char* TXT_getOutroText(void)
+char* TXT_getOutroText(void)
 {
 	if (outroTextLoaded)
 	{

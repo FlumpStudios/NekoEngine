@@ -7,3 +7,5 @@
 # Ignore specific file
 launcher_Settings.dat
 *.sav
+
+GameData/DeadHunt/

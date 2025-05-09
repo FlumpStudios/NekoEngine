@@ -482,10 +482,10 @@ int main(int argc, char *argv[])
   // Load in SFX files
   const char* loc = "Sfx/data.SAD";
   
+  SFG_initSteam();
   SFG_loadTexturesFromFile(SFG_sounds,loc, SFG_SFX_SIZE * 6);
 
   SFG_init();
-
 
 
   SDL_Init(SDL_INIT_AUDIO | SDL_INIT_JOYSTICK);
@@ -558,7 +558,7 @@ int main(int argc, char *argv[])
   while (running)
     mainLoopIteration();
 #endif
-
+  SFG_ShutdownSteam();
   SDL_GameControllerClose(sdlController);
   SDL_PauseAudio(1);
   SDL_CloseAudio();

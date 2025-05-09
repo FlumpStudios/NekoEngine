@@ -1,6 +1,17 @@
 #ifndef _SFG_GAME_H
 #define _SFG_GAME_H
 
+#define IS_STEAM
+
+
+#define ACHIEVEMENT_LEVEL_COMPLETE "ClassicCompleteLevel"
+#define ACHIEVEMENT_GAME_COMPLETE "ClassicCompleteGame"
+#define ACHIEVEMENT_PLAY_COMPLETE "ClassicPlayGame"
+#define ACHIEVEMENT_ROCKET_PICKUP "ClassicRocketPickup"
+#define ACHIEVEMENT_PLASMA_PICKUP "ClassicPlasmaPickup"
+#define ACHIEVEMENT_BARREL_PICKUP "ClassicBlowUpBarrel"
+
+
 #include <stdint.h> // Needed for fixed width types, can easily be replaced.
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,6 +24,11 @@
 #include <limits.h>
 #include <unistd.h>
 #endif
+
+#ifdef IS_STEAM
+    #include "Steamworks/public/steam/steam_api.h"
+#endif // IS_STEAM
+
 
 /*
   The following keys are mandatory to be implemented on any platform in order
@@ -198,6 +214,32 @@ uint8_t SFG_load(uint8_t data[SFG_SAVE_SIZE]);
   relieving CPU, so don't do this.
 */
 uint8_t SFG_mainLoopBody();
+
+#ifdef IS_STEAM
+void SFG_ShutdownSteam()
+{
+    SteamAPI_Shutdown();
+}
+
+void UnlockSteamAchievement(const char* achievementID) {    
+    // Check if Steam is initialized
+    if (SteamAPI_IsSteamRunning()) {
+        // Unlock the achievement by its ID
+        if (SteamUserStats()->SetAchievement(achievementID)) {
+            SFG_LOG("Achievement unlocked");
+
+            // You must store the achievement locally to ensure that it stays unlocked
+            SteamUserStats()->StoreStats();
+        }
+        else {
+            SFG_LOG("Failed to unlock achievement");
+        }
+    }
+    else {
+        SFG_LOG("Steam was not running when achievement was attempted to unlock");
+    }
+}
+#endif // IS_STEAM
 
 /**
   Initializes the game, call this in the platform's initialization code.
@@ -1340,6 +1382,45 @@ RCL_Unit SFG_movingWallHeight(
   return low + halfHeight + (RCL_sin(sinArg) * halfHeight) / RCL_UNITS_PER_SQUARE;
 }
 
+RCL_Unit SFG_floorHeightAt(int16_t x, int16_t y)
+{
+    uint8_t properties;
+
+    SFG_TileDefinition tile =
+        SFG_getMapTile(SFG_currentLevel.levelPointer, x, y, &properties);
+
+    RCL_Unit doorHeight = 0;
+
+    if (properties == SFG_TILE_PROPERTY_DOOR)
+    {
+        for (uint8_t i = 0; i < SFG_currentLevel.doorRecordCount; ++i)
+        {
+            SFG_DoorRecord* door = &(SFG_currentLevel.doorRecords[i]);
+
+            if ((door->coords[0] == x) && (door->coords[1] == y))
+            {
+                doorHeight = door->state & SFG_DOOR_VERTICAL_POSITION_MASK;
+
+                doorHeight = doorHeight != (0xff & SFG_DOOR_VERTICAL_POSITION_MASK) ? doorHeight * SFG_DOOR_HEIGHT_STEP : RCL_UNITS_PER_SQUARE;
+
+                break;
+            }
+        }
+    }
+    else if (properties == SFG_TILE_PROPERTY_ELEVATOR)
+    {
+        RCL_Unit height =
+            SFG_TILE_FLOOR_HEIGHT(tile) * SFG_WALL_HEIGHT_STEP;
+
+        return SFG_movingWallHeight(
+            height,
+            height + SFG_TILE_CEILING_HEIGHT(tile) * SFG_WALL_HEIGHT_STEP,
+            SFG_game.frameTime - SFG_currentLevel.timeStart);
+    }
+
+    return SFG_TILE_FLOOR_HEIGHT(tile) * SFG_WALL_HEIGHT_STEP - doorHeight;
+}
+
 static SFG_Level* level = NULL;
 
 void RCL_updateWallZbuffer(RCL_HitResult* hits, uint16_t hitCount, int32_t index)
@@ -1379,44 +1460,6 @@ void RCL_updateWallZbuffer(RCL_HitResult* hits, uint16_t hitCount, int32_t index
    
 };
 
-RCL_Unit SFG_floorHeightAt(int16_t x, int16_t y)
-{
-  uint8_t properties;
-
-  SFG_TileDefinition tile =
-      SFG_getMapTile(SFG_currentLevel.levelPointer, x, y, &properties);
-
-  RCL_Unit doorHeight = 0;
-
-  if (properties == SFG_TILE_PROPERTY_DOOR)
-  {
-    for (uint8_t i = 0; i < SFG_currentLevel.doorRecordCount; ++i)
-    {
-      SFG_DoorRecord *door = &(SFG_currentLevel.doorRecords[i]);
-
-      if ((door->coords[0] == x) && (door->coords[1] == y))
-      {
-        doorHeight = door->state & SFG_DOOR_VERTICAL_POSITION_MASK;
-
-        doorHeight = doorHeight != (0xff & SFG_DOOR_VERTICAL_POSITION_MASK) ? doorHeight * SFG_DOOR_HEIGHT_STEP : RCL_UNITS_PER_SQUARE;
-
-        break;
-      }
-    }
-  }
-  else if (properties == SFG_TILE_PROPERTY_ELEVATOR)
-  {
-    RCL_Unit height =
-        SFG_TILE_FLOOR_HEIGHT(tile) * SFG_WALL_HEIGHT_STEP;
-
-    return SFG_movingWallHeight(
-        height,
-        height + SFG_TILE_CEILING_HEIGHT(tile) * SFG_WALL_HEIGHT_STEP,
-        SFG_game.frameTime - SFG_currentLevel.timeStart);
-  }
-
-  return SFG_TILE_FLOOR_HEIGHT(tile) * SFG_WALL_HEIGHT_STEP - doorHeight;
-}
 
 /**
   Like SFG_floorCollisionHeightAt, but takes into account colliding items on
@@ -1812,13 +1855,36 @@ void SFG_createDefaultSaveData(uint8_t *memory)
   memory[1] = SFG_DEFAULT_SETTINGS;
 }
 
+void SFG_initSteam()
+{
+#ifdef IS_STEAM
+    if (SteamAPI_Init()) {
+        const char* name = SteamFriends()->GetPersonaName();
+        uint64 steamId = SteamUser()->GetSteamID().ConvertToUint64();
+        if (name)
+        {
+            strcpy(SFG_displayName, name);
+        }
+        if (steamId > 0)
+        {
+            snprintf(SFG_clientId, sizeof(SFG_clientId), "%" PRIu64, steamId);
+        }
+    }
+    else {
+        SFG_LOG("Unable to init steam");
+    }
+#endif
+}
+
 void SFG_init()
 {
   SFG_LOG("initializing game");
 
   setUpdateZBufferFunction(RCL_updateWallZbuffer);
+#ifdef IS_STEAM
+  UnlockSteamAchievement(ACHIEVEMENT_PLAY_COMPLETE);
+#endif // IS_STEAM
 
- 
   char loc[256];
   sprintf(loc, "WallTextures/data.TAD");
   SFG_loadTexturesFromFile(SFG_wallTextures, loc, SFG_WALL_TEXTURE_COUNT * SFG_TEXTURE_STORE_SIZE);
@@ -2289,6 +2355,7 @@ static inline const SFG_LevelElement *SFG_getLevelElement(uint8_t index)
                                                    ~SFG_ITEM_RECORD_ACTIVE_MASK]);
 }
 
+
 void SFG_createExplosion(RCL_Unit, RCL_Unit, RCL_Unit); // forward decl
 
 void SFG_explodeBarrel(uint8_t itemIndex, RCL_Unit x, RCL_Unit y, RCL_Unit z)
@@ -2297,6 +2364,7 @@ void SFG_explodeBarrel(uint8_t itemIndex, RCL_Unit x, RCL_Unit y, RCL_Unit z)
   SFG_setItemCollisionMapBit(e->coords[0], e->coords[1], 0);
   SFG_removeItem(itemIndex);
   SFG_createExplosion(x, y, z);
+  UnlockSteamAchievement(ACHIEVEMENT_BARREL_PICKUP);
 }
 
 void SFG_createExplosion(RCL_Unit x, RCL_Unit y, RCL_Unit z)
@@ -3303,6 +3371,7 @@ void SFG_winLevel()
         SFG_score += SFG_timeBonus / 10;
         SFG_levelEnds();
         SFG_setGameState(SFG_GAME_STATE_WIN);
+        UnlockSteamAchievement(ACHIEVEMENT_LEVEL_COMPLETE);
         SFG_playGameSound(2, 255);
         SFG_processEvent(SFG_EVENT_VIBRATE, 0);
         SFG_processEvent(SFG_EVENT_LEVEL_WON, SFG_currentLevel.levelNumber + 1);
@@ -3312,6 +3381,8 @@ void SFG_winLevel()
         SFG_showLevelEndLockedWarning = TRUE;
     }
 }
+
+
 
 /**
   Part of SFG_gameStep() for SFG_GAME_STATE_PLAYING.
@@ -3655,9 +3726,11 @@ else{
           addAmmo(BULLETS) break;
 
         case SFG_LEVEL_ELEMENT_ROCKETS:
+          UnlockSteamAchievement(ACHIEVEMENT_ROCKET_PICKUP);
           addAmmo(ROCKETS) break;
 
         case SFG_LEVEL_ELEMENT_PLASMA:
+        UnlockSteamAchievement(ACHIEVEMENT_PLASMA_PICKUP);
           addAmmo(PLASMA) break;
 
         case SFG_LEVEL_ELEMENT_GEM:
@@ -4307,6 +4380,7 @@ void SFG_gameStep()
       {
         if (SFG_keyIsDown(SFG_KEY_A))
         {
+          UnlockSteamAchievement(ACHIEVEMENT_GAME_COMPLETE);
           SFG_setGameState(SFG_GAME_STATE_OUTRO);
           SFG_setMusic(SFG_MUSIC_TURN_OFF);
         }
@@ -4833,7 +4907,7 @@ void SFG_drawMenu()
 }
 
 void SFG_drawWinOverlay()
-{   
+{  
     
   uint32_t t = RCL_min(SFG_WIN_ANIMATION_DURATION, SFG_game.stateTime);
 
@@ -5233,7 +5307,7 @@ void SFG_draw()
 #define TEXT_Y (SFG_GAME_RESOLUTION_Y - SFG_HUD_MARGIN - \
                 SFG_FONT_CHARACTER_SIZE * SFG_FONT_SIZE_MEDIUM)
 
-    static levelLockedWarningTicker = 0;
+    static int levelLockedWarningTicker = 0;
 
     if (!SFG_PREVIEW_MODE) {
         SFG_drawText("+", SFG_GAME_RESOLUTION_X / 2, 200, SFG_FONT_SIZE_SMALL, 6, 2, SFG_GAME_RESOLUTION_X);
