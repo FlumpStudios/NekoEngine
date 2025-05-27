@@ -8,4 +8,7 @@
 launcher_Settings.dat
 *.sav
 
+steam_appid.txt
 GameData/DeadHunt/
+GameData/Engine/
+GameData/RuynHD.exe
